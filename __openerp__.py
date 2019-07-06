@@ -15,6 +15,8 @@ membership products (schemes).
     'data': [
         'Room/room_view.xml',
         'Department/department_view.xml',
+        'Doctors/doctors_view.xml',
+        'Patients/patients_view.xml',
 
     ],
     'demo': [],
