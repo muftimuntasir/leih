@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="doctors_view" model="ir.ui.view">
+            <field name="name">leih.views</field>
+            <field name="model">leih.doctors</field>
+            <field name="arch" type="xml">
+            <form string="Doctors">
+                <sheet>
+
+                    <group>
+
+                        <field name="name"/>
+                        <field name="department"/>
+                        <field name="designation"/>
+                        <field name="status"/>
+
+                    </group>
+
+                </sheet>
+            </form>
+
+            </field>
+
+        </record>
+
+
+
+
+        <record id="doctors_action" model="ir.actions.act_window">
+            <field name="name">doctors.form</field>
+            <field name="res_model">leih.doctors</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+        </record>
+
+        <!-- expense type tree -->
+        <record model="ir.ui.view" id="doctors_tree" >
+            <field name="name">leih</field>
+            <field name="model">leih.doctors</field>
+            <field name="arch" type="xml">
+            <tree string="Alu List">
+                        <field name="name"/>
+                        <field name="department"/>
+                        <field name="designation"/>
+                        <field name="status"/>
+
+
+            </tree>
+            </field>
+        </record>
+
+
+        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>
+        <menuitem name="Doctors" id="doctors_menu_mainform" parent="leih_doctors_menu" action="doctors_action"/>
+
+
+    </data>
+</openerp>
