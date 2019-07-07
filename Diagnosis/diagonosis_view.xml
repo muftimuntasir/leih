@@ -94,13 +94,9 @@
             </field>
         </record>
 
-<!--        <menuitem name="diagonosis" id="diagonosis_menu" />-->
-<!--        <menuitem name="diagonosis Group" id="diagonosis_group_menu" parent="diagonosis_menu"/>-->
+
         <menuitem name="Diagonosiss" id="diagonosis_menu_mainform" parent="leih_group_menu" action="diagonosis_type_action"/>
 
-
-<!--        <menuitem name="diagonosis" id="leih_patients_menu" parent="leih_menu"/>-->
-<!--        <menuitem name="Diagonosis" id="diagonosis_menu_mainform" parent="leih_group_menu" action="diagonosis_action"/>-->
 
 
     </data>
