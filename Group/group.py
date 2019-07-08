@@ -10,7 +10,8 @@ class group(osv.osv):
 
     _columns = {
 
-        'name': fields.char("Group Name",required=True)
+        'name': fields.char("Group Name",required=True),
+        'department':fields.many2one('leih.department',"Department")
 
 
 

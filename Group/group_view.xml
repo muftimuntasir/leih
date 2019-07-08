@@ -10,9 +10,11 @@
                 <sheet>
 
                     <group>
+                        <table>
 
                         <field name="name"/>
-
+                            <field name="department"/>
+                        </table>
 
                     </group>
 
