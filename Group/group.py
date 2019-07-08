@@ -11,7 +11,8 @@ class group(osv.osv):
     _columns = {
 
         'name': fields.char("Group Name",required=True),
-        'department':fields.many2one('leih.department',"Department")
+        'department':fields.many2one('leih.department',"Department"),
+        'year':fields.integer("Year")
 
 
 

@@ -14,6 +14,7 @@
 
                         <field name="name"/>
                             <field name="department"/>
+                            <field name="year"/>
                         </table>
 
                     </group>
@@ -44,6 +45,8 @@
             <field name="arch" type="xml">
             <tree string="Alu List">
                         <field name="name"/>
+                <field name="department"/>
+                <field name="year"/>
 
 
             </tree>

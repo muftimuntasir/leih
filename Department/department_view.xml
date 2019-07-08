@@ -11,7 +11,7 @@
 
                     <group>
 
-                        <field name="department_name"/>
+                        <field name="name"/>
                         <field name="parent"/>
 
                     </group>
@@ -41,7 +41,7 @@
             <field name="model">leih.department</field>
             <field name="arch" type="xml">
             <tree string="Alu List">
-                        <field name="department_name"/>
+                        <field name="name"/>
                         <field name="parent"/>
 
 

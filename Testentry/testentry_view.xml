@@ -12,7 +12,7 @@
                     <group>
 
                         <field name="name"/>
-                        <field name="group"/>
+                        <field name="group" on_change="onchange_group(group, context)"/>
                         <field name="department"/>
                         <field name="rate"/>
                         <field name="refarence_value"/>

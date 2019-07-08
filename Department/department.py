@@ -10,7 +10,7 @@ class leih(osv.osv):
 
     _columns = {
 
-        'department_name': fields.char("Department Name",required=True),
+        'name': fields.char("Department Name",required=True),
         'parent':fields.selection([('a','A'),('b','B')], string='Parent', default='a')
 
     }
