@@ -13,7 +13,9 @@ class leih(osv.osv):
         'name': fields.char("Doctor Name",required=True),
         'department':fields.char('Department',required=True),
         'designation':fields.char('Designation',required=True),
-        'status': fields.selection([('a', 'In house'), ('b', 'Consoled'),('c','Prt_time'),('d','Out_side')], string='Status', default='a'),
+        'type': fields.selection([('inhouse', 'In house'), ('consoled', 'Consoled'),('prttime','Prt_time'),('outsid','Out_side')], string='Type', default='inhouse'),
+        'status': fields.selection([('active', 'Active'), ('inactive', 'Inactive')], string='Status', default='active'),
+        'others': fields.char("Others"),
         'nid':fields.integer("NID")
 
 

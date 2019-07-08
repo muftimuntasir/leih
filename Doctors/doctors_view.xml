@@ -14,7 +14,9 @@
                         <field name="name"/>
                         <field name="department"/>
                         <field name="designation"/>
+                        <field name="type"/>
                         <field name="status"/>
+                        <field name="others"/>
 
                     </group>
 
@@ -46,7 +48,9 @@
                         <field name="name"/>
                         <field name="department"/>
                         <field name="designation"/>
+                        <field name="type"/>
                         <field name="status"/>
+                        <field name="others"/>
 
 
             </tree>
