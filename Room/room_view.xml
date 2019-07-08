@@ -53,7 +53,7 @@
         </record>
 
         <menuitem name="LEIH" id="leih_menu" />
-        <menuitem name="Room" id="leih_group_menu" parent="leih_menu"/>
+        <menuitem name="Hospital" id="leih_group_menu" parent="leih_menu"/>
         <menuitem name="Room" id="room_menu_mainform" parent="leih_group_menu" action="room_action"/>
 
 

@@ -55,8 +55,8 @@
         </record>
 
 
-        <menuitem name="Patients" id="leih_patients_menu" parent="leih_menu"/>
-        <menuitem name="Patients" id="patients_menu_mainform" parent="leih_patients_menu" action="patients_action"/>
+<!--        <menuitem name="Patients" id="leih_patients_menu" parent="leih_menu"/>-->
+        <menuitem name="Patients" id="patients_menu_mainform" parent="leih_group_menu" action="patients_action"/>
 
 
     </data>

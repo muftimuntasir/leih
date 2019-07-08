@@ -17,6 +17,8 @@ membership products (schemes).
         'Department/department_view.xml',
         'Doctors/doctors_view.xml',
         'Patients/patients_view.xml',
+        'Diagnosis/diagonosis_view.xml',
+        'Group/group_view.xml',
 
     ],
     'demo': [],
