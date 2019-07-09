@@ -25,20 +25,29 @@ class testentry(osv.osv):
         'department':fields.char("Department"),
         'rate':fields.integer("Rate"),
         'refarence_value':fields.char("Reference value"),
-        'required_time':fields.char("Required time")
-
-
-
+        'required_time':fields.char("Required time"),
+        'entrr_parameters':fields.one2many('ss','testenry_id','Parameters',required=True)
 
     }
     def onchange_group(self,cr,uid,ids,group,context=None):
 
         test={'values':{}}
         dep_object=self.pool.get('leih.group').browse(cr,uid,group,context=None)
-        abc={'department':dep_object.department}
+        abc={'department':dep_object.department.name}
         test['value']=abc
         # import pdb
         # pdb.set_trace()
         return test
 
 
+
+
+class testentryparamaerte(osv.osv):
+    _name = 'ss'
+    _columns = {
+
+        'name': fields.char("Test Names", required=True, ondelete='cascade', select=True),
+        'testenry_id': fields.many2one('leih.testentry', "Test Entry"),
+        'reference_value': fields.char("Reference Value"),
+        'others': fields.char("Others"),
+    }
