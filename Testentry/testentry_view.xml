@@ -19,22 +19,17 @@
                         <field name="required_time"/>
 
                     </group>
-                    <notebook>
-                        <page string="Mufti">
-                            <field name="entrr_parameters">
-                                <form string="_____0i0i3eij23i">
-                                    <group>
-                                        <field name="name" class="oe_inline"/>
-                                        <field name="reference_value" class="oe_inline"/>
-                                        <field name="others"/>
+                     <notebook>
+                        <page string="Referance Value">
+                            <field name="entrr_parameters" mode="tree">
+                                <tree string="Select Referance Value" editable="top">
 
-                                    </group>
+                                    <field name="name"/>
+                                    <field name="reference_value"/>
+                                    <field name="others"/>
 
-                                </form>
-
+                                </tree>
                             </field>
-
-
                         </page>
 
                     </notebook>
@@ -73,12 +68,13 @@
 
 
 
+
             </tree>
             </field>
         </record>
 
 
-<!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
+
         <menuitem name="Test Entry" id="testentry_menu_mainform" parent="leih_group_menu" action="testentry_action"/>
 
 
