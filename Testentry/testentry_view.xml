@@ -19,6 +19,7 @@
                         <field name="required_time"/>
 
                     </group>
+<<<<<<< HEAD
                     <notebook>
                         <page string="Mufti">
                             <field name="entrr_parameters" mode="tree">
@@ -32,10 +33,19 @@
                                 </tree>
 
 
+=======
+                     <notebook>
+                        <page string="Referance Value">
+                            <field name="entrr_parameters" mode="tree">
+                                <tree string="Select Referance Value" editable="top">
 
+                                    <field name="name"/>
+                                    <field name="reference_value"/>
+                                    <field name="others"/>
+>>>>>>> 626560dfa9a5df3a61bbb4566b08f5750f935c69
+
+                                </tree>
                             </field>
-
-
                         </page>
 
                     </notebook>
@@ -74,12 +84,13 @@
 
 
 
+
             </tree>
             </field>
         </record>
 
 
-<!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
+
         <menuitem name="Test Entry" id="testentry_menu_mainform" parent="leih_group_menu" action="testentry_action"/>
 
 
