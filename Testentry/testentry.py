@@ -40,14 +40,22 @@ class testentry(osv.osv):
         return test
 
 
-
+# many2one('leih.doctors',"Test Names", required=True, ondelete='cascade', select=True)
 
 class testentryparamaerte(osv.osv):
     _name = 'ss'
     _columns = {
 
-        'name': fields.char("Test Names", required=True, ondelete='cascade', select=True),
+        'name': fields.char("Name"),
         'testenry_id': fields.many2one('leih.testentry', "Test Entry"),
         'reference_value': fields.char("Reference Value"),
-        'others': fields.char("Others"),
+        'others': fields.char("Others")
     }
+
+    # def onchange_ll(self,cr,uid,ids,name,context=None):
+    #     # raise osv.except_osv(_('ValidateError'), _('Directory name contains special characters!'))
+    #     tests={'values':{}}
+    #     dep_object = self.pool.get('leih.doctors').browse(cr, uid, name, context=None)
+    #     abc = {'reference_value': dep_object.designation}
+    #     tests['value'] = abc
+    #     return tests

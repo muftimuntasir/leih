@@ -21,16 +21,17 @@
                     </group>
                     <notebook>
                         <page string="Mufti">
-                            <field name="entrr_parameters">
-                                <form string="_____0i0i3eij23i">
-                                    <group>
-                                        <field name="name" class="oe_inline"/>
+                            <field name="entrr_parameters" mode="tree">
+                                <tree string="Selece Reerence value" editable="top">
+<!--class="oe_inline" on_change="onchange_ll(name,context)-->
+
+                                        <field name="name"/>
                                         <field name="reference_value" class="oe_inline"/>
                                         <field name="others"/>
 
-                                    </group>
+                                </tree>
 
-                                </form>
+
 
                             </field>
 
