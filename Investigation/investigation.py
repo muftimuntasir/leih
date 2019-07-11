@@ -22,20 +22,29 @@ class investigation(osv.osv):
         'sex':fields.char("Sex"),
         'ref_doctors': fields.selection([('shafi', 'Dr. Md. Shafi Khan'), ('ssg', 'Dr. S S Gazi'),('sabrina','Dr. Sabrina Rahmatullah'),('Bibek','Dr. Bibek Ananda')], string='Ref. Doctorss', default='shafi'),
         'delivery_date': fields.char("Delivery Date"),
-        'entrr_test_information': fields.one2many('ti', 'test_info', 'Parameters', required=True)
+        'entrr_test_information': fields.one2many('leih.tests', 'test_info', 'Parameters', required=True)
     }
 
 
 class test_information(osv.osv):
-    _name = 'ti'
+    _name = 'leih.tests'
     _columns = {
 
-        'name': fields.char("Name", required=True, ondelete='cascade', select=True),
+        'name': fields.many2one("leih.testentry", required=True, ondelete='cascade'),
         'test_info': fields.many2one('leih.investigation', "Information"),
         'price': fields.char("Price"),
         'discount': fields.char("Discount"),
         'total_amount': fields.char("Total Amount"),
     }
+
+    def onchange_test(self,cr,uid,ids,name,context=None):
+        tests = {'values': {}}
+        dep_object = self.pool.get('leih.testentry').browse(cr, uid, name, context=None)
+        abc = {'price': dep_object.rate}
+        tests['value'] = abc
+        # import pdb
+        # pdb.set_trace()
+        return tests
 
 
 

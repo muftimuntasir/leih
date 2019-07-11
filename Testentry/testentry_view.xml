@@ -19,22 +19,7 @@
                         <field name="required_time"/>
 
                     </group>
-<<<<<<< HEAD
                     <notebook>
-                        <page string="Mufti">
-                            <field name="entrr_parameters" mode="tree">
-                                <tree string="Selece Reerence value" editable="top">
-<!--class="oe_inline" on_change="onchange_ll(name,context)-->
-
-                                        <field name="name"/>
-                                        <field name="reference_value" class="oe_inline"/>
-                                        <field name="others"/>
-
-                                </tree>
-
-
-=======
-                     <notebook>
                         <page string="Referance Value">
                             <field name="entrr_parameters" mode="tree">
                                 <tree string="Select Referance Value" editable="top">
@@ -42,7 +27,7 @@
                                     <field name="name"/>
                                     <field name="reference_value"/>
                                     <field name="others"/>
->>>>>>> 626560dfa9a5df3a61bbb4566b08f5750f935c69
+
 
                                 </tree>
                             </field>

@@ -26,7 +26,7 @@
                             <field name="entrr_test_information" mode="tree">
                                 <tree string="Select Referance Value" editable="top">
 
-                                    <field name="name"/>
+                                    <field name="name" on_change="onchange_test(name, context)"/>
                                     <field name="price"/>
                                     <field name="discount"/>
                                     <field name="total_amount"/>

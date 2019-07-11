@@ -46,7 +46,7 @@ class testentryparamaerte(osv.osv):
     _name = 'ss'
     _columns = {
 
-        'name': fields.char("Name"),
+        'name': fields.char("Name",required=True,ondelete='cascade'),
         'testenry_id': fields.many2one('leih.testentry', "Test Entry"),
         'reference_value': fields.char("Reference Value"),
         'others': fields.char("Others")
