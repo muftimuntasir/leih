@@ -19,7 +19,7 @@
                         <field name="required_time"/>
 
                     </group>
-                     <notebook>
+                    <notebook>
                         <page string="Referance Value">
                             <field name="entrr_parameters" mode="tree">
                                 <tree string="Select Referance Value" editable="top">
@@ -27,6 +27,7 @@
                                     <field name="name"/>
                                     <field name="reference_value"/>
                                     <field name="others"/>
+
 
                                 </tree>
                             </field>

@@ -20,6 +20,7 @@ membership products (schemes).
         'Diagnosis/diagonosis_view.xml',
         'Group/group_view.xml',
         'Testentry/testentry_view.xml',
+        'Investigation/investigation_view.xml'
 
     ],
     'demo': [],
