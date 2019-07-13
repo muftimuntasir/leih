@@ -10,8 +10,6 @@ class investigation(osv.osv):
 
 
 
-
-
     _columns = {
 
         'patient_id': fields.char("Patient ID",required=True),
@@ -28,13 +26,19 @@ class investigation(osv.osv):
 
 class test_information(osv.osv):
     _name = 'leih.tests'
+
+
+    def _price_update(self, cr, uid, ids, name, arg, context=None):
+
+
+
     _columns = {
 
         'name': fields.many2one("leih.testentry", required=True, ondelete='cascade'),
         'test_info': fields.many2one('leih.investigation', "Information"),
         'price': fields.char("Price"),
         'discount': fields.char("Discount"),
-        'total_amount': fields.char("Total Amount"),
+        'total_amount': fields.function(_price_update,type='char', string="Total")
     }
 
     def onchange_test(self,cr,uid,ids,name,context=None):
