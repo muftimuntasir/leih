@@ -34,19 +34,22 @@ class investigation(osv.osv):
 class test_information(osv.osv):
     _name = 'leih.tests'
 
-<<<<<<< HEAD
 
-    def _price_update(self, cr, uid, ids, name, arg, context=None):
 
-=======
+
+
+
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         cur_obj = self.pool.get('leih.investigation')
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
             rate=record.price
-            res[record.id]=rate
+            discount=record.discount
+            interst_amount=int(discount)*int(rate)/100
+            total_amount=int(rate)-interst_amount
+            res[record.id]=total_amount
         return res
->>>>>>> 80ce915dc94c83c7e8528b29767fc3b1a378961e
+
 
 
     _columns = {
@@ -58,11 +61,8 @@ class test_information(osv.osv):
         # 'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
         'price': fields.char("Price"),
         'discount': fields.char("Discount"),
-<<<<<<< HEAD
-        'total_amount': fields.function(_price_update,type='char', string="Total")
-=======
         'total_amount': fields.function(_amount_all, string="Total Amount"),
->>>>>>> 80ce915dc94c83c7e8528b29767fc3b1a378961e
+
     }
 
     def onchange_test(self,cr,uid,ids,name,context=None):
