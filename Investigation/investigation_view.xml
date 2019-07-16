@@ -36,23 +36,8 @@
                         </page>
 
                     </notebook>
-                    <notebook>
-                    <page string="Referance Value">
-                            <field name="footer_connection" mode="tree">
-                                <tree string="Select Referance Value" editable="top">
 
-                                    <field name="relation"/>
-                                    <field name="total"/>
-                                    <field name="discount"/>
-                                    <field name="flat_discount"/>
-                                    <field name="grand_total"/>
-                                    <field name="paid"/>
-                                    <field name="due"/>
 
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
 
 
                 </sheet>
@@ -63,6 +48,32 @@
         </record>
 
 
+ <record id="investigation_view_footer" model="ir.ui.view">
+            <field name="name">leih.view</field>
+            <field name="model">leih.footer</field>
+            <field name="arch" type="xml">
+            <form string="footer">
+                <sheet>
+                    <group>
+
+
+                                    <field name="relation"/>
+                                    <field name="total"/>
+                                    <field name="discount"/>
+                                    <field name="flat_discount"/>
+                                    <field name="grand_total"/>
+                                    <field name="paid"/>
+                                    <field name="due"/>
+                    </group>
+
+
+
+                </sheet>
+            </form>
+
+            </field>
+
+        </record>
 
 
         <record id="investigation_action" model="ir.actions.act_window">
