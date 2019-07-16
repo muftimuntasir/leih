@@ -33,6 +33,7 @@
 
                                 </tree>
                             </field>
+<<<<<<< HEAD
                         </page>
 
                     </notebook>
@@ -68,14 +69,36 @@
 
 
 
+=======
+                            <group>
+
+<!--                                <field name="relation"/>-->
+                                <field name="total"/>
+                                <field name="discount"/>
+                                <field name="flat_discount"/>
+                                <field name="grand_total"/>
+                                <field name="paid"/>
+                                <field name="due"/>
+
+                            </group>
+                        </page>
+                    </notebook>
+>>>>>>> e2e7589ae2f3e9d25ee586e4a1a815033f3d95c5
                 </sheet>
-            </form>
+                    </form>
 
             </field>
 
         </record>
 
 
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> e2e7589ae2f3e9d25ee586e4a1a815033f3d95c5
         <record id="investigation_action" model="ir.actions.act_window">
             <field name="name">investigation.form</field>
             <field name="res_model">leih.investigation</field>
