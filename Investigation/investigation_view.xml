@@ -33,7 +33,14 @@
 
                                 </tree>
                             </field>
-<<<<<<< HEAD
+                            <group>
+                                <field name="total"/>
+                                <field name="discounts"/>
+                                <field name="flat_discount"/>
+                                <field name="grand_total"/>
+                                <field name="paid"/>
+                                <field name="due"/>
+                            </group>
                         </page>
 
                     </notebook>
@@ -49,56 +56,6 @@
         </record>
 
 
- <record id="investigation_view_footer" model="ir.ui.view">
-            <field name="name">leih.view</field>
-            <field name="model">leih.footer</field>
-            <field name="arch" type="xml">
-            <form string="footer">
-                <sheet>
-                    <group>
-
-
-                                    <field name="relation"/>
-                                    <field name="total"/>
-                                    <field name="discount"/>
-                                    <field name="flat_discount"/>
-                                    <field name="grand_total"/>
-                                    <field name="paid"/>
-                                    <field name="due"/>
-                    </group>
-
-
-
-=======
-                            <group>
-
-<!--                                <field name="relation"/>-->
-                                <field name="total"/>
-                                <field name="discount"/>
-                                <field name="flat_discount"/>
-                                <field name="grand_total"/>
-                                <field name="paid"/>
-                                <field name="due"/>
-
-                            </group>
-                        </page>
-                    </notebook>
->>>>>>> e2e7589ae2f3e9d25ee586e4a1a815033f3d95c5
-                </sheet>
-                    </form>
-
-            </field>
-
-        </record>
-
-
-<<<<<<< HEAD
-=======
-
-
-
-
->>>>>>> e2e7589ae2f3e9d25ee586e4a1a815033f3d95c5
         <record id="investigation_action" model="ir.actions.act_window">
             <field name="name">investigation.form</field>
             <field name="res_model">leih.investigation</field>
