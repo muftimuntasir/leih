@@ -78,6 +78,15 @@ class test_information(osv.osv):
         # import pdb
         # pdb.set_trace()
         return tests
+    
+    def onchange_discount(self,cr,uid,ids,name,discount,context=None):
+        tests = {'values': {}}
+        dep_object = self.pool.get('leih.testentry').browse(cr, uid, name, context=None)
+        abc = {'total_amount':round(dep_object.rate-(dep_object.rate* discount/100))}
+        tests['value'] = abc
+        # import pdb
+        # pdb.set_trace()
+        return tests
 
 
     # def onchange_tamount(self,cr,uid,ids,name,context=None):
