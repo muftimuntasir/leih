@@ -33,6 +33,7 @@
 
                                 </tree>
                             </field>
+
                             <group>
                                 <field name="total"/>
                                 <field name="discounts"/>
@@ -41,9 +42,12 @@
                                 <field name="paid"/>
                                 <field name="due"/>
                             </group>
+
                         </page>
 
                     </notebook>
+
+
 
 
 
@@ -54,6 +58,8 @@
             </field>
 
         </record>
+
+
 
 
         <record id="investigation_action" model="ir.actions.act_window">

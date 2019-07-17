@@ -30,6 +30,7 @@ class investigation(osv.osv):
         'paid': fields.float("Paid"),
         'due': fields.float("Due"),
 
+
     }
     # def onchange_pation_info(self,cr,uid,ids,name,context=None):
     #     testss = {'values': {}}
@@ -38,7 +39,7 @@ class investigation(osv.osv):
     #     testss['value'] = abcd
     #     # import pdb
     #     # pdb.set_trace()
-    #     return testss
+    #     return testssstash
 
 class test_information(osv.osv):
     _name = 'leih.tests'
@@ -89,20 +90,25 @@ class test_information(osv.osv):
     #     return testss
 
 
-# class footer(osv.osv):
-#     _name = 'leih.footer'
-#
-#     _columns = {
-#
-#         'relation':fields.many2one("leih.investigation"),
-#         'total': fields.float("Total",required=True),
-#         'discount': fields.float("Discount(%)", required=True),
-#         'flat_discount': fields.float("Flat Discount"),
-#         'grand_total': fields.float("Grand Total"),
-#         'paid':fields.float("Paid"),
-#         'due': fields.char("Due"),
-#
-#     }
+class footer(osv.osv):
+    _name = "leih.footer"
+
+
+
+
+
+
+    _columns = {
+
+        'relation':fields.many2one("leih.investigation"),
+        'total': fields.float("Total",required=True),
+        'discount': fields.float("Discount(%)", required=True),
+        'flat_discount': fields.float("Flat Discount"),
+        'grand_total': fields.float("Grand Total"),
+        'paid':fields.float("Paid"),
+        'due': fields.char("Due"),
+
+    }
     # def onchange_pation_info(self,cr,uid,ids,name,context=None):
     #     testss = {'values': {}}
     #     dep_object = self.pool.get('leih.patients').browse(cr, uid, name, context=None)
