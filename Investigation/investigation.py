@@ -6,7 +6,16 @@ class investigation(osv.osv):
     _name = "leih.investigation"
 
 
-
+    # def total_amount_all(self, cr, uid, ids, field_name, arg, context=None):
+    #     cur_obj = self.pool.get('leih.investigation')
+    #     res = {}
+    #     for record in self.browse(cr, uid, ids, context=context):
+    #         rate=record.price
+    #         discount=record.discount
+    #         interst_amount=int(discount)*int(rate)/100
+    #         total=int(rate)-interst_amount
+    #         res[record.id]=total
+    #     return res
 
 
 
@@ -44,10 +53,6 @@ class test_information(osv.osv):
     _name = 'leih.tests'
 
 
-
-
-
-
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         cur_obj = self.pool.get('leih.investigation')
         res = {}
@@ -57,6 +62,8 @@ class test_information(osv.osv):
             interst_amount=int(discount)*int(rate)/100
             total_amount=int(rate)-interst_amount
             res[record.id]=total_amount
+            # import pdb
+            # pdb.set_trace()
         return res
 
 
@@ -82,16 +89,6 @@ class test_information(osv.osv):
         # import pdb
         # pdb.set_trace()
         return tests
-
-
-    # def onchange_tamount(self,cr,uid,ids,name,context=None):
-    #     testss = {'values': {}}
-    #     dep_object = self.pool.get('leih.testentry').browse(cr, uid, name, context=None)
-    #     abcd = {'total_amount': dep_object.rate}
-    #     testss['value'] = abcd
-    #     # import pdb
-    #     # pdb.set_trace()
-    #     return testss
 
 
 # class footer(osv.osv):
