@@ -24,7 +24,7 @@ class investigation(osv.osv):
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
         # 'relation': fields.many2one("leih.investigation"),
         'total': fields.float("Total", required=True),
-        'discount': fields.float("Discount(%)", required=True),
+        'discounts': fields.float("Discount(%)", required=True),
         'flat_discount': fields.float("Flat Discount"),
         'grand_total': fields.float("Grand Total"),
         'paid': fields.float("Paid"),
@@ -44,6 +44,7 @@ class investigation(osv.osv):
 class test_information(osv.osv):
     _name = 'leih.tests'
 
+<<<<<<< HEAD
 
 
 
@@ -59,6 +60,18 @@ class test_information(osv.osv):
     #         total_amount=int(rate)-interst_amount
     #         res[record.id]=total_amount
     #     return res
+=======
+    def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
+        cur_obj = self.pool.get('leih.investigation')
+        res = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            rate=record.price
+            discount=record.discount
+            interst_amount=int(discount)*int(rate)/100
+            total_amount=int(rate)-interst_amount
+            res[record.id]=total_amount
+        return res
+>>>>>>> 25a05ec2c5ecb45b223c05ef4b26ec153a0455d4
 
 
 
