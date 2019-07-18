@@ -44,7 +44,7 @@ class investigation(osv.osv):
 class test_information(osv.osv):
     _name = 'leih.tests'
 
-<<<<<<< HEAD
+
 
 
 
@@ -60,7 +60,7 @@ class test_information(osv.osv):
     #         total_amount=int(rate)-interst_amount
     #         res[record.id]=total_amount
     #     return res
-=======
+
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         cur_obj = self.pool.get('leih.investigation')
         res = {}
@@ -71,7 +71,7 @@ class test_information(osv.osv):
             total_amount=int(rate)-interst_amount
             res[record.id]=total_amount
         return res
->>>>>>> 25a05ec2c5ecb45b223c05ef4b26ec153a0455d4
+
 
 
 
