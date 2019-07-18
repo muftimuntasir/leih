@@ -28,14 +28,9 @@
 
                                     <field name="name" on_change="onchange_test(name, context)"/>
                                     <field name="price"/>
-<<<<<<< HEAD
-                                    <field name="discount"/>
-                                    <field name="total_amount" on_change="onchange_tamount(name,context)"/>
-=======
                                     <field name="discount" on_change="onchange_discount(name,discount,context)"/>
                                     <field name="total_amount"/>
 
->>>>>>> 79902ed3d7179c46d190d9ea46a10e9606c998aa
                                 </tree>
                             </field>
 

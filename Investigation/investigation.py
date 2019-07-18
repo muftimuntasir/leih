@@ -54,8 +54,6 @@ class test_information(osv.osv):
     _name = 'leih.tests'
 
 
-<<<<<<< HEAD
-=======
 
 
 
@@ -72,7 +70,6 @@ class test_information(osv.osv):
     #         res[record.id]=total_amount
     #     return res
 
->>>>>>> 79902ed3d7179c46d190d9ea46a10e9606c998aa
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
         cur_obj = self.pool.get('leih.investigation')
         res = {}
@@ -121,7 +118,7 @@ class test_information(osv.osv):
         return tests
 
 
-<<<<<<< HEAD
+
 # class footer(osv.osv):
 #     _name = 'leih.footer'
 #
@@ -136,7 +133,6 @@ class test_information(osv.osv):
 #         'due': fields.char("Due"),
 #
 #     }
-=======
 
     # def onchange_tamount(self,cr,uid,ids,name,context=None):
     #     testss = {'values': {}}
@@ -167,7 +163,7 @@ class footer(osv.osv):
         'due': fields.char("Due"),
 
     }
->>>>>>> 79902ed3d7179c46d190d9ea46a10e9606c998aa
+
     # def onchange_pation_info(self,cr,uid,ids,name,context=None):
     #     testss = {'values': {}}
     #     dep_object = self.pool.get('leih.patients').browse(cr, uid, name, context=None)
