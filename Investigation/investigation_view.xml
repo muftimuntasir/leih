@@ -28,7 +28,7 @@
 
                                     <field name="name" on_change="onchange_test(name, context)"/>
                                     <field name="price"/>
-                                    <field name="discount"/>
+                                    <field name="discount" on_change="onchange_discount(discount,name, context)"/>
                                     <field name="total_amount"/>
 
                                 </tree>
@@ -36,23 +36,7 @@
                         </page>
 
                     </notebook>
-                    <notebook>
-                    <page string="Referance Value">
-                            <field name="footer_connection" mode="tree">
-                                <tree string="Select Referance Value" editable="top">
 
-                                    <field name="relation"/>
-                                    <field name="total"/>
-                                    <field name="discount"/>
-                                    <field name="flat_discount"/>
-                                    <field name="grand_total"/>
-                                    <field name="paid"/>
-                                    <field name="due"/>
-
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
 
 
                 </sheet>
