@@ -6,3 +6,4 @@ import Room
 import Group
 import Testentry
 import Investigation
+import sample

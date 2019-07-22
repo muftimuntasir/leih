@@ -32,15 +32,15 @@ class investigation(osv.osv):
 
 
     }
-    # def onchange_pation_info(self,cr,uid,ids,name,context=None):
-    #     testss = {'values': {}}
-    #     dep_object = self.pool.get('leih.patients').browse(cr, uid, name, context=None)
-    #     abcd = {'name': dep_object.name, 'address':dep_object.address}
-    #     testss['value'] = abcd
-    #     # import pdb
-    #     # pdb.set_trace()
-    #     return testssstash
 
+    def onchange_total(self,cr,uid,ids,name,context=None):
+        tests = {'values': {}}
+        dep_object = self.pool.get('leih.tests').browse(cr, uid, name, context=None)
+        abc = {'total': dep_object.rate}
+        tests['value'] = abc
+        # import pdb
+        # pdb.set_trace()
+        return tests
 class test_information(osv.osv):
     _name = 'leih.tests'
 
@@ -108,6 +108,7 @@ class test_information(osv.osv):
 
 
 
+
     # def onchange_tamount(self,cr,uid,ids,name,context=None):
     #     testss = {'values': {}}
     #     dep_object = self.pool.get('leih.testentry').browse(cr, uid, name, context=None)
@@ -118,25 +119,25 @@ class test_information(osv.osv):
     #     return testss
 
 
-class footer(osv.osv):
-    _name = "leih.footer"
-
-
-
-
-
-
-    _columns = {
-
-        'relation':fields.many2one("leih.investigation"),
-        'total': fields.float("Total",required=True),
-        'discount': fields.float("Discount(%)", required=True),
-        'flat_discount': fields.float("Flat Discount"),
-        'grand_total': fields.float("Grand Total"),
-        'paid':fields.float("Paid"),
-        'due': fields.char("Due"),
-
-    }
+# class footer(osv.osv):
+#     _name = "leih.footer"
+#
+#
+#
+#
+#
+#
+#     _columns = {
+#
+#         'relation':fields.many2one("leih.investigation"),
+#         'total': fields.float("Total",required=True),
+#         'discount': fields.float("Discount(%)", required=True),
+#         'flat_discount': fields.float("Flat Discount"),
+#         'grand_total': fields.float("Grand Total"),
+#         'paid':fields.float("Paid"),
+#         'due': fields.char("Due"),
+#
+#     }
     # def onchange_pation_info(self,cr,uid,ids,name,context=None):
     #     testss = {'values': {}}
     #     dep_object = self.pool.get('leih.patients').browse(cr, uid, name, context=None)
