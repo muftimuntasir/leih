@@ -21,7 +21,7 @@ membership products (schemes).
         'Group/group_view.xml',
         'Testentry/testentry_view.xml',
         'Investigation/investigation_view.xml'
-        
+
 
     ],
     'demo': [],

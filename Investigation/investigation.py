@@ -6,7 +6,16 @@ class investigation(osv.osv):
     _name = "leih.investigation"
 
 
-
+    # def total_amount_all(self, cr, uid, ids, field_name, arg, context=None):
+    #     cur_obj = self.pool.get('leih.investigation')
+    #     res = {}
+    #     for record in self.browse(cr, uid, ids, context=context):
+    #         rate=record.price
+    #         discount=record.discount
+    #         interst_amount=int(discount)*int(rate)/100
+    #         total=int(rate)-interst_amount
+    #         res[record.id]=total
+    #     return res
 
 
 
@@ -70,6 +79,8 @@ class test_information(osv.osv):
             interst_amount=int(discount)*int(rate)/100
             total_amount=int(rate)-interst_amount
             res[record.id]=total_amount
+            # import pdb
+            # pdb.set_trace()
         return res
 
 
@@ -109,6 +120,22 @@ class test_information(osv.osv):
 
 
 
+# class footer(osv.osv):
+#     _name = 'leih.footer'
+#
+#     _columns = {
+#
+#         'relation':fields.many2one("leih.investigation"),
+#         'total': fields.float("Total",required=True),
+#         'discount': fields.float("Discount(%)", required=True),
+#         'flat_discount': fields.float("Flat Discount"),
+#         'grand_total': fields.float("Grand Total"),
+#         'paid':fields.float("Paid"),
+#         'due': fields.char("Due"),
+#
+#     }
+
+
     # def onchange_tamount(self,cr,uid,ids,name,context=None):
     #     testss = {'values': {}}
     #     dep_object = self.pool.get('leih.testentry').browse(cr, uid, name, context=None)
@@ -117,6 +144,7 @@ class test_information(osv.osv):
     #     # import pdb
     #     # pdb.set_trace()
     #     return testss
+
 
 
 # class footer(osv.osv):
@@ -138,6 +166,7 @@ class test_information(osv.osv):
 #         'due': fields.char("Due"),
 #
 #     }
+
     # def onchange_pation_info(self,cr,uid,ids,name,context=None):
     #     testss = {'values': {}}
     #     dep_object = self.pool.get('leih.patients').browse(cr, uid, name, context=None)

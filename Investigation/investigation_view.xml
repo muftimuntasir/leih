@@ -29,7 +29,7 @@
                                     <field name="name" on_change="onchange_test(name, context)"/>
                                     <field name="price"/>
                                     <field name="discount" on_change="onchange_discount(name,discount,context)"/>
-                                    <field name="total_amount" on_change="onchange_total(name,context)"/>
+                                    <field name="total_amount"/>
 
                                 </tree>
                             </field>
