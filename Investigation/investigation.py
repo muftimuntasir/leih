@@ -21,9 +21,9 @@ class investigation(osv.osv):
 
     _columns = {
 
-        'patient_id': fields.char("Patient ID",required=True),
-        'mobile': fields.char("Mobile", required=True),
-        'name': fields.many2one('leih.patients', "Name", required=True),
+        'patient_id': fields.char("Patient ID"),
+        'mobile': fields.char("Mobile"),
+        'name': fields.many2one('leih.patients', "Name"),
         'address': fields.char("Address",),
         'age': fields.char("Age"),
         'sex':fields.char("Sex"),
@@ -50,6 +50,44 @@ class investigation(osv.osv):
         # import pdb
         # pdb.set_trace()
         return tests
+
+
+
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+
+        stored = super(investigation, self).create(cr, uid, vals, context) # retunr ID nt object
+
+        stored_obj = self.browse(cr, uid, [stored], context=context)
+                        # Self means model
+                        # brouse means select query proepare
+
+
+
+
+
+
+        for items in stored_obj.entrr_test_information:
+            value = {
+                'investigation_id':int(stored),
+                'tests_id':int(items.id),
+                'department_id':items.name.department
+            }
+            # import pdb
+            # pdb.set_trace()
+
+            sample_obj = self.pool.get('leih.sample')
+            sample_obj.create(cr, uid, value, context=context)
+        return 1
+
+
+
+
+
+
+
+
 class test_information(osv.osv):
     _name = 'leih.tests'
 

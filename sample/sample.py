@@ -11,10 +11,10 @@ class sample(osv.osv):
 
 
     _columns = {
-
-        'patient_id': fields.char("Patient ID",required=True),
-        'mobile': fields.char("Mobile", required=True),
-        'name': fields.many2one('leih.patients', "Name", required=True),
+        'sample_id':fields.integer("ID"),
+        'investigation_id':fields.integer('investigation'),
+        'tests_id':fields.integer('Test ID'),
+        'department_id':fields.char('Department')
 
 
     }
