@@ -18,12 +18,23 @@
 
 
                     </group>
+                    <notebook>
+                        <page string="Referance Value">
+                            <field name="testsampleid" mode="tree">
+                                <tree string="Select Referance Value" editable="top">
 
 
+                                    <field name="test_name"/>
+                                    <field name="ref_value"/>
+                                    <field name="result"/>
+                                    <field name="remarks"/>
 
 
+                                </tree>
+                            </field>
+                        </page>
 
-
+                    </notebook>
 
                 </sheet>
             </form>
@@ -54,12 +65,20 @@
                         <field name="investigation_id"/>
                         <field name="tests_id"/>
                         <field name="department_id"/>
+                 <field name="testsampleid">
+                        <field name="test_name"/>
+                        <field name="ref_value"/>
+                        <field name="result"/>
+                        <field name="remarks"/>
+                </field>
 
 
 
             </tree>
             </field>
         </record>
+
+
 
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
