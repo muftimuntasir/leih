@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="sample_view" model="ir.ui.view">
+            <field name="name">leih.views</field>
+            <field name="model">leih.sample</field>
+            <field name="arch" type="xml">
+            <form string="Investigation">
+                <sheet>
+
+                    <group>
+
+                        <field name="sample_id"/>
+                        <field name="investigation_id"/>
+                        <field name="tests_id"/>
+                        <field name="department_id"/>
+
+
+                    </group>
+
+
+
+
+
+
+
+                </sheet>
+            </form>
+
+            </field>
+
+        </record>
+
+
+
+
+        <record id="sample_action" model="ir.actions.act_window">
+            <field name="name">sample.form</field>
+            <field name="res_model">leih.sample</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+        </record>
+
+        <!-- expense type tree -->
+        <record model="ir.ui.view" id="sample_tree" >
+            <field name="name">leih</field>
+            <field name="model">leih.sample</field>
+            <field name="arch" type="xml">
+            <tree string="Alu List">
+                        <field name="sample_id"/>
+                        <field name="investigation_id"/>
+                        <field name="tests_id"/>
+                        <field name="department_id"/>
+
+
+
+            </tree>
+            </field>
+        </record>
+
+
+<!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
+        <menuitem name="Sample" id="sample_menu_mainform" parent="leih_group_menu" action="sample_action"/>
+
+
+    </data>
+</openerp>
