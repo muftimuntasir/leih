@@ -63,35 +63,51 @@ class investigation(osv.osv):
                         # Self means model
                         # brouse means select query proepare
 
-
-
+        child_list =[]
+        for line_item in stored_obj.entrr_test_information:
+            tmp_dict ={}
+            for test_item in line_item.name.entrr_parameters:
+                tmp_dict['test_name']=test_item.name
+                tmp_dict['ref_value']=test_item.reference_value
+                child_list.append([0,False,tmp_dict])
 
 
 
         for items in stored_obj.entrr_test_information:
+            child_list = []
             value = {
                 'investigation_id':int(stored),
                 'tests_id':int(items.id),
-                'department_id':items.name.department
+                'department_id':items.name.department,
+
+
             }
+
+            tmp_dict = {}
+            for test_item in items.name.entrr_parameters:
+                tmp_dict['test_name'] = test_item.name
+                tmp_dict['ref_value'] = test_item.reference_value
+                child_list.append([0, False, tmp_dict])
+            value['testsampleid']=child_list
             # import pdb
             # pdb.set_trace()
 
             sample_obj = self.pool.get('leih.sample')
-            sample_obj.create(cr, uid, value, context=context)
-        for item in stored_obj.entrr_test_information.name:
+            sample_id = sample_obj.create(cr, uid, value, context=context)
 
-            values = {
-                'test_name':item.name,
-                'ref_value': item.department,
-                'result': item.required_time
-            }
+        # for item in stored_obj.entrr_test_information.name:
+        #
+        #     values = {
+        #         'test_name':item.name,
+        #         'ref_value': item.department,
+        #         'result': item.required_time
+        #     }
 
 
 
-            samples_obj = self.pool.get('leih.testsample')
-            samples_obj.create(cr, uid, values, context=context)
-            # import pdb
+            # samples_obj = self.pool.get('leih.testsample')
+            # samples_obj.create(cr, uid, values, context=context)
+            # # import pdb
             # pdb.set_trace()
         return 1
 
