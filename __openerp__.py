@@ -13,15 +13,15 @@ membership products (schemes).
     'author': 'BLF Team',
     'depends': [],
     'data': [
-        'Room/room_view.xml',
+        'diagnosis_room/diagnosis_room_view.xml',
         'Department/department_view.xml',
         'Doctors/doctors_view.xml',
         'Patients/patients_view.xml',
         'Diagnosis/diagonosis_view.xml',
-        'Group/group_view.xml',
-        'Testentry/testentry_view.xml',
-        'Investigation/investigation_view.xml',
-        'sample/sample_view.xml',
+        'Group/diagnosisgroup_view.xml',
+        'examine_entry/examinationentry_view.xml',
+        'bill_register/bill_register_view.xml',
+        'sample/sticker_view.xml',
 
 
     ],

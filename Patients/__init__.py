@@ -1,1 +1,1 @@
-import patients
+import patient_info

@@ -2,8 +2,8 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from datetime import date, time
 
-class leih(osv.osv):
-    _name = "leih.doctors"
+class doctors_profile(osv.osv):
+    _name = "doctors.profile"
 
 
 
@@ -16,7 +16,7 @@ class leih(osv.osv):
         'type': fields.selection([('inhouse', 'In house'), ('consoled', 'Consoled'),('prttime','Prt_time'),('outsid','Out_side')], string='Type', default='inhouse'),
         'status': fields.selection([('active', 'Active'), ('inactive', 'Inactive')], string='Status', default='active'),
         'others': fields.char("Others"),
-        'nid':fields.integer("NID")
+        # 'nid':fields.integer("NID")
 
 
     }

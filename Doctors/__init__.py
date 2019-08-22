@@ -1,1 +1,1 @@
-import doctors
+import doctors_profile

@@ -3,8 +3,8 @@
     <data>
 
         <record id="group_view" model="ir.ui.view">
-            <field name="name">leih.group</field>
-            <field name="model">leih.group</field>
+            <field name="name">diagnosis.group.view</field>
+            <field name="model">diagnosis.group</field>
             <field name="arch" type="xml">
             <form string="Group">
                 <sheet>
@@ -30,8 +30,8 @@
 
 
         <record id="group_action" model="ir.actions.act_window">
-            <field name="name">group.form</field>
-            <field name="res_model">leih.group</field>
+            <field name="name">Diagnosis group</field>
+            <field name="res_model">diagnosis.group</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -40,8 +40,8 @@
 
         <!-- expense type tree -->
         <record model="ir.ui.view" id="group_tree" >
-            <field name="name">group tree</field>
-            <field name="model">leih.group</field>
+            <field name="name">diagnosis.group.tree</field>
+            <field name="model">diagnosis.group</field>
             <field name="arch" type="xml">
             <tree string="Alu List">
                         <field name="name"/>

@@ -3,8 +3,8 @@
     <data>
 
         <record id="dep_view" model="ir.ui.view">
-            <field name="name">leih.views</field>
-            <field name="model">leih.department</field>
+            <field name="name">diagnosis.views</field>
+            <field name="model">diagnosis.department</field>
             <field name="arch" type="xml">
             <form string="Room">
                 <sheet>
@@ -27,8 +27,8 @@
 
 
         <record id="dep_action" model="ir.actions.act_window">
-            <field name="name">dep.form</field>
-            <field name="res_model">leih.department</field>
+            <field name="name">Department</field>
+            <field name="res_model">diagnosis.department</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -37,8 +37,8 @@
 
         <!-- expense type tree -->
         <record model="ir.ui.view" id="dep_tree" >
-            <field name="name">leih</field>
-            <field name="model">leih.department</field>
+            <field name="name">diagnosis</field>
+            <field name="model">diagnosis.department</field>
             <field name="arch" type="xml">
             <tree string="Alu List">
                         <field name="name"/>

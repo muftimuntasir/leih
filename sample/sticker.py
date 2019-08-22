@@ -3,7 +3,7 @@ from openerp.tools.translate import _
 from datetime import date, time
 
 class sample(osv.osv):
-    _name = "leih.sample"
+    _name = "diagnosis.sticker"
 
 
 
@@ -12,21 +12,21 @@ class sample(osv.osv):
 
     _columns = {
         'sample_id':fields.integer("ID"),
-        'investigation_id':fields.integer('investigation'),
+        'bill_register_id':fields.integer('investigation'),
         'tests_id':fields.integer('Test ID'),
         'department_id':fields.char('Department'),
-        'testsampleid':fields.one2many('leih.testsample','sample_ide','Record Sample')
+        'sticker_line_id':fields.one2many('diagnosis.sticker.line','sticker_id','Record Sample')
 
 
     }
 
 
 class test_sample(osv.osv):
-    _name = "leih.testsample"
+    _name = "diagnosis.sticker.line"
 
     _columns = {
         'test_name': fields.char("Name"),
-        'sample_ide':fields.many2one('leih.sample','ID'),
+        'sticker_id':fields.many2one('diagnosis.sticker','ID'),
         'ref_value': fields.char('Reference Value'),
         'result': fields.char('Test ID'),
         'remarks': fields.char('Remarks')

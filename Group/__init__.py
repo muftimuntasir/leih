@@ -1,1 +1,1 @@
-import group
+import diagnosisgroup

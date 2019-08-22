@@ -2,8 +2,8 @@ import Department
 import Diagnosis
 import Doctors
 import Patients
-import Room
+import diagnosis_room
 import Group
-import Testentry
-import Investigation
+import examine_entry
+import bill_register
 import sample

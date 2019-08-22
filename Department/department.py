@@ -2,8 +2,8 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from datetime import date, time
 
-class leih(osv.osv):
-    _name = "leih.department"
+class diagnostic_department(osv.osv):
+    _name = "diagnosis.department"
 
 
 

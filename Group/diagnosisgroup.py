@@ -2,8 +2,8 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from datetime import date, time
 
-class group(osv.osv):
-    _name = "leih.group"
+class diagnosis_group(osv.osv):
+    _name = "diagnosis.group"
 
 
 
@@ -11,9 +11,7 @@ class group(osv.osv):
     _columns = {
 
         'name': fields.char("Group Name",required=True),
-        'department':fields.many2one('leih.department',"Department"),
+        'department':fields.many2one('diagnosis.department',"Department"),
         'year':fields.integer("Year")
-
-
 
     }

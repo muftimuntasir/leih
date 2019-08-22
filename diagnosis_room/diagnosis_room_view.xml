@@ -3,8 +3,8 @@
     <data>
 
         <record id="room_view" model="ir.ui.view">
-            <field name="name">leih.view</field>
-            <field name="model">leih.room</field>
+            <field name="name">diagnostic.view</field>
+            <field name="model">diagnosis.room</field>
             <field name="arch" type="xml">
             <form string="Room">
                 <sheet>
@@ -28,8 +28,8 @@
 
 
         <record id="room_action" model="ir.actions.act_window">
-            <field name="name">leih.form</field>
-            <field name="res_model">leih.room</field>
+            <field name="name">Diagnostic form</field>
+            <field name="res_model">diagnosis.room</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -38,8 +38,8 @@
 
         <!-- expense type tree -->
         <record model="ir.ui.view" id="room_tree" >
-            <field name="name">leih</field>
-            <field name="model">leih.room</field>
+            <field name="name">diagnostic</field>
+            <field name="model">diagnosis.room</field>
             <field name="arch" type="xml">
             <tree string="Alu List">
                         <field name="room_no"/>
