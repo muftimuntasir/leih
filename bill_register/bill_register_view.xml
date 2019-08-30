@@ -12,8 +12,9 @@
                     <group>
 
                         <field name="patient_id"/>
-                        <field name="mobile"/>
                         <field name="name"/>
+                        <field name="mobile"/>
+                        <field name="patient_name" on_change="onchange_patient(patient_name, context)"/>
                         <field name="address"/>
                         <field name="age"/>
                         <field name="sex"/>
@@ -79,7 +80,7 @@
             <tree string="Alu List">
                         <field name="patient_id"/>
                         <field name="mobile"/>
-                        <field name="name"/>
+                        <field name="patient_name"/>
                         <field name="age"/>
                         <field name="sex"/>
                         <field name="delivery_date"/>

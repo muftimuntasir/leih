@@ -9,8 +9,9 @@ class bill_register(osv.osv):
     _columns = {
 
         'patient_id': fields.char("Patient ID"),
+        'name':fields.char("Name"),
         'mobile': fields.char("Mobile"),
-        'name': fields.many2one('leih.patients', "Name"),
+        'patient_name': fields.many2one('patient.info', "Patient Name"),
         'address': fields.char("Address",),
         'age': fields.char("Age"),
         'sex':fields.char("Sex"),
@@ -37,6 +38,14 @@ class bill_register(osv.osv):
         # import pdb
         # pdb.set_trace()
         return tests
+
+    def onchange_patient(self,cr,uid,ids,name,context=None):
+        tests={'values':{}}
+        dep_object = self.pool.get('patient.info').browse(cr, uid, name, context=None)
+        abc={'mobile':dep_object.mobile}
+        tests['value']=abc
+        return tests
+
 
 
 
