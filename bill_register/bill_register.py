@@ -9,13 +9,13 @@ class bill_register(osv.osv):
     _columns = {
 
         'patient_id': fields.char("Patient ID"),
-        'name':fields.char("Name"),
+        # 'name':fields.char("Name"),
         'mobile': fields.char("Mobile"),
         'patient_name': fields.many2one('patient.info', "Patient Name"),
         'address': fields.char("Address",),
         'age': fields.char("Age"),
         'sex':fields.char("Sex"),
-        'ref_doctors': fields.selection([('shafi', 'Dr. Md. Shafi Khan'), ('ssg', 'Dr. S S Gazi'),('sabrina','Dr. Sabrina Rahmatullah'),('Bibek','Dr. Bibek Ananda')], string='Ref. Doctorss', default='shafi'),
+        'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
         'delivery_date': fields.char("Delivery Date"),
         'bill_register_line_id': fields.one2many('bill.register.line', 'bill_register_id', 'Investigations', required=True),
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
@@ -42,7 +42,7 @@ class bill_register(osv.osv):
     def onchange_patient(self,cr,uid,ids,name,context=None):
         tests={'values':{}}
         dep_object = self.pool.get('patient.info').browse(cr, uid, name, context=None)
-        abc={'mobile':dep_object.mobile}
+        abc={'mobile':dep_object.mobile,'address':dep_object.address,'age':dep_object.age,'sex':dep_object.sex}
         tests['value']=abc
         return tests
 

@@ -15,10 +15,8 @@
                         <field name="age"/>
                         <field name="sex"/>
                         <field name="address"/>
-                        <field name="bills"/>
                     </group>
                     <notebook>
-
                         <page string="Tests">
                             <field name="bills">
                                 <tree string="tests history">
@@ -28,6 +26,17 @@
                             </field>
 
                         </page>
+
+                        <page string="Bill">
+                            <field name="bills">
+                                <tree string="tests history">
+                                    <field name="mobile"/>
+                                    <field name="sex"/>
+                                </tree>
+                            </field>
+
+                        </page>
+
                     </notebook>
 
                 </sheet>

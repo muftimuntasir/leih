@@ -13,7 +13,7 @@ class examination_entry(osv.osv):
         'department':fields.char("Department"),
         'rate':fields.integer("Rate"),
         'required_time':fields.char("Required time"),
-        'examination_entry_line':fields.one2many('examination.entry.line','examinationentry_id','Parameters',required=True)
+        'examination_entry_line':fields.one2many('examination.entry.line','examinationentry_id','Parameters')
 
     }
     def onchange_group(self,cr,uid,ids,group,context=None):
@@ -33,7 +33,7 @@ class testentryparamaerte(osv.osv):
     _name = 'examination.entry.line'
     _columns = {
 
-        'name': fields.char("Name",required=True,ondelete='cascade'),
+        'name': fields.char("Name",ondelete='cascade'),
         'examinationentry_id': fields.many2one('examination.entry', "Test Entry"),
         'reference_value': fields.char("Reference Value"),
         'others': fields.char("Others")
