@@ -5,6 +5,24 @@ from datetime import date, time
 class bill_register(osv.osv):
     _name = "bill.register"
 
+    def _totalpayable(self, cr, uid, ids, field_name, arg, context=None):
+        Percentance_calculation = {}
+        sum = 0
+        for items in self.pool.get("bill.register").browse(cr,uid,ids,context=None):
+            total_list=[]
+            for amount in items.bill_register_line_id:
+                total_list.append(amount.total_amount)
+
+            for item in total_list:
+                sum=item+sum
+
+
+                for record in self.browse(cr, uid, ids, context=context):
+                    Percentance_calculation[record.id] = sum
+                    # import pdb
+                    # pdb.set_trace()
+        return Percentance_calculation
+
 
     _columns = {
 
@@ -20,12 +38,13 @@ class bill_register(osv.osv):
         'bill_register_line_id': fields.one2many('bill.register.line', 'bill_register_id', 'Investigations', required=True),
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
         # 'relation': fields.many2one("leih.investigation"),
-        'total': fields.float("Total", required=True),
+        'total': fields.function(_totalpayable,string="Total",type='float',required=True),
         'discounts': fields.float("Discount(%)", required=True),
         'flat_discount': fields.float("Flat Discount"),
         'grand_total': fields.float("Grand Total"),
         'paid': fields.float("Paid"),
         'due': fields.float("Due"),
+
 
 
     }
@@ -45,6 +64,19 @@ class bill_register(osv.osv):
         abc={'mobile':dep_object.mobile,'address':dep_object.address,'age':dep_object.age,'sex':dep_object.sex}
         tests['value']=abc
         return tests
+
+    # def onchange_mobile(self,cr,uid,ids,mobile,context=None):
+    #     tests={'values':{}}
+    #     patient_id=self.pool.get('patient.info').search(cr,uid,[('mobile', '=', mobile)],context=None)
+    #     dep_object=self.pool.get('patient.info').browse(cr,uid,patient_id,context)
+    #     abc = {'patient': dep_object.name, 'address': dep_object.address, 'age': dep_object.age, 'sex': dep_object.sex}
+    #     tests['value']=abc
+    #     return tests
+
+        #
+        # import pdb
+        # pdb.set_trace()
+
 
 
 
@@ -71,6 +103,7 @@ class bill_register(osv.osv):
             }
 
             tmp_dict = {}
+
             for test_item in items.name.examination_entry_line:
                 tmp_dict['test_name'] = test_item.name
                 tmp_dict['ref_value'] = test_item.reference_value

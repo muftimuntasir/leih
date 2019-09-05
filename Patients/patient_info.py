@@ -71,3 +71,29 @@ class patient_info(osv.osv):
         'bills':fields.one2many('bill.register','patient_name','Bill History',required=False),
         'testname':fields.function(_testname,string="Test Name",type='char')
     }
+    _sql_constraints = [
+        ('code_mobile_uniq', 'unique (mobile)', 'The mobile number already exist !')
+    ]
+
+    def create(self, cr, uid, vals, context=None):
+        mobile_number = None
+        mobile_number = vals.get('mobile')
+        if len(mobile_number) <11:
+            raise osv.except_osv(_('Error!'), _('Mobile number should minimum 11 digit'))
+        if len(mobile_number)>11:
+            x=mobile_number.split()
+            number=x[0]
+            back=len(number)-11
+            listnumber=[]
+            for item in range(len(number)-1,back-1,-1):
+                singlenumber=number[item]
+                listnumber.append(singlenumber)
+            reverse_number=''.join(listnumber)
+            final_number=reverse_number[::-1]
+            # import pdb
+            # pdb.set_trace()
+
+
+            vals['mobile'] = final_number
+
+        return super(patient_info, self).create(cr, uid, vals, context=context)
