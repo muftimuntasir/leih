@@ -13,6 +13,12 @@ class examination_entry(osv.osv):
         'department':fields.char("Department"),
         'rate':fields.integer("Rate"),
         'required_time':fields.char("Required time"),
+        'sample_req': fields.boolean("Sample Required"),
+        'individual': fields.boolean("Individual"),
+        'manual': fields.boolean("Manual"),
+        'merge': fields.boolean("Merge"),
+        'dependency': fields.boolean("Dependency"),
+        'sample_type':fields.many2one('sample.type','Sample Type'),
         'examination_entry_line':fields.one2many('examination.entry.line','examinationentry_id','Parameters')
 
     }

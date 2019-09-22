@@ -16,6 +16,13 @@
                         <field name="department"/>
                         <field name="rate"/>
                         <field name="required_time"/>
+                        <field name="sample_req"/>
+                        <field name="individual"/>
+                        <field name="manual"/>
+                        <field name="merge"/>
+                        <field name="dependency"/>
+                        <field name="sample_type"/>
+
 
                     </group>
                     <notebook>
