@@ -22,6 +22,7 @@ membership products (schemes).
         'examine_entry/examinationentry_view.xml',
         'bill_register/bill_register_view.xml',
         'sample/sticker_view.xml',
+        'examine_entry/sample_type_view.xml',
 
 
     ],

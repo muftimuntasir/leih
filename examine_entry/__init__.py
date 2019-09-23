@@ -1,1 +1,2 @@
 import examinationentry
+import sample_type
