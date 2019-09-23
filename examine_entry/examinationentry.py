@@ -33,13 +33,34 @@ class examination_entry(osv.osv):
         return test
 
 
+    def create(self, cr, uid, vals, context=None):
+
+        sample=vals['sample_req']
+        sample_type=vals.get('sample_type')
+        examination_entry_line=self.pool.get('examination.entry.line').browse(cr, uid, ids, context=context)
+        import pdb
+        pdb.set_trace()
+        if sample==True:
+            if sample_type:
+                return super(examination_entry, self).create(cr, uid, vals, context=context)
+
+        raise osv.except_osv(_('Warning!'), _('Sample type must defined.'))
+        # import pdb
+        # pdb.set_trace()
+
+
+
+
+
+
+
 # many2one('leih.doctors',"Test Names", required=True, ondelete='cascade', select=True)
 
 class testentryparamaerte(osv.osv):
     _name = 'examination.entry.line'
     _columns = {
 
-        'name': fields.char("Name",ondelete='cascade'),
+        'name': fields.char("Name",ondelete='cascade',required=True),
         'examinationentry_id': fields.many2one('examination.entry', "Test Entry"),
         'reference_value': fields.char("Reference Value"),
         'others': fields.char("Others")
