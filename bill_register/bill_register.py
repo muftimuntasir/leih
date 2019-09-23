@@ -28,25 +28,22 @@ class bill_register(osv.osv):
 
         'patient_id': fields.char("Patient ID"),
         # 'name':fields.char("Name"),
-        'mobile': fields.char("Mobile"),
+        'mobile': fields.char(string="Mobile",store=False),
         'patient_name': fields.many2one('patient.info', "Patient Name"),
-        'address': fields.char("Address",),
-        'age': fields.char("Age"),
-        'sex':fields.char("Sex"),
+        'address': fields.char("Address",store=False),
+        'age': fields.char("Age",store=False),
+        'sex':fields.char("Sex",store=False),
         'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
         'delivery_date': fields.char("Delivery Date"),
         'bill_register_line_id': fields.one2many('bill.register.line', 'bill_register_id', 'Investigations', required=True),
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
         # 'relation': fields.many2one("leih.investigation"),
-        'total': fields.function(_totalpayable,string="Total",type='float',required=True),
+        'total': fields.function(_totalpayable,string="Total",type='float',store=True),
         'discounts': fields.float("Discount(%)", required=True),
         'flat_discount': fields.float("Flat Discount"),
         'grand_total': fields.float("Grand Total"),
         'paid': fields.float("Paid"),
         'due': fields.float("Due"),
-
-
-
     }
 
     def onchange_total(self,cr,uid,ids,name,context=None):
@@ -90,7 +87,8 @@ class bill_register(osv.osv):
         stored_obj = self.browse(cr, uid, [stored], context=context)
                         # Self means model
                         # brouse means select query proepare
-
+        # import pdb
+        # pdb.set_trace()
 
 
 
@@ -109,8 +107,7 @@ class bill_register(osv.osv):
                 tmp_dict['ref_value'] = test_item.reference_value
                 child_list.append([0, False, tmp_dict])
             value['sticker_line_id']=child_list
-            # import pdb
-            # pdb.set_trace()
+
 
             sample_obj = self.pool.get('diagnosis.sticker')
             sample_id = sample_obj.create(cr, uid, value, context=context)
@@ -155,7 +152,7 @@ class test_information(osv.osv):
         # 'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
         'price': fields.integer("Price"),
         'discount': fields.integer("Discount"),
-        'total_amount': fields.integer("Total Amount"),
+        'total_amount': fields.integer("Total Amount")
 
     }
 
