@@ -37,14 +37,24 @@ class examination_entry(osv.osv):
 
         sample=vals['sample_req']
         sample_type=vals.get('sample_type')
-        examination_entry_line=self.pool.get('examination.entry.line').browse(cr, uid, ids, context=context)
-        import pdb
-        pdb.set_trace()
+        idss= vals['examination_entry_line']
+
+        # import pdb
+        # pdb.set_trace()
         if sample==True:
             if sample_type:
                 return super(examination_entry, self).create(cr, uid, vals, context=context)
+            else:
+                raise osv.except_osv(_('Warning!'), _('Sample type must defined.'))
 
-        raise osv.except_osv(_('Warning!'), _('Sample type must defined.'))
+
+
+        if vals['manual']==True and idss or sample:
+            raise osv.except_osv(_('Warning!'), _('test name shouldnt exist.'))
+        else:
+            return super(examination_entry, self).create(cr, uid, vals, context=context)
+
+
         # import pdb
         # pdb.set_trace()
 
