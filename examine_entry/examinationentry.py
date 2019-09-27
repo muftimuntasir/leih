@@ -6,6 +6,13 @@ from datetime import date, time
 class examination_entry(osv.osv):
     _name = "examination.entry"
 
+
+    def onchange_manual(self, cr, uid, ids, manual=False, context=None):
+        if manual:
+            return {'value': {'boolean': True}}
+        else:
+            return {'value': {'boolean': False}}
+
     _columns = {
 
         'name': fields.char("Test Name",required=True),
@@ -49,8 +56,10 @@ class examination_entry(osv.osv):
 
 
 
-        if vals['manual']==True and idss or sample:
-            raise osv.except_osv(_('Warning!'), _('test name shouldnt exist.'))
+        # if vals['manual']==True and idss or sample:
+        #     raise osv.except_osv(_('Warning!'), _('test name shouldnt exist.'))
+        # elif vals['manual']==False and not idss:
+        #     for names in examination_entry_line
         else:
             return super(examination_entry, self).create(cr, uid, vals, context=context)
 

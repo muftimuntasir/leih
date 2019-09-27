@@ -18,13 +18,16 @@
                         <field name="required_time"/>
                         <field name="sample_req"/>
                         <field name="individual"/>
-                        <field name="manual"/>
+                        <field name="manual" on_change="onchange_manual(manual)"/>
+
                         <field name="merge"/>
                         <field name="dependency"/>
                         <field name="sample_type"/>
 
 
+
                     </group>
+                <group string="Hehehe" colspan="4" attrs="{'invisible':[('manual', '=', True)]}">
                     <notebook>
                         <page string="Referance Value">
                             <field name="examination_entry_line" mode="tree">
@@ -40,6 +43,7 @@
                         </page>
 
                     </notebook>
+                     </group>
 
                 </sheet>
             </form>
