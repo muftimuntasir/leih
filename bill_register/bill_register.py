@@ -4,6 +4,7 @@ from datetime import date, time
 
 class bill_register(osv.osv):
     _name = "bill.register"
+    _order = 'id desc'
 
     def _totalpayable(self, cr, uid, ids, field_name, arg, context=None):
         Percentance_calculation = {}
@@ -26,8 +27,8 @@ class bill_register(osv.osv):
 
     _columns = {
 
-        'patient_id': fields.char("Patient ID"),
-        # 'name':fields.char("Name"),
+        # 'patient_id': fields.char("Patient ID"),
+        'name':fields.char("Name"),
         'mobile': fields.char(string="Mobile",readonly=True,store=False),
         'patient_name': fields.many2one('patient.info', "Patient Name"),
         'address': fields.char("Address",store=False),
@@ -54,6 +55,14 @@ class bill_register(osv.osv):
         # import pdb
         # pdb.set_trace()
         return tests
+
+    # def print_bill_register(self, cr, uid, ids, context=None):
+    #     '''
+    #     This function prints the sales order and mark it as sent, so that we can see more easily the next step of the workflow
+    #     '''
+    #     assert len(ids) == 1, 'This option should only be used for a single id at a time'
+    #
+    #     return self.pool['report'].get_action(cr, uid, ids, 'sale.report_saleorder', context=context)
 
     def onchange_patient(self,cr,uid,ids,name,context=None):
         tests={'values':{}}
@@ -82,13 +91,16 @@ class bill_register(osv.osv):
         if context is None:
             context = {}
 
-        stored = super(bill_register, self).create(cr, uid, vals, context) # retunr ID nt object
+        stored = super(bill_register, self).create(cr, uid, vals, context) # return ID int object
+
+        if stored is not None:
+            name_text = 'Bill-1000' + str(stored)
+            cr.execute('update bill_register set name=%s where id=%s', (name_text, stored))
+            cr.commit()
 
         stored_obj = self.browse(cr, uid, [stored], context=context)
                         # Self means model
-                        # brouse means select query proepare
-        # import pdb
-        # pdb.set_trace()
+                        # browse means select query proepare
 
 
 

@@ -25,6 +25,10 @@ membership products (schemes).
         'examine_entry/sample_type_view.xml',
         'sample/pending_in_lab_view.xml',
         'sample/report_view.xml',
+        'bill_register/report/report_bill_register.xml',
+        'bill_register/report/bill_report_menu.xml',
+
+
 
 
     ],

@@ -11,7 +11,7 @@
 
                     <group>
 
-                        <field name="patient_id"/>
+<!--                        <field name="patient_id"/>-->
 <!--                        <field name="name"/>-->
                         <field name="mobile"/>
                         <field name="patient_name" on_change="onchange_patient(patient_name, context)"/>
@@ -79,12 +79,15 @@
             <field name="model">bill.register</field>
             <field name="arch" type="xml">
             <tree string="Alu List">
-                        <field name="patient_id"/>
+
+                <field name="name"/>
+                <field name="patient_name"/>
                         <field name="mobile"/>
-                        <field name="patient_name"/>
-                        <field name="age"/>
-                        <field name="sex"/>
-                        <field name="delivery_date"/>
+                <!--                        <field name="patient_id"/>-->
+
+                        <field name="grand_total"/>
+                        <field name="paid"/>
+                        <field name="due"/>
 
 
             </tree>

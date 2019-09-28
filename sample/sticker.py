@@ -4,6 +4,7 @@ from datetime import date, time
 
 class sample(osv.osv):
     _name = "diagnosis.sticker"
+    _order = 'id desc'
 
 
 
