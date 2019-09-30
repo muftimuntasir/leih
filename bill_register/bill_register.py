@@ -124,6 +124,11 @@ class bill_register(osv.osv):
             sample_obj = self.pool.get('diagnosis.sticker')
             sample_id = sample_obj.create(cr, uid, value, context=context)
 
+            if sample_id is not None:
+                sample_text = 'Lab-100' + str(sample_id)
+                cr.execute('update diagnosis_sticker set name=%s where id=%s', (sample_text, sample_id))
+                cr.commit()
+
 
         return 1
 
