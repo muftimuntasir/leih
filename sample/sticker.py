@@ -13,12 +13,11 @@ class sample(osv.osv):
 
     _columns = {
         'sample_id':fields.integer("ID"),
-        'bill_register_id':fields.integer('Bill register Id'),
-        'tests_id':fields.integer('Test ID'),
-        'department_id':fields.char('Department'),
+        'bill_register_id':fields.many2one('bill.register','Bill register Id'),
+        'tests_id':fields.many2one('examination.entry','Test ID'),
+        'department_id':fields.char('diagnosis.department','Department'),
+        'name': fields.char('Name'),
         'sticker_line_id':fields.one2many('diagnosis.sticker.line','sticker_id','Record Sample')
-
-
     }
 
 

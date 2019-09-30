@@ -30,7 +30,7 @@
                         <page string="Bill">
                             <field name="bills">
                                 <tree string="tests history">
-                                    <field name="mobile"/>
+                                    <field name="age"/>
                                     <field name="sex"/>
                                 </tree>
                             </field>

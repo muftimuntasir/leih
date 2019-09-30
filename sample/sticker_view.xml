@@ -61,6 +61,7 @@
             <field name="model">diagnosis.sticker</field>
             <field name="arch" type="xml">
             <tree string="Alu List">
+                        <field name="name"/>
                         <field name="sample_id"/>
                         <field name="bill_register_id"/>
                         <field name="tests_id"/>
