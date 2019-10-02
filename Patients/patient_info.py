@@ -83,17 +83,25 @@ class patient_info(osv.osv):
         if len(mobile_number)>11:
             x=mobile_number.split()
             number=x[0]
-            back=len(number)-11
-            listnumber=[]
-            for item in range(len(number)-1,back-1,-1):
-                singlenumber=number[item]
-                listnumber.append(singlenumber)
-            reverse_number=''.join(listnumber)
-            final_number=reverse_number[::-1]
+            if((number[0]=='0' or number[1]=='0' or number[2]=='0' or number[3]=='0') and len(number)>11):
+                number=number[:-1]
+            back = len(number) - 11
+            if len(number)>11:
+                listnumber=[]
+                for item in range(len(number)-1,back-1,-1):
+                    singlenumber=number[item]
+                    listnumber.append(singlenumber)
+                reverse_number=''.join(listnumber)
+                final_number=reverse_number[::-1]
+                vals['mobile'] = final_number
+            else:
+                vals['mobile']=number
+
             # import pdb
             # pdb.set_trace()
 
 
-            vals['mobile'] = final_number
+
+
 
         return super(patient_info, self).create(cr, uid, vals, context=context)

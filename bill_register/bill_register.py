@@ -109,7 +109,7 @@ class bill_register(osv.osv):
             value = {
                 'bill_register_id':int(stored),
                 'tests_id':int(items.id),
-                'department_id':items.name.department,
+                'department_id':items.name.group.id,
             }
 
             tmp_dict = {}

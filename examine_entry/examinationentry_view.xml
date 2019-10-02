@@ -65,23 +65,20 @@
         </record>
 
         <!-- expense type tree -->
-        <record model="ir.ui.view" id="testentry_tree" >
+        <record model="ir.ui.view" id="testentry_tree">
             <field name="name">leih</field>
             <field name="model">examination.entry</field>
             <field name="arch" type="xml">
-            <tree string="Testentry List">
+            <tree string="Alu List">
                         <field name="name"/>
                         <field name="group"/>
                         <field name="department"/>
                         <field name="rate"/>
                         <field name="required_time"/>
-
-
-
-
             </tree>
             </field>
         </record>
+
 
 
 
