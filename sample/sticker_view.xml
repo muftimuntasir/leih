@@ -11,25 +11,19 @@
 
                     <group>
 
-                        <field name="sample_id"/>
+                        <field name="name"/>
                         <field name="bill_register_id"/>
-                        <field name="tests_id"/>
                         <field name="department_id"/>
-
 
                     </group>
                     <notebook>
                         <page string="Referance Value">
                             <field name="sticker_line_id" mode="tree">
                                 <tree string="Select Referance Value" editable="top">
-
-
                                     <field name="test_name"/>
                                     <field name="ref_value"/>
                                     <field name="result"/>
                                     <field name="remarks"/>
-
-
                                 </tree>
                             </field>
                         </page>
@@ -62,9 +56,7 @@
             <field name="arch" type="xml">
             <tree string="Alu List">
                         <field name="name"/>
-                        <field name="sample_id"/>
                         <field name="bill_register_id"/>
-                        <field name="tests_id"/>
                         <field name="department_id"/>
                  <field name="sticker_line_id">
                         <field name="test_name"/>
