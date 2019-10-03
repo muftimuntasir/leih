@@ -110,6 +110,7 @@ class bill_register(osv.osv):
                 'bill_register_id':int(stored),
                 'tests_id':int(items.id),
                 'department_id':items.name.group.id,
+                'state':'sample',
             }
 
             tmp_dict = {}

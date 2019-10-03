@@ -7,6 +7,9 @@
             <field name="model">diagnosis.sticker</field>
             <field name="arch" type="xml">
             <form string="Investigation">
+                <header>
+<button name="print_sticker" string="Print Sticker" type="object"/>
+</header>
                 <sheet>
 
                     <group>
@@ -63,6 +66,7 @@
                         <field name="ref_value"/>
                         <field name="result"/>
                         <field name="remarks"/>
+                        <field name="state"/>
                 </field>
 
 
