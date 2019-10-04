@@ -33,6 +33,20 @@ class sample(osv.osv):
         return True
 
 
+    def set_to_lab(self,cr,uid,ids,context=None):
+        status = 'lab'
+
+        for id in ids:
+            # report_obj = self.browse(cr, uid, id, context=context)
+            # if report_obj.state == 'done':
+            #     raise osv.except_osv(_('Warning!'),
+            #                          _('Already it is Completed.'))
+            cr.execute('update diagnosis_sticker set state=%s where id=%s', (status, id))
+            cr.commit()
+        return True
+
+
+
 
 
     _columns = {

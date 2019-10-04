@@ -29,6 +29,7 @@ membership products (schemes).
         'bill_register/report/bill_report_menu.xml',
         'sample/report/report_sample_report.xml',
         'sample/report/sample_report_menu.xml',
+        'sample/common_admin_view.xml',
 
 
 

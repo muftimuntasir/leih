@@ -5,7 +5,7 @@
 
 
         <record id="report_action" model="ir.actions.act_window">
-            <field name="name">Sticker</field>
+            <field name="name">Stickered</field>
             <field name="res_model">diagnosis.sticker</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
