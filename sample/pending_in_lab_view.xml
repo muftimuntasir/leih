@@ -2,40 +2,7 @@
 <openerp>
     <data>
 
-        <record id="lab_view" model="ir.ui.view">
-            <field name="name">diagnosis.sticker.views</field>
-            <field name="model">diagnosis.sticker</field>
-            <field name="arch" type="xml">
-             <form string="Investigation">
-                <sheet>
 
-                    <group>
-
-                        <field name="name"/>
-                        <field name="bill_register_id"/>
-                        <field name="department_id"/>
-
-                    </group>
-                    <notebook>
-                        <page string="Referance Value">
-                            <field name="sticker_line_id" mode="tree">
-                                <tree string="Select Referance Value" editable="top">
-                                    <field name="test_name"/>
-                                    <field name="ref_value"/>
-                                    <field name="result"/>
-                                    <field name="remarks"/>
-                                </tree>
-                            </field>
-                        </page>
-
-                    </notebook>
-
-                </sheet>
-            </form>
-
-            </field>
-
-        </record>
 
 
 
@@ -58,12 +25,7 @@
                         <field name="name"/>
                         <field name="bill_register_id"/>
                         <field name="department_id"/>
-                 <field name="sticker_line_id">
-                        <field name="test_name"/>
-                        <field name="ref_value"/>
-                        <field name="result"/>
-                        <field name="remarks"/>
-                </field>
+                         <field name="state"/>
 
 
 

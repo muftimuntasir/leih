@@ -8,7 +8,8 @@
             <field name="arch" type="xml">
             <form string="Investigation">
                 <header>
-<button name="print_sticker" string="Print Sticker" type="object"/>
+<button name="print_sticker" string="Print Sticker" type="object" />
+                    <button name="print_lab_report" string="Complete and Print Sticker" type="object" />
 </header>
                 <sheet>
 
@@ -61,13 +62,8 @@
                         <field name="name"/>
                         <field name="bill_register_id"/>
                         <field name="department_id"/>
-                 <field name="sticker_line_id">
-                        <field name="test_name"/>
-                        <field name="ref_value"/>
-                        <field name="result"/>
-                        <field name="remarks"/>
                         <field name="state"/>
-                </field>
+
 
 
 

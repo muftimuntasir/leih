@@ -10,9 +10,25 @@ class sample(osv.osv):
     def print_sticker(self,cr,uid,ids,context=None):
         statue='lab'
 
-        print 'teddd '*10
+
         for id in ids:
+            report_obj = self.browse(cr, uid, id, context=context)
+            if report_obj.state == 'lab' or report_obj.state == 'done':
+                raise osv.except_osv(_('Warning!'),
+                                     _('Already it is sample collected.'))
             cr.execute('update diagnosis_sticker set state=%s where id=%s', (statue, id))
+            cr.commit()
+        return True
+
+    def print_lab_report(self,cr,uid,ids,context=None):
+        status='done'
+
+        for id in ids:
+            report_obj = self.browse(cr, uid, id, context=context)
+            if report_obj.state == 'done':
+                raise osv.except_osv(_('Warning!'),
+                                     _('Already it is Completed.'))
+            cr.execute('update diagnosis_sticker set state=%s where id=%s', (status, id))
             cr.commit()
         return True
 
