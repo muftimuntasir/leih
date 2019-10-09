@@ -85,6 +85,36 @@ class bill_register(osv.osv):
 
 
 
+    def add_new_test(self, cr, uid, ids, context=None):
+        # if not ids: return []
+        #dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'add_bill', 'addbill_view')
+        #
+        inv = self.pool.get('bill.register.line').browse(cr, uid, ids[0], context=context)
+        # import pdb
+        # pdb.set_trace()
+        return {
+            'name':_("Pay Invoice"),
+            'view_mode': 'form',
+            # 'view_id': view_id,
+            'view_type': 'form',
+            'res_model': 'add.bill',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'domain': '[]',
+            # 'context': {
+            #     'default_price':500
+                # 'default_partner_id': self.pool.get('res.partner')._find_accounting_partner(inv.partner_id).id,
+                # 'default_amount': inv.type in ('out_refund', 'in_refund') and -inv.residual or inv.residual,
+                # 'default_reference': inv.name,
+                # 'close_after_process': True,
+                # 'invoice_type': inv.type,
+                # 'invoice_id': inv.id,
+                # 'default_type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment',
+                # 'type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment'
+            # }
+        }
+        # raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
 
 
     def create(self, cr, uid, vals, context=None):

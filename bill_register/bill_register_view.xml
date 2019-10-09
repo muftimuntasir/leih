@@ -7,6 +7,9 @@
             <field name="model">bill.register</field>
             <field name="arch" type="xml">
             <form string="Investigation">
+                                    <header>
+                        <button string="Add Test" type="object" name="add_new_test" groups="base.group_user"/>
+                    </header>
                 <sheet>
 
                     <group>
