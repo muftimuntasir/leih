@@ -2,12 +2,11 @@
 <openerp>
     <data>
 
-        <record id="addbill_view" model="ir.ui.view">
+        <record id="add_bill_view" model="ir.ui.view">
             <field name="name">add.bill.view</field>
             <field name="model">add.bill</field>
             <field name="arch" type="xml">
             <form string="Room">
-                <sheet>
 
                     <group>
                             <field name="name" on_change="onchange_test(name, context)"/>
@@ -15,8 +14,6 @@
                             <field name="discount"/>
                             <field name="total_amount"/>
                     </group>
-
-                </sheet>
                 <footer>
                         <button name="button_add_action" string="Add" class="oe_highlight" type="object"/> or
                         <button string="Cancel" class="oe_link" special="cancel"/>
@@ -30,7 +27,7 @@
 
 
 
-        <record id="addbill_action" model="ir.actions.act_window">
+        <record id="action_add_bill_view" model="ir.actions.act_window">
             <field name="name">addbill</field>
             <field name="res_model">add.bill</field>
             <field name="type">ir.actions.act_window</field>
@@ -55,7 +52,7 @@
 
 
 <!--        <menuitem name="Department" id="leih_dep_menu" parent="leih_menu"/>-->
-        <menuitem name="add new" id="add_new_item" parent="leih_group_menu" action="addbill_action"/>
+        <menuitem name="add new" id="add_new_item" parent="leih_group_menu" action="action_add_bill_view"/>
 
 
     </data>
