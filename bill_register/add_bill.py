@@ -9,8 +9,8 @@ class add_bill(osv.osv):
     def button_add_action(self,cr,uid,ids,vals,context):
         return 0
         #
-        # import pdb
-        # pdb.set_trace()
+        import pdb
+        pdb.set_trace()
 
     _columns = {
 
