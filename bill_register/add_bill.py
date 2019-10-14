@@ -6,11 +6,12 @@ class add_bill(osv.osv):
     _name = "add.bill"
 
 
-    def button_add_action(self,cr,uid,ids,vals,context):
-        return 0
-        #
+    def button_add_action(self,cr,uid,ids,context):
         import pdb
         pdb.set_trace()
+        return 0
+        #
+
 
     _columns = {
 
