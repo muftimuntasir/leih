@@ -65,7 +65,7 @@ class bill_register(osv.osv):
     #     return self.pool['report'].get_action(cr, uid, ids, 'sale.report_saleorder', context=context)
 
     def onchange_patient(self,cr,uid,ids,name,context=None):
-        tests={'values':{}}
+        tests={}
         dep_object = self.pool.get('patient.info').browse(cr, uid, name, context=None)
         abc={'mobile':dep_object.mobile,'address':dep_object.address,'age':dep_object.age,'sex':dep_object.sex}
         tests['value']=abc
