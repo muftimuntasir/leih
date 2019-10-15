@@ -7,6 +7,9 @@
             <field name="model">bill.register</field>
             <field name="arch" type="xml">
             <form string="Investigation">
+                                    <header>
+                        <button string="Add Test" type="object" name="add_new_test" groups="base.group_user"/>
+                    </header>
                 <sheet>
 
                     <group>
@@ -14,13 +17,13 @@
 <!--                        <field name="patient_id"/>-->
 <!--                        <field name="name"/>-->
                         <field name="mobile"/>
+                        <field name="patient_id"/>
                         <field name="patient_name" on_change="onchange_patient(patient_name, context)"/>
                         <field name="address"/>
                         <field name="age"/>
                         <field name="sex"/>
                         <field name="ref_doctors"/>
                         <field name="delivery_date"/>
-
 
                     </group>
                     <notebook>
@@ -48,12 +51,6 @@
                         </page>
 
                     </notebook>
-
-
-
-
-
-
                 </sheet>
             </form>
 

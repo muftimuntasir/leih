@@ -26,7 +26,7 @@ class examination_entry(osv.osv):
         'merge': fields.boolean("Merge"),
         'dependency': fields.boolean("Dependency"),
         'sample_type':fields.many2one('sample.type','Sample Type'),
-        'examination_entry_line':fields.one2many('examination.entry.line','examinationentry_id','Parameters')
+        'examination_entry_line':fields.one2many('examination.entry.line','examinationentry_id','Parameters'),
 
     }
     def onchange_group(self,cr,uid,ids,group,context=None):

@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-
         <record id="sample_view" model="ir.ui.view">
-            <field name="name">diagnosis.sticker.views</field>
+            <field name="name">diagnosis.view</field>
             <field name="model">diagnosis.sticker</field>
             <field name="arch" type="xml">
             <form string="Investigation">
                 <header>
 <button name="print_sticker" string="Print Sticker" type="object" />
                     <button name="print_lab_report" string="Complete and Print Sticker" type="object" />
+                     <button name="set_to_lab" string="Set to Lab" type="object" />
+                     <button name="set_to_sample" string="Set to Sample" type="object" />
+
 </header>
                 <sheet>
 
@@ -41,25 +43,9 @@
 
         </record>
 
-        <record id="minutes_meeting_search_view" model="ir.ui.view">
-            <field name="name">lab search view</field>
-            <field name="model">diagnosis.sticker</field>
-            <field eval="10" name="priority"/>
-            <field name="arch" type="xml">
-                <search string="MoM">
-                    <filter icon="terp-mail-message-new" string="Action Items" name="my_requests_filter" domain="[('state','!=','lab')]"/>
-                    <field name="state"/>
-                    <field name="name"/>
-                        <filter name="fil_by_disability" string="lab fileter" domain="[('state','=','lab')]"
-						help="Show all Physically Disabled Students" />
-                </search>
-            </field>
-        </record>
 
 
-
-
-        <record id="sample_action" model="ir.actions.act_window">
+        <record id="common_admins" model="ir.actions.act_window">
             <field name="name">Sticker</field>
             <field name="res_model">diagnosis.sticker</field>
             <field name="type">ir.actions.act_window</field>
@@ -69,18 +55,15 @@
         </record>
 
         <!-- expense type tree -->
-        <record model="ir.ui.view" id="sample_tree" >
+        <record model="ir.ui.view" id="report_tree">
             <field name="name">leih</field>
             <field name="model">diagnosis.sticker</field>
             <field name="arch" type="xml">
-
-            <tree string="Alu List">
+             <tree string="Alu List">
                         <field name="name"/>
                         <field name="bill_register_id"/>
                         <field name="department_id"/>
-                        <field name="state">[('state','=','lab')]</field>
-
-
+                        <field name="state"/>
 
 
 
@@ -92,7 +75,7 @@
 
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
-        <menuitem name="Sample Collection" id="sample_menu_mainform" parent="leih_group_menu" action="sample_action"/>
+        <menuitem name="Common Admin" id="common_admin_menu" parent="leih_group_menu" action="common_admins"/>
 
 
     </data>

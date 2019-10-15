@@ -4,6 +4,27 @@ from datetime import date, time
 
 class patient_info(osv.osv):
     _name = "patient.info"
+    # _rec_name = 'patient_id'
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        res = []
+        for elmt in self.browse(cr, uid, ids, context=context):
+            name = elmt.name
+            name = name + ' ' + str(elmt.patient_id)
+            res.append((elmt.id, name))
+        return res
+
+    # def name_search(self, name, args=None, operator='ilike', limit=100):
+    #     import pdb
+    #     pdb.set_trace()
+
+        # args = args or []
+        # recs = self.browse()
+        # if not recs:
+        #     recs = self.search([('patient_id', operator, name)] + args, limit=limit)
+        # return 1
 
     def _testname(self,cr,uid,ids,field_name, arg, context=None):
         result={}
@@ -64,7 +85,8 @@ class patient_info(osv.osv):
     _columns = {
 
         'mobile': fields.char("Mobile No",required=True),
-        'name': fields.char("Patient Name"),
+        'patient_id': fields.char("Patient Id"),
+        'name':fields.char("Name"),
         'age':fields.char('Age'),
         'address':fields.char('Address'),
         'sex': fields.selection([('male', 'Male'), ('female', 'Female'),('others','Others')], string='Sex', default='male'),
@@ -83,17 +105,30 @@ class patient_info(osv.osv):
         if len(mobile_number)>11:
             x=mobile_number.split()
             number=x[0]
-            back=len(number)-11
-            listnumber=[]
-            for item in range(len(number)-1,back-1,-1):
-                singlenumber=number[item]
-                listnumber.append(singlenumber)
-            reverse_number=''.join(listnumber)
-            final_number=reverse_number[::-1]
+            if((number[0]=='0' or number[1]=='0' or number[2]=='0' or number[3]=='0') and len(number)>11):
+                number=number[:-1]
+            back = len(number) - 11
+            if len(number)>11:
+                listnumber=[]
+                for item in range(len(number)-1,back-1,-1):
+                    singlenumber=number[item]
+                    listnumber.append(singlenumber)
+                reverse_number=''.join(listnumber)
+                final_number=reverse_number[::-1]
+                vals['mobile'] = final_number
+            else:
+                vals['mobile']=number
+
             # import pdb
             # pdb.set_trace()
 
 
-            vals['mobile'] = final_number
 
-        return super(patient_info, self).create(cr, uid, vals, context=context)
+
+
+        stored_id=super(patient_info, self).create(cr, uid, vals, context=context)
+        if stored_id is not None:
+            name_text = 'P-1000' + str(stored_id)
+            cr.execute('update patient_info set patient_id=%s where id=%s', (name_text, stored_id))
+            cr.commit()
+        return stored_id

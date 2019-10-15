@@ -35,7 +35,7 @@
         </record>
 
         <!-- expense type tree -->
-        <record model="ir.ui.view" id="testentry_tree" >
+        <record model="ir.ui.view" id="sample_tree" >
             <field name="name">sampletype</field>
             <field name="model">sample.type</field>
             <field name="arch" type="xml">

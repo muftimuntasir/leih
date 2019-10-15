@@ -7,17 +7,58 @@ class sample(osv.osv):
     _order = 'id desc'
 
 
+    def print_sticker(self,cr,uid,ids,context=None):
+        statue='lab'
+
+
+        for id in ids:
+            report_obj = self.browse(cr, uid, id, context=context)
+            if report_obj.state == 'lab' or report_obj.state == 'done':
+                raise osv.except_osv(_('Warning!'),
+                                     _('Already it is sample collected.'))
+            cr.execute('update diagnosis_sticker set state=%s where id=%s', (statue, id))
+            cr.commit()
+        return True
+
+    def print_lab_report(self,cr,uid,ids,context=None):
+        status='done'
+
+        for id in ids:
+            report_obj = self.browse(cr, uid, id, context=context)
+            if report_obj.state == 'done':
+                raise osv.except_osv(_('Warning!'),
+                                     _('Already it is Completed.'))
+            cr.execute('update diagnosis_sticker set state=%s where id=%s', (status, id))
+            cr.commit()
+        return True
+
+
+    def set_to_lab(self,cr,uid,ids,context=None):
+        status = 'lab'
+
+        for id in ids:
+            # report_obj = self.browse(cr, uid, id, context=context)
+            # if report_obj.state == 'done':
+            #     raise osv.except_osv(_('Warning!'),
+            #                          _('Already it is Completed.'))
+            cr.execute('update diagnosis_sticker set state=%s where id=%s', (status, id))
+            cr.commit()
+        return True
+
 
 
 
 
     _columns = {
-        'sample_id':fields.integer("ID"),
-        'bill_register_id':fields.integer('Bill register Id'),
-        'tests_id':fields.integer('Test ID'),
-        'department_id':fields.char('Department'),
         'name': fields.char('Name'),
-        'sticker_line_id':fields.one2many('diagnosis.sticker.line','sticker_id','Record Sample')
+        'bill_register_id':fields.many2one('bill.register','Bill register Id'),
+        'department_id':fields.many2one('diagnosis.group','Department'),
+        'sticker_line_id':fields.one2many('diagnosis.sticker.line','sticker_id','Record Sample'),
+        'state': fields.selection(
+            [('cancel', 'Cancelled'), ('sample', 'Sample'), ('lab', 'Lab'),('done', 'Done')],
+            'Status', required=True, readonly=True, copy=False,
+            ),
+
     }
 
 

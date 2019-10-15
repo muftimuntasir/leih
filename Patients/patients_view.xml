@@ -10,6 +10,7 @@
                 <sheet>
 
                     <group>
+                        <field name="patient_id"/>
                         <field name="mobile"/>
                         <field name="name"/>
                         <field name="age"/>
@@ -30,7 +31,7 @@
                         <page string="Bill">
                             <field name="bills">
                                 <tree string="tests history">
-                                    <field name="mobile"/>
+                                    <field name="age"/>
                                     <field name="sex"/>
                                 </tree>
                             </field>
@@ -64,6 +65,7 @@
             <field name="model">patient.info</field>
             <field name="arch" type="xml">
             <tree string="Alu List">
+                        <field name="patient_id"/>
                         <field name="mobile"/>
                         <field name="name"/>
                         <field name="age"/>
