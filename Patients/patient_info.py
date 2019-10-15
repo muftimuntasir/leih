@@ -6,23 +6,25 @@ class patient_info(osv.osv):
     _name = "patient.info"
     # _rec_name = 'patient_id'
 
-    # def name_get(self, cr, uid, ids, context=None):
-    #     if not ids:
-    #         return []
-    #     res = []
-    #     for elmt in self.browse(cr, uid, ids, context=context):
-    #         name = elmt.name
-    #         name = name + ' ' + str(elmt.patient_id)
-    #         res.append((elmt.id, name))
-    #     return res
-    #
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        res = []
+        for elmt in self.browse(cr, uid, ids, context=context):
+            name = elmt.name
+            name = name + ' ' + str(elmt.patient_id)
+            res.append((elmt.id, name))
+        return res
+
     # def name_search(self, name, args=None, operator='ilike', limit=100):
-    #
-    #     args = args or []
-    #     recs = self.browse()
-    #     if not recs:
-    #         recs = self.search([('patient_id', operator, name)] + args, limit=limit)
-    #     return recs.name_get()
+    #     import pdb
+    #     pdb.set_trace()
+
+        # args = args or []
+        # recs = self.browse()
+        # if not recs:
+        #     recs = self.search([('patient_id', operator, name)] + args, limit=limit)
+        # return 1
 
     def _testname(self,cr,uid,ids,field_name, arg, context=None):
         result={}
