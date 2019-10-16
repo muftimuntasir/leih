@@ -1,20 +1,22 @@
+from openerp import models, fields, api, _
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from datetime import date, time
+
 
 class patient_info(osv.osv):
     _name = "patient.info"
     # _rec_name = 'patient_id'
 
-    def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
-        res = []
-        for elmt in self.browse(cr, uid, ids, context=context):
-            name = elmt.name
-            name = name + ' ' + str(elmt.patient_id)
-            res.append((elmt.id, name))
-        return res
+    # def name_get(self, cr, uid, ids, context=None):
+    #     if not ids:
+    #         return []
+    #     res = []
+    #     for elmt in self.browse(cr, uid, ids, context=context):
+    #         name = elmt.name
+    #         name = name + ' ' + str(elmt.patient_id)
+    #         res.append((elmt.id, name))
+    #     return res
 
     # def name_search(self, name, args=None, operator='ilike', limit=100):
     #     import pdb
@@ -132,3 +134,18 @@ class patient_info(osv.osv):
             cr.execute('update patient_info set patient_id=%s where id=%s', (name_text, stored_id))
             cr.commit()
         return stored_id
+
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        recs = self.browse()
+        if name:
+            recs = self.search([('patient_id', '=', name)] + args, limit=limit)
+            # import pdb
+            # pdb.set_trace()
+        if not recs:
+            recs = self.search([('patient_id', operator, name)] + args, limit=limit)
+        if not recs:
+            recs = self.search([('name', operator, name)] + args, limit=limit)
+
+        return recs.name_get()
