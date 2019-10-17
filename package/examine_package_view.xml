@@ -20,33 +20,19 @@
                         <page string="Referance Value">
                             <field name="examine_package_line_id" mode="tree">
                                 <tree string="Select Referance Value" editable="top">
-
                                     <field name="name"/>
-                                    <field name="price"/>
-                                    <field name="discount"/>
-                                    <field name="total_amount"/>
-
                                 </tree>
                             </field>
 
                         </page>
                     </notebook>
-                    <group>
-                                <field name="total"/>
-                                <field name="discounts"/>
-                                <field name="flat_discount"/>
-                                <field name="grand_total"/>
-                                <field name="paid"/>
-                                <field name="due"/>
-                    </group>
+
                 </sheet>
             </form>
 
             </field>
 
         </record>
-
-
 
 
         <record id="examine_view_action" model="ir.actions.act_window">

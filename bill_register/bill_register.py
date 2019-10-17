@@ -40,6 +40,7 @@ class bill_register(osv.osv):
         'sex':fields.char("Sex",store=False),
         'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
         'delivery_date': fields.char("Delivery Date"),
+        'package_name':fields.many2one("examine.package",string="Package"),
         'bill_register_line_id': fields.one2many('bill.register.line', 'bill_register_id', 'Investigations', required=True),
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
         # 'relation': fields.many2one("leih.investigation"),
@@ -122,6 +123,12 @@ class bill_register(osv.osv):
             }
         }
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
+
+    # def onchange_package(self,cr,uid,ids,package_name,context=None):
+    #     # import pdb
+    #     # pdb.set_trace()
+
+
 
 
     def create(self, cr, uid, vals, context=None):

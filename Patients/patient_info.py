@@ -18,15 +18,6 @@ class patient_info(osv.osv):
     #         res.append((elmt.id, name))
     #     return res
 
-    # def name_search(self, name, args=None, operator='ilike', limit=100):
-    #     import pdb
-    #     pdb.set_trace()
-
-        # args = args or []
-        # recs = self.browse()
-        # if not recs:
-        #     recs = self.search([('patient_id', operator, name)] + args, limit=limit)
-        # return 1
 
     def _testname(self,cr,uid,ids,field_name, arg, context=None):
         result={}

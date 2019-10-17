@@ -13,12 +13,6 @@ class examine_package(osv.osv):
         'end_date': fields.date(string="End Date"),
         'active': fields.boolean("Active"),
         'examine_package_line_id':fields.one2many('examine.package.line', 'examine_package_id', 'Add test', required=True),
-        'total': fields.float("Total"),
-        'discounts': fields.float("Discount(%)", required=True),
-        'flat_discount': fields.float("Flat Discount"),
-        'grand_total': fields.float("Grand Total"),
-        'paid': fields.float("Paid"),
-        'due': fields.float("Due"),
     }
 
 
@@ -29,13 +23,6 @@ class examine_package_line(osv.osv):
 
         'name': fields.many2one("examination.entry","Test Name", required=True, ondelete='cascade'),
         'examine_package_id': fields.many2one('examine.package', "Information"),
-        # 'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency",
-        #                               string="Currency", readonly=True, required=True),
-        # 'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
-        'price': fields.integer("Price"),
-        'discount': fields.integer("Discount"),
-        'total_amount': fields.integer("Total Amount")
-
     }
 
 

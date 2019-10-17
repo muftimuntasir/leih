@@ -24,6 +24,7 @@
                         <field name="sex"/>
                         <field name="ref_doctors"/>
                         <field name="delivery_date"/>
+                        <field name="package_name" on_change="onchange_package(package_name, context)"/>
 
                     </group>
                     <notebook>
