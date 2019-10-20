@@ -88,7 +88,31 @@ class bill_register(osv.osv):
         # import pdb
         # pdb.set_trace()
 
+    def onchange_package(self,cr,uid,ids,package_name,context=None):
+        values={}
+        if not package_name:
+            return {}
+        abc={'bill_register_line_id':[]}
+        package_object=self.pool.get('examine.package').browse(cr,uid,package_name,context=None)
+        for item in package_object.examine_package_line_id:
+            items=item.name
+            for itemid in items:
+                car=itemid.id
+                abc['bill_register_line_id'].append([0, False, {'name':car, 'total_amount': 400}])
 
+        # abc={'bill_register_line_id':[[0, False, {'discount': 0, 'price': 400, 'name': 2, 'total_amount': 400}]]}
+        # abc['bill_register_line_id'].append([0, False, {'discount': 0, 'price': 400, 'name': 2, 'total_amount': 400}])
+        values['value']=abc
+
+        return values
+
+
+
+    # {'grand_total': 0,
+    #  'bill_register_line_id': [[0, False, {'discount': 0, 'price': 400, 'name': 2, 'total_amount': 400}],
+    #                            [0, False, {'discount': 0, 'price': 400, 'name': 1, 'total_amount': 400}]],
+    #  'flat_discount': 0, 'package_name': False, 'patient_id': False, 'discounts': 0, 'age': '33', 'due': 0, 'paid': 0,
+    #  'patient_name': 1, 'ref_doctors': 1, 'address': 'Agargaon', 'sex': 'male', 'delivery_date': False}
 
     def add_new_test(self, cr, uid, ids, context=None):
         if not ids: return []
@@ -132,6 +156,8 @@ class bill_register(osv.osv):
 
 
     def create(self, cr, uid, vals, context=None):
+        import pdb
+        pdb.set_trace()
         if context is None:
             context = {}
 
