@@ -2,6 +2,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from datetime import date, time
 
+PACKAGE_FIELDS=('name','price')
 class bill_register(osv.osv):
     _name = "bill.register"
     _order = 'id desc'
@@ -76,19 +77,8 @@ class bill_register(osv.osv):
         tests['value']=abc
         return tests
 
-    # def onchange_mobile(self,cr,uid,ids,mobile,context=None):
-    #     tests={'values':{}}
-    #     patient_id=self.pool.get('patient.info').search(cr,uid,[('mobile', '=', mobile)],context=None)
-    #     dep_object=self.pool.get('patient.info').browse(cr,uid,patient_id,context)
-    #     abc = {'patient': dep_object.name, 'address': dep_object.address, 'age': dep_object.age, 'sex': dep_object.sex}
-    #     tests['value']=abc
-    #     return tests
-
-        #
-        # import pdb
-        # pdb.set_trace()
-
-
+    def _package_fields(self, cr, uid, context=None):
+        return list(PACKAGE_FIELDS)
 
     def add_new_test(self, cr, uid, ids, context=None):
         if not ids: return []
@@ -124,14 +114,35 @@ class bill_register(osv.osv):
         }
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
 
-    # def onchange_package(self,cr,uid,ids,package_name,context=None):
-    #     # import pdb
-    #     # pdb.set_trace()
+    def onchange_package(self,cr,uid,ids,package_name,context=None):
+        values = {}
+        if not package_name:
+            return {}
+
+        def value_or_id(val):
+            for item in examine_package.examine_package_line_id:
+                for items in item.name:
+                    return items.id
+
+        # r = []
+        # r.append({'price': 500})
+        # vals.update({'bill_register_line_id': r})
+        examine_package = self.pool.get('examine.package').browse(cr, uid, package_name, context=context)
+        address_fields = self._package_fields(cr, uid, context=context)
+        abc={'bill_register_line_id': [[0, False, {'discount': 0, 'price': 400, 'name':400, 'total_amount': 400}]]}
+        abc['bill_register_line_id'][0]=dict((key, value_or_id(examine_package[key])) for key in address_fields)
+        import pdb
+        pdb.set_trace()
+
+        values['value']=abc
+        return values
 
 
 
 
     def create(self, cr, uid, vals, context=None):
+        import pdb
+        pdb.set_trace()
         if context is None:
             context = {}
 
