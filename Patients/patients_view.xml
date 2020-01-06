@@ -10,8 +10,8 @@
                 <sheet>
 
                     <group>
-                        <field name="patient_id"/>
                         <field name="mobile"/>
+                        <field name="patient_id"/>
                         <field name="name"/>
                         <field name="age"/>
                         <field name="sex"/>

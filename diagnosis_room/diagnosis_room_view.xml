@@ -28,7 +28,7 @@
 
 
         <record id="room_action" model="ir.actions.act_window">
-            <field name="name">Diagnostic form</field>
+            <field name="name">Room</field>
             <field name="res_model">diagnosis.room</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>

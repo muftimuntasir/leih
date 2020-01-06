@@ -40,7 +40,7 @@ class bill_register(osv.osv):
         'age': fields.char("Age",store=False),
         'sex':fields.char("Sex",store=False),
         'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
-        'delivery_date': fields.char("Delivery Date"),
+        'delivery_date': fields.date("Delivery Date"),
         'package_name':fields.many2one("examine.package",string="Package"),
         'bill_register_line_id': fields.one2many('bill.register.line', 'bill_register_id', 'Investigations', required=True),
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
@@ -72,13 +72,58 @@ class bill_register(osv.osv):
 
     def onchange_patient(self,cr,uid,ids,name,context=None):
         tests={'values':{}}
+
         dep_object = self.pool.get('patient.info').browse(cr, uid, name, context=None)
         abc={'mobile':dep_object.mobile,'address':dep_object.address,'age':dep_object.age,'sex':dep_object.sex}
         tests['value']=abc
         return tests
 
+
     def _package_fields(self, cr, uid, context=None):
         return list(PACKAGE_FIELDS)
+
+    # def onchange_mobile(self,cr,uid,ids,mobile,context=None):
+    #     tests={'values':{}}
+    #     patient_id=self.pool.get('patient.info').search(cr,uid,[('mobile', '=', mobile)],context=None)
+    #     dep_object=self.pool.get('patient.info').browse(cr,uid,patient_id,context)
+    #     abc = {'patient': dep_object.name, 'address': dep_object.address, 'age': dep_object.age, 'sex': dep_object.sex}
+    #     tests['value']=abc
+    #     return tests
+
+        #
+        # import pdb
+        # pdb.set_trace()
+
+    def onchange_package(self,cr,uid,ids,package_name,vals,context=None):
+
+        values={}
+        if not package_name:
+            return {}
+        # import pdb
+        # pdb.set_trace()
+        abc={'bill_register_line_id':[]}
+        package_object=self.pool.get('examine.package').browse(cr,uid,package_name,context=None)
+        # import pdb
+        # pdb.set_trace()
+        for item in package_object.examine_package_line_id:
+            items=item.name
+            for itemid in items:
+                car=itemid.id
+                abc['bill_register_line_id'].append([0, False, {'name':car, 'total_amount': 400}])
+
+        # abc={'bill_register_line_id':[[0, False, {'discount': 0, 'price': 400, 'name': 2, 'total_amount': 400}]]}
+        # abc['bill_register_line_id'].append([0, False, {'discount': 0, 'price': 400, 'name': 2, 'total_amount': 400}])
+        values['value']=abc
+
+        return values
+
+
+
+    # {'grand_total': 0,
+    #  'bill_register_line_id': [[0, False, {'discount': 0, 'price': 400, 'name': 2, 'total_amount': 400}],
+    #                            [0, False, {'discount': 0, 'price': 400, 'name': 1, 'total_amount': 400}]],
+    #  'flat_discount': 0, 'package_name': False, 'patient_id': False, 'discounts': 0, 'age': '33', 'due': 0, 'paid': 0,
+    #  'patient_name': 1, 'ref_doctors': 1, 'address': 'Agargaon', 'sex': 'male', 'delivery_date': False}
 
     def add_new_test(self, cr, uid, ids, context=None):
         if not ids: return []
@@ -114,35 +159,35 @@ class bill_register(osv.osv):
         }
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
 
-    def onchange_package(self,cr,uid,ids,package_name,context=None):
-        values = {}
-        if not package_name:
-            return {}
-
-        def value_or_id(val):
-            for item in examine_package.examine_package_line_id:
-                for items in item.name:
-                    return items.id
-
-        # r = []
-        # r.append({'price': 500})
-        # vals.update({'bill_register_line_id': r})
-        examine_package = self.pool.get('examine.package').browse(cr, uid, package_name, context=context)
-        address_fields = self._package_fields(cr, uid, context=context)
-        abc={'bill_register_line_id': [[0, False, {'discount': 0, 'price': 400, 'name':400, 'total_amount': 400}]]}
-        abc['bill_register_line_id'][0]=dict((key, value_or_id(examine_package[key])) for key in address_fields)
-        import pdb
-        pdb.set_trace()
-
-        values['value']=abc
-        return values
+    # def onchange_package(self,cr,uid,ids,package_name,context=None):
+    #     values = {}
+    #     if not package_name:
+    #         return {}
+    #
+    #     def value_or_id(val):
+    #         for item in examine_package.examine_package_line_id:
+    #             for items in item.name:
+    #                 return items.id
+    #
+    #     # r = []
+    #     # r.append({'price': 500})
+    #     # vals.update({'bill_register_line_id': r})
+    #     examine_package = self.pool.get('examine.package').browse(cr, uid, package_name, context=context)
+    #     address_fields = self._package_fields(cr, uid, context=context)
+    #     abc={'bill_register_line_id': [[0, False, {'discount': 0, 'price': 400, 'name':400, 'total_amount': 400}]]}
+    #     abc['bill_register_line_id'][0]=dict((key, value_or_id(examine_package[key])) for key in address_fields)
+    #     import pdb
+    #     pdb.set_trace()
+    #
+    #     values['value']=abc
+    #     return values
 
 
 
 
     def create(self, cr, uid, vals, context=None):
-        import pdb
-        pdb.set_trace()
+        # import pdb
+        # pdb.set_trace()
         if context is None:
             context = {}
 
@@ -220,6 +265,7 @@ class test_information(osv.osv):
 
         'name': fields.many2one("examination.entry","Test Name", required=True, ondelete='cascade'),
         'bill_register_id': fields.many2one('bill.register', "Information"),
+        'add_bill_id':fields.many2one('add.bill','Add bill'),
         # 'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency",
         #                               string="Currency", readonly=True, required=True),
         # 'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),

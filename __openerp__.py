@@ -17,7 +17,6 @@ membership products (schemes).
         'Department/department_view.xml',
         'Doctors/doctors_view.xml',
         'Patients/patients_view.xml',
-        'Diagnosis/diagonosis_view.xml',
         'Group/diagnosisgroup_view.xml',
         'examine_entry/examinationentry_view.xml',
         'bill_register/bill_register_view.xml',

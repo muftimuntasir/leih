@@ -40,7 +40,7 @@
             <field name="name">diagnosis</field>
             <field name="model">diagnosis.department</field>
             <field name="arch" type="xml">
-            <tree string="Alu List">
+            <tree string="Department List">
                         <field name="name"/>
                         <field name="parent"/>
 

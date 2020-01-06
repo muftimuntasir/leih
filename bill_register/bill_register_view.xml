@@ -13,9 +13,6 @@
                 <sheet>
 
                     <group>
-
-<!--                        <field name="patient_id"/>-->
-<!--                        <field name="name"/>-->
                         <field name="mobile"/>
                         <field name="patient_id"/>
                         <field name="patient_name" on_change="onchange_patient(patient_name, context)"/>

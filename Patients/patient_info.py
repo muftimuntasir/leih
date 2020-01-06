@@ -78,7 +78,7 @@ class patient_info(osv.osv):
     _columns = {
 
         'mobile': fields.char("Mobile No",required=True),
-        'patient_id': fields.char("Patient Id"),
+        'patient_id': fields.char("Patient ID"),
         'name':fields.char("Name"),
         'age':fields.char('Age'),
         'address':fields.char('Address'),
@@ -112,10 +112,6 @@ class patient_info(osv.osv):
             else:
                 vals['mobile']=number
 
-            # import pdb
-            # pdb.set_trace()
-
-
 
 
 
@@ -127,7 +123,7 @@ class patient_info(osv.osv):
         return stored_id
 
     @api.model
-    def name_search(self, name, args=None, operator='ilike', limit=100):
+    def name_search(self, name, args=None, operator='ilike', limit=10):
         args = args or []
         recs = self.browse()
         if name:
@@ -136,7 +132,11 @@ class patient_info(osv.osv):
             # pdb.set_trace()
         if not recs:
             recs = self.search([('patient_id', operator, name)] + args, limit=limit)
+
         if not recs:
             recs = self.search([('name', operator, name)] + args, limit=limit)
+
+        if not recs:
+            recs = self.search([('mobile', operator, name)] + args, limit=limit)
 
         return recs.name_get()

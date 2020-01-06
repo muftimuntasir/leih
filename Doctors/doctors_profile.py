@@ -15,7 +15,7 @@ class doctors_profile(osv.osv):
         'designation':fields.char('Designation',required=True),
         'type': fields.selection([('inhouse', 'In house'), ('consoled', 'Consoled'),('prttime','Prt_time'),('outsid','Out_side')], string='Type', default='inhouse'),
         'status': fields.selection([('active', 'Active'), ('inactive', 'Inactive')], string='Status', default='active'),
-        'others': fields.char("Others"),
+        'others': fields.text("About Dr. "),
         # 'nid':fields.integer("NID")
 
 

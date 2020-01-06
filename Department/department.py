@@ -11,6 +11,6 @@ class diagnostic_department(osv.osv):
     _columns = {
 
         'name': fields.char("Department Name",required=True),
-        'parent':fields.many2one('diagnosis.department','parent')
+        'parent':fields.many2one('diagnosis.department','Parent')
 
     }

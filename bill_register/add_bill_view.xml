@@ -6,19 +6,51 @@
             <field name="name">add.bill.view</field>
             <field name="model">add.bill</field>
             <field name="arch" type="xml">
-            <form string="Room">
 
-                    <group>
-                            <field name="name"/>
-                            <field name="price"/>
-                            <field name="discount"/>
-                            <field name="total_amount"/>
-                    </group>
-                <footer>
+                 <form string="Investigation">
+
+                <sheet>
+                    <notebook>
+                        <page string="Referance Value">
+                            <field name="bill_register_line_id" mode="tree">
+                                <tree string="Select Referance Value" editable="top">
+
+                                    <field name="name"/>
+                                    <field name="price"/>
+                                    <field name="discount"/>
+                                    <field name="total_amount"/>
+
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                                             <footer>
                         <button name="button_add_action" string="Add" class="oe_highlight" type="object"/> or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
+                </sheet>
             </form>
+
+
+
+<!--            <form string="Room">-->
+
+
+<!--                        <page string="Referance Value">-->
+<!--                            <field name="bill_register_line_id" mode="tree">-->
+<!--                                <tree string="Select Referance Value" editable="top">-->
+
+<!--                                    <field name="name" on_change="onchange_test(name, context)"/>-->
+<!--                                    <field name="price"/>-->
+<!--                                    <field name="discount" on_change="onchange_discount(name,discount,context)"/>-->
+<!--                                    <field name="total_amount"/>-->
+
+<!--                                </tree>-->
+<!--                            </field>-->
+<!--                        </page>-->
+
+
+<!--            </form>-->
 
             </field>
 
@@ -42,7 +74,7 @@
             <field name="model">add.bill</field>
             <field name="arch" type="xml">
             <tree string="Alu List">
-                        <field name="name"/>
+
 
 
 
