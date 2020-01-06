@@ -9,7 +9,7 @@
             <form string="Investigation">
                 <header>
 <button name="print_sticker" string="Print Sticker" type="object" />
-                    <button name="print_lab_report" string="Complete and Print Sticker" type="object" />
+                    <button name="print_lab_report" string="Complete and Print Report" type="object" />
 </header>
                 <sheet>
 
