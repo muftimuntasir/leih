@@ -31,6 +31,7 @@ membership products (schemes).
         'sample/common_admin_view.xml',
         'bill_register/add_bill_view.xml',
         'package/examine_package_view.xml',
+        'doctor_appointment/doctor_appointment.xml',
 
 
 
