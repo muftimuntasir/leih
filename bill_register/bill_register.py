@@ -101,15 +101,20 @@ class bill_register(osv.osv):
             return {}
         # import pdb
         # pdb.set_trace()
+        package_amount = 0
         abc={'bill_register_line_id':[]}
         package_object=self.pool.get('examine.package').browse(cr,uid,package_name,context=None)
-        # import pdb
-        # pdb.set_trace()
+        package_amount = package_object.price
+
+
         for item in package_object.examine_package_line_id:
             items=item.name
+
             for itemid in items:
                 car=itemid.id
-                abc['bill_register_line_id'].append([0, False, {'name':car, 'total_amount': 400}])
+                abc['bill_register_line_id'].append([0, False, {'test_id':car, 'total_amount': package_amount}])
+            if package_amount > 0:
+                package_amount = 0
 
         # abc={'bill_register_line_id':[[0, False, {'discount': 0, 'price': 400, 'name': 2, 'total_amount': 400}]]}
         # abc['bill_register_line_id'].append([0, False, {'discount': 0, 'price': 400, 'name': 2, 'total_amount': 400}])
