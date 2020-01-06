@@ -202,20 +202,21 @@ class bill_register(osv.osv):
                         # Self means model
                         # browse means select query proepare
 
-
-
+        value ={}
         for items in stored_obj.bill_register_line_id:
             child_list = []
+
             value = {
                 'bill_register_id':int(stored),
-                'tests_id':int(items.id),
-                'department_id':items.name.group.id,
+                'test_id':int(items.test_id.id),
+                'department_id':items.test_id.group.id,
                 'state':'sample',
             }
 
-            tmp_dict = {}
 
-            for test_item in items.name.examination_entry_line:
+
+            for test_item in items.test_id.examination_entry_line:
+                tmp_dict = {}
                 tmp_dict['test_name'] = test_item.name
                 tmp_dict['ref_value'] = test_item.reference_value
                 child_list.append([0, False, tmp_dict])
@@ -224,6 +225,7 @@ class bill_register(osv.osv):
 
             sample_obj = self.pool.get('diagnosis.sticker')
             sample_id = sample_obj.create(cr, uid, value, context=context)
+
 
             if sample_id is not None:
                 sample_text = 'Lab-100' + str(sample_id)
@@ -263,7 +265,8 @@ class test_information(osv.osv):
 
     _columns = {
 
-        'name': fields.many2one("examination.entry","Test Name", required=True, ondelete='cascade'),
+        'name':fields.char("Name"),
+        'test_id': fields.many2one("examination.entry","Test Name", required=True, ondelete='cascade'),
         'bill_register_id': fields.many2one('bill.register', "Information"),
         'add_bill_id':fields.many2one('add.bill','Add bill'),
         # 'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency",

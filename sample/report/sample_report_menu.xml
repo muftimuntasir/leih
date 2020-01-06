@@ -10,10 +10,7 @@
                 name="leih.report_sample_report"
                 file="leih.report_sample_report"
                 menu="True"
-
         />
-
-
 
        </data>
 </openerp>

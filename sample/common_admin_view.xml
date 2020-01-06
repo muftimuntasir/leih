@@ -16,6 +16,7 @@
                 <sheet>
 
                     <group>
+                        <field name="test_id"/>
 
                         <field name="name"/>
                         <field name="bill_register_id"/>
