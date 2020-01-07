@@ -32,6 +32,8 @@ membership products (schemes).
         'sample/common_admin_view.xml',
         'bill_register/add_bill_view.xml',
         'package/examine_package_view.xml',
+        'laundry/laundry_product_view.xml',
+        'laundry/cleaning_view.xml',
 
 
 

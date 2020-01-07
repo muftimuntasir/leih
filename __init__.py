@@ -8,3 +8,4 @@ import examine_entry
 import bill_register
 import sample
 import package
+import laundry
