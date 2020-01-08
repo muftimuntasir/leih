@@ -39,6 +39,10 @@ membership products (schemes).
         'diagnosis_room/report/diagnosis_room_print_menu.xml',
         'Department/report/report_department_layout.xml',
         'Department/report/department_print_menu.xml',
+        'Doctors/report/report_doctor_layout.xml',
+        'Doctors/report/doctor_print_menu.xml',
+        'Patients/report/report_patients_layout.xml',
+        'Patients/report/patients_print_menu.xml',
 
 
     ],
