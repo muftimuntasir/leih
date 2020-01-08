@@ -35,7 +35,8 @@ membership products (schemes).
         'laundry/laundry_product_view.xml',
         'laundry/cleaning_view.xml',
 
-
+        'diagnosis_room/report/report_diagnosis_room_layout.xml',
+        'diagnosis_room/report/diagnosis_room_print_menu.xml',
 
 
     ],
