@@ -6,7 +6,7 @@
             <field name="name">laundry.laundry</field>
             <field name="model">laundry.laundry</field>
             <field name="arch" type="xml">
-            <form string="laundry">
+            <form string="laundry Entry Form">
                 <sheet>
 
                     <group>

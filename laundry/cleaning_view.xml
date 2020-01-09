@@ -12,13 +12,20 @@
                     <group>
 
                         <field name="name"/>
-                        <field name="color"/>
-                        <field name="quantity"/>
                         <field name="send_date"/>
                         <field name="laundry_name"/>
                         <field name="back_date"/>
 
                     </group>
+
+                    <field name="product_line" mode="tree">
+                                <tree string="Select Referance Value" editable="top">
+                             <field name="linen_item"/>
+                             <field name="color"/>
+                             <field name="quantity"/>
+
+                                </tree>
+                    </field>
 
                 </sheet>
             </form>
@@ -46,8 +53,6 @@
             <field name="arch" type="xml">
             <tree string="Alu List">
                         <field name="name"/>
-                        <field name="color"/>
-                        <field name="quantity"/>
                         <field name="send_date"/>
                         <field name="laundry_name"/>
                         <field name="back_date"/>

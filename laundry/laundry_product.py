@@ -17,5 +17,4 @@ class laundry(osv.osv):
         'others': fields.char("Others")
         # 'nid':fields.integer("NID")
 
-
     }

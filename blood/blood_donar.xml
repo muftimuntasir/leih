@@ -58,7 +58,8 @@
             </field>
         </record>
 
-        <menuitem name="Blood Donar" id="blood_donar_menu_mainform" parent="leih_group_menu" action="blood_donar_action"/>
+        <menuitem name="Blood Bank" id="leih_blood_menu" parent="leih_menu"/>
+        <menuitem name="Blood Donar" id="blood_donar_menu_mainform" parent="leih_blood_menu" action="blood_donar_action"/>
 
     </data>
 </openerp>
