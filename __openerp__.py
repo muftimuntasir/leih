@@ -57,6 +57,9 @@ membership products (schemes).
         'Diagnosis/report/report_diagnosis_layout.xml',
         'Diagnosis/report/diagnosis_print_menu.xml',
 
+        'examine_entry/report/report_examine_entry_layout.xml',
+        'examine_entry/report/examine_entry_print_menu.xml',
+
 
     ],
     'demo': [],
