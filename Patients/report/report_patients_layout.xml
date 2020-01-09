@@ -96,10 +96,7 @@
                                     <t t-set="i" t-value="1" />
                                     <t t-foreach="o.bills" t-as="z">
                                         <tr>
-                                            <td>
-                                                <span t-esc="i"/>
-                                                <t t-set="i" t-value="i+1"/>
-                                            </td>
+
                                             <td>
                                                 <span t-field="z.name"/>
 

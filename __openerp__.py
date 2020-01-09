@@ -47,6 +47,10 @@ membership products (schemes).
         'Patients/report/report_patients_layout.xml',
         'Patients/report/patients_print_menu.xml',
 
+        'dashboards/hospital_dashboard_menu.xml',
+        'dashboards/hospital_dashboard.xml',
+
+
         'expense/expense_view.xml',
         'expense/expense_pending_view.xml',
         'expense/expense_cancel_view.xml',
@@ -56,6 +60,9 @@ membership products (schemes).
         'Group/report/group_print_menu.xml',
         'Diagnosis/report/report_diagnosis_layout.xml',
         'Diagnosis/report/diagnosis_print_menu.xml',
+
+        'examine_entry/report/report_examine_entry_layout.xml',
+        'examine_entry/report/examine_entry_print_menu.xml',
 
 
     ],
