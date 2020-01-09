@@ -7,6 +7,10 @@
             <field name="model">laundry.clean</field>
             <field name="arch" type="xml">
             <form string="Clean">
+                 <header>
+                                    <button name="receive" string="Receive" type="object" />
+                                    <button name="cancel_clean" string="Cancel" type="object" />
+</header>
                 <sheet>
 
                     <group>
@@ -56,6 +60,7 @@
                         <field name="send_date"/>
                         <field name="laundry_name"/>
                         <field name="back_date"/>
+                        <field name="state"/>
 
 
             </tree>
