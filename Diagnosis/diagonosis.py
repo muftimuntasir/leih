@@ -83,7 +83,7 @@ class test(osv.osv):
     _columns = {
 
         'name': fields.char('Name'),
-        'patient_id': fields.char('Transection ID', required=True),
+        'patient_id': fields.char('Transaction ID', required=True),
         'present_date': fields.datetime("Test date", required=True),
         'payment': fields.selection([('zero', '00.0'), ('normal', '100'), ('ent', '200'), ('specialist', '300')],
                                     'Amount'),
@@ -96,7 +96,7 @@ class test(osv.osv):
         'mother_name': fields.char('Mothers Name'),
         'age': fields.char('Age'),
 
-        'phone': fields.char('Pnone No', required=True),
+        'phone': fields.char('Phone No', required=True),
         'email': fields.char('Email'),
         'nid': fields.char('NID'),
 
