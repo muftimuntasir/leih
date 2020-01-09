@@ -46,7 +46,10 @@ membership products (schemes).
         'Doctors/report/doctor_print_menu.xml',
         'Patients/report/report_patients_layout.xml',
         'Patients/report/patients_print_menu.xml',
-
+        'Group/report/report_group_layout.xml',
+        'Group/report/group_print_menu.xml',
+        'Diagnosis/report/report_diagnosis_layout.xml',
+        'Diagnosis/report/diagnosis_print_menu.xml',
 
     ],
     'demo': [],
