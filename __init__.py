@@ -10,3 +10,4 @@ import sample
 import package
 import laundry
 import blood
+import dashboards
