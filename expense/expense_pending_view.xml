@@ -31,7 +31,7 @@
 
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
-        <menuitem name="Expense Pending" id="expense_pending_menu_mainform" parent="leih_expense_menu" action="expense_pending_action"/>
+        <menuitem name="Approved Expense" id="expense_pending_menu_mainform" parent="leih_expense_menu" action="expense_pending_action"/>
 
 
     </data>
