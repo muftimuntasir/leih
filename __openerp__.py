@@ -34,6 +34,9 @@ membership products (schemes).
         'package/examine_package_view.xml',
         'laundry/laundry_product_view.xml',
         'laundry/cleaning_view.xml',
+        'blood/blood_donar.xml',
+        'blood/blood_receiver.xml',
+        'laundry/laundry_receive_view.xml',
 
 
 
