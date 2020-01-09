@@ -30,24 +30,25 @@ class hospital_dashboard(osv.osv):
                 collection_overview_data_lebel.append('Others')
                 collection_overview_data.append(items[0])
 
+        cr.execute(
+            "select count(id) from patient_info")
+        patient_data = cr.fetchall()
+        if len(patient_data) >0:
+            v3=v4 = patient_data[0][0]
 
-        for items in all_data:
-            if items[1] == 'draft':
-                v1 +=items[0]
-            elif items[1] == 'assigned':
-                v2 +=items[0]
-            elif items[1] == 'submitted':
-                v3 +=items[0]
-            elif items[1] == 'submitted':
-                v4 +=items[0]
-            elif items[1] == 'pending_payment':
-                v5 +=items[0]
-            elif items[1] == 'pending_payment':
-                v6 +=items[0]
-            elif items[1] == 'pending_payment':
-                v7 +=items[0]
-            elif items[1] == 'partially_paid' or items[1] == 'paid':
-                v8 +=items[0]
+        cr.execute(
+            "select count(id) from diagnosis_sticker")
+        test_data = cr.fetchall()
+        if len(test_data) > 0:
+            v5 = v6 = test_data[0][0]
+
+        cr.execute(
+            "select sum(amount) from leih_expense")
+        expense_data = cr.fetchall()
+        if len(expense_data) > 0:
+            v7 = expense_data[0][0]
+            v8=4
+
 
         pending_for_assignment = "Income Summary : " +str(v1)
         assigned = "Total Cash Collected : "+str(v2)
