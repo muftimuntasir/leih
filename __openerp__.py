@@ -46,6 +46,9 @@ membership products (schemes).
         'Doctors/report/doctor_print_menu.xml',
         'Patients/report/report_patients_layout.xml',
         'Patients/report/patients_print_menu.xml',
+        'expense/expense_view.xml',
+        'expense/expense_pending_view.xml',
+        'expense/expense_cancel_view.xml',
 
 
     ],
