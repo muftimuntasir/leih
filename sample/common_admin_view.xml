@@ -75,7 +75,7 @@
 
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
-        <menuitem name="Common Admin" id="common_admin_menu" parent="leih_group_menu" action="common_admins"/>
+        <menuitem name="Common Admin" id="common_admin_menu" parent="leih_reportreceiption_menu" action="common_admins"/>
 
 
     </data>

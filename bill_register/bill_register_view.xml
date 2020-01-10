@@ -93,7 +93,8 @@
 
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
-        <menuitem name="Bill Register" id="investigation_menu_mainform" parent="leih_group_menu" action="investigation_action"/>
+        <menuitem name="Billing" id="leih_billing_menu" parent="leih_menu" sequence="2"/>
+        <menuitem name="Bill Register" id="investigation_menu_mainform" parent="leih_billing_menu" action="investigation_action"/>
 
 
     </data>

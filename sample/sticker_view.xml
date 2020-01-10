@@ -92,7 +92,8 @@
 
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
-        <menuitem name="Sample Collection" id="sample_menu_mainform" parent="leih_group_menu" action="sample_action"/>
+        <menuitem name="Lab" id="leih_labs_menu" parent="leih_menu" sequence="3"/>
+        <menuitem name="Sample Collection" id="sample_menu_mainform" parent="leih_labs_menu" action="sample_action"/>
 
 
     </data>

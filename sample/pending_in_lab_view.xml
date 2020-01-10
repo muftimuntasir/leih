@@ -37,7 +37,7 @@
 
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
-        <menuitem name="Pending in Lab" id="pending_in_lab" parent="leih_group_menu" action="lab_action"/>
+        <menuitem name="Pending in Lab" id="pending_in_lab" parent="leih_labs_menu" action="lab_action"/>
 
 
     </data>
