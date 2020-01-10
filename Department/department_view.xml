@@ -50,7 +50,7 @@
         </record>
 
 
-<!--        <menuitem name="Department" id="leih_dep_menu" parent="leih_menu"/>-->
+
         <menuitem name="Department" id="dep_menu_mainform" parent="leih_group_menu" action="dep_action"/>
 
 

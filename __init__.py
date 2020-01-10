@@ -12,3 +12,4 @@ import laundry
 import blood
 import dashboards
 import expense
+import ward
