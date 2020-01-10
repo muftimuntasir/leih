@@ -15,7 +15,7 @@
 
 
 
-        <menuitem name="OT Dashboard" id="oy_dashboard_menu_mainform" parent="leih_group_menu" action="action_hospital_cart_rpt" sequence="1"/>
+        <menuitem name="OT Dashboard" id="oy_dashboard_menu_mainform" parent="leih_group_menu" action="action_hospital_cart_rpt"/>
 
     </data>
 </openerp>

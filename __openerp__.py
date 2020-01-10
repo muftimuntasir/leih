@@ -65,8 +65,6 @@ membership products (schemes).
         'examine_entry/report/examine_entry_print_menu.xml',
         'ward/wardform_view.xml',
 
-
-
     ],
     'demo': [],
     'installable': True,
