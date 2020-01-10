@@ -10,8 +10,7 @@
                 <sheet>
 
                     <group>
-
-                        <field name="doner_name"/>
+                        <field name="date"/>
                         <field name="doner_name"/>
                         <field name="mobile_no"/>
                         <field name="description"/>
@@ -46,10 +45,9 @@
             <field name="arch" type="xml">
             <tree string="Alu List">
                         <field name="name"/>
-
                         <field name="doner_name"/>
                         <field name="mobile_no"/>
-                        <field name="receive_date"/>
+                        <field name="date"/>
                         <field name="description"/>
                         <field name="group"/>
                         <field name="cost"/>

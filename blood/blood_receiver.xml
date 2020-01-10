@@ -44,7 +44,7 @@
                         <field name="mobile_no"/>
                         <field name="patient_id"/>
                         <field name="description"/>
-                        <field name="group"/>
+                        <field name="blood_group"/>
                         <field name="price"/>
                         <field name="paid_amount"/>
                         <field name="unpaid_amount"/>
@@ -82,7 +82,7 @@
 
                         <field name="patient_id"/>
                         <field name="description"/>
-                        <field name="group"/>
+                        <field name="blood_group"/>
                         <field name="price"/>
                         <field name="paid_amount"/>
                         <field name="unpaid_amount"/>
