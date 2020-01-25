@@ -40,7 +40,7 @@ class bill_register(osv.osv):
         'sex':fields.char("Sex",store=False),
         'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
         'delivery_date': fields.char("Delivery Date"),
-        'bill_register_line_id': fields.one2many('bill.register.line', 'bill_register_id', 'Investigations', required=True),
+        'bill_register_line_id': fields.one2many('bill.register.line', 'bill_register_id', 'Investigations'),
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
         # 'relation': fields.many2one("leih.investigation"),
         'total': fields.function(_totalpayable,string="Total",type='float',store=True),
@@ -111,6 +111,45 @@ class bill_register(osv.osv):
                 'default_price':500,
                 # 'default_name':context.get('name', False),
                 'default_total_amount':200,
+                # 'default_partner_id': self.pool.get('res.partner')._find_accounting_partner(inv.partner_id).id,
+                # 'default_amount': inv.type in ('out_refund', 'in_refund') and -inv.residual or inv.residual,
+                # 'default_reference': inv.name,
+                # 'close_after_process': True,
+                # 'invoice_type': inv.type,
+                # 'invoice_id': inv.id,
+                # 'default_type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment',
+                # 'type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment'
+            }
+        }
+        raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
+
+
+
+    def add_discount(self,cr,uid,ids,context=None):
+        # import pdb
+        # pdb.set_trace()
+        if not ids: return []
+
+        dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'leih', 'discount_view')
+        #
+        inv = self.browse(cr, uid, ids[0], context=context)
+        # import pdb
+        # pdb.set_trace()
+        return {
+            'name': _("Pay Invoice"),
+            'view_mode': 'form',
+            'view_id': view_id,
+            'view_type': 'form',
+            'res_model': 'discount',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'domain': '[]',
+            'context': {
+                'pi_id':ids[0]
+                # 'default_price': 500,
+                # # 'default_name':context.get('name', False),
+                # 'default_total_amount': 200,
                 # 'default_partner_id': self.pool.get('res.partner')._find_accounting_partner(inv.partner_id).id,
                 # 'default_amount': inv.type in ('out_refund', 'in_refund') and -inv.residual or inv.residual,
                 # 'default_reference': inv.name,
@@ -200,7 +239,7 @@ class test_information(osv.osv):
 
     _columns = {
 
-        'name': fields.many2one("examination.entry","Test Name", required=True, ondelete='cascade'),
+        'name': fields.many2one("examination.entry","Test Name",ondelete='cascade'),
         'bill_register_id': fields.many2one('bill.register', "Information"),
         # 'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency",
         #                               string="Currency", readonly=True, required=True),

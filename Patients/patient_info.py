@@ -1,3 +1,4 @@
+from openerp import api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from datetime import date, time
@@ -132,3 +133,19 @@ class patient_info(osv.osv):
             cr.execute('update patient_info set patient_id=%s where id=%s', (name_text, stored_id))
             cr.commit()
         return stored_id
+
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        recs = self.browse()
+
+        if name:
+            recs = self.search([('patient_id', '=', name)] + args, limit=limit)
+            # import pdb
+            # pdb.set_trace()
+        if not recs:
+            recs = self.search([('patient_id', operator, name)] + args, limit=limit)
+        if not recs:
+            recs = self.search([('name', operator, name)] + args, limit=limit)
+
+        return recs.name_get()
