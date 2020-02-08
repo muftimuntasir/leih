@@ -14,3 +14,5 @@ import dashboards
 import expense
 import ward
 import discount
+import opd
+import admission

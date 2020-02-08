@@ -239,7 +239,7 @@ class test_information(osv.osv):
 
     _columns = {
 
-        'name': fields.many2one("examination.entry","Test Name",ondelete='cascade'),
+        'name': fields.many2one("examination.entry","Item Name",ondelete='cascade'),
         'bill_register_id': fields.many2one('bill.register', "Information"),
         # 'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency",
         #                               string="Currency", readonly=True, required=True),

@@ -15,9 +15,9 @@ class examination_entry(osv.osv):
 
     _columns = {
 
-        'name': fields.char("Test Name",required=True),
-        'group':fields.many2one('diagnosis.group',"Group"),
-        'department':fields.char("Department"),
+        'name': fields.char("Item Name",required=True),
+        # 'group':fields.many2one('diagnosis.group',"Group"),
+        'department':fields.many2one("diagnosis.department",'Department'),
         'rate':fields.integer("Rate"),
         'required_time':fields.char("Required time"),
         'sample_req': fields.boolean("Sample Required"),

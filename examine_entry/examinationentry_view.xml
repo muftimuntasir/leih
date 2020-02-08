@@ -12,7 +12,7 @@
                     <group>
 
                         <field name="name"/>
-                        <field name="group" on_change="onchange_group(group, context)"/>
+<!--                        <field name="group" on_change="onchange_group(group, context)"/>-->
                         <field name="department"/>
                         <field name="rate"/>
                         <field name="required_time"/>
@@ -71,7 +71,7 @@
             <field name="arch" type="xml">
             <tree string="Alu List">
                         <field name="name"/>
-                        <field name="group"/>
+<!--                        <field name="group"/>-->
                         <field name="department"/>
                         <field name="rate"/>
                         <field name="required_time"/>
@@ -82,7 +82,7 @@
 
 
 
-        <menuitem name="Test Entry" id="testentry_menu_mainform" parent="leih_config_menu" action="examinationentry_action"/>
+        <menuitem name="Item Entry" id="testentry_menu_mainform" parent="leih_config_menu" action="examinationentry_action"/>
 
 
     </data>

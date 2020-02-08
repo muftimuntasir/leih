@@ -68,6 +68,11 @@ membership products (schemes).
         'discount/pending_discount_view.xml',
         'discount/approved_discount_view.xml',
         'discount/cancelled_discount_view.xml',
+        'opd/opd_view.xml',
+        'opd/opd_ticket_view.xml',
+        'opd/report/opd_ticket_report.xml',
+        'opd/report/opd_ticket_report_menu.xml',
+        'admission/leih_admission_view.xml',
 
 
     ],
