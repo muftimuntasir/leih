@@ -53,6 +53,10 @@ class leih_admission(osv.osv):
         'grand_total': fields.float("Grand Total"),
         'paid': fields.float("Paid"),
         'due': fields.float("Due"),
+        'state': fields.selection(
+            [('activated', 'Activated'), ('released', 'Released'), ('cancelled', 'Cancelled')],
+            'Status',default='activated', readonly=True,
+        ),
     }
 
     def onchange_total(self,cr,uid,ids,name,context=None):
@@ -131,9 +135,7 @@ class leih_admission(osv.osv):
             'target': 'new',
             'domain': '[]',
             'context': {
-                'default_price':500,
-                # 'default_name':context.get('name', False),
-                'default_total_amount':200,
+
                 # 'default_partner_id': self.pool.get('res.partner')._find_accounting_partner(inv.partner_id).id,
                 # 'default_amount': inv.type in ('out_refund', 'in_refund') and -inv.residual or inv.residual,
                 # 'default_reference': inv.name,
@@ -146,6 +148,80 @@ class leih_admission(osv.osv):
         }
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
 
+    def btn_final_settlement(self, cr, uid, ids, context=None):
+        if not ids: return []
+
+        dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'leih', 'admission_release_view')
+        #
+        inv = self.browse(cr, uid, ids[0], context=context)
+        total=inv.total
+        # import pdb
+        # pdb.set_trace()
+        return {
+            'name':_("Pay Invoice"),
+            'view_mode': 'form',
+            'view_id': view_id,
+            'view_type': 'form',
+            'res_model': 'admission.release',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'domain': '[]',
+            'context': {
+                'default_total':total
+                # 'loan_id': ids[0]
+                # 'default_price':500,
+                # 'default_name':context.get('name', False),
+                # 'default_total_amount':200,
+                # 'default_partner_id': self.pool.get('res.partner')._find_accounting_partner(inv.partner_id).id,
+                # 'default_amount': inv.type in ('out_refund', 'in_refund') and -inv.residual or inv.residual,
+                # 'default_reference': inv.name,
+                # 'close_after_process': True,
+                # 'invoice_type': inv.type,
+                # 'invoice_id': inv.id,
+                # 'default_type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment',
+                # 'type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment'
+            }
+        }
+        raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
+
+
+    def btn_pay(self, cr, uid, ids, context=None):
+        if not ids: return []
+
+        dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'leih', 'admission_payment_form_view')
+        #
+        inv = self.browse(cr, uid, ids[0], context=context)
+        # total=inv.total
+        # import pdb
+        # pdb.set_trace()
+        return {
+            'name':_("Pay Invoice"),
+            'view_mode': 'form',
+            'view_id': view_id,
+            'view_type': 'form',
+            'res_model': 'admission.payment',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'domain': '[]',
+            'context': {
+                # 'default_total':total
+                # 'loan_id': ids[0]
+                # 'default_price':500,
+                # 'default_name':context.get('name', False),
+                # 'default_total_amount':200,
+                # 'default_partner_id': self.pool.get('res.partner')._find_accounting_partner(inv.partner_id).id,
+                # 'default_amount': inv.type in ('out_refund', 'in_refund') and -inv.residual or inv.residual,
+                # 'default_reference': inv.name,
+                # 'close_after_process': True,
+                # 'invoice_type': inv.type,
+                # 'invoice_id': inv.id,
+                # 'default_type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment',
+                # 'type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment'
+            }
+        }
+        raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
 
 
     def add_discount(self,cr,uid,ids,context=None):

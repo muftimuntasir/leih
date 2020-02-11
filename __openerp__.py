@@ -73,6 +73,11 @@ membership products (schemes).
         'opd/report/opd_ticket_report.xml',
         'opd/report/opd_ticket_report_menu.xml',
         'admission/leih_admission_view.xml',
+        'admission/leih_admission_activated_view.xml',
+        'admission/leih_admission_released_view.xml',
+        'admission/leih_admission_cancelled_view.xml',
+        'admission/release/admission_release_view.xml',
+        'admission/payment/admission_payment_view.xml',
 
 
     ],
