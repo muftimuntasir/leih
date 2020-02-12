@@ -54,6 +54,20 @@
                             </field>
                           </page>
 
+                        <page string="Payment Info">
+                            <field name="admission_payment_line_id" mode="tree">
+                                <tree string="Select Referance Value" editable="top">
+
+                                    <field name="date"/>
+                                    <field name="amount"/>
+                                    <field name="type"/>
+                                    <field name="card_no"/>
+                                    <field name="bank_name"/>
+
+                                </tree>
+                            </field>
+                          </page>
+
                     </notebook>
 
                             <field name="bill_register_admission_line_id" mode="tree">
@@ -65,7 +79,7 @@
                                 </tree>
                             </field>
 
-                                                <group>
+                    <group>
                                 <field name="total"/>
                                 <field name="discounts"/>
                                 <field name="flat_discount"/>

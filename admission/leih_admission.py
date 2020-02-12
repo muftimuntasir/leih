@@ -45,6 +45,7 @@ class leih_admission(osv.osv):
         'leih_admission_line_id': fields.one2many('leih.admission.line', 'leih_admission_id', 'Investigations'),
         'guarantor_line_id':fields.one2many("patient.guarantor","admission_id","Guarantor Name"),
         'bill_register_admission_line_id': fields.one2many("bill.register.admission.line","admission_line_id","Bill Register"),
+        'admission_payment_line_id': fields.one2many("admission.payment.line","admission_payment_line_id","Admission Payment"),
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
         # 'relation': fields.many2one("leih.investigation"),
         'total': fields.function(_totalpayable,string="Total",type='float',store=True),
@@ -207,7 +208,7 @@ class leih_admission(osv.osv):
             'domain': '[]',
             'context': {
                 # 'default_total':total
-                # 'loan_id': ids[0]
+                'admission_id': ids[0]
                 # 'default_price':500,
                 # 'default_name':context.get('name', False),
                 # 'default_total_amount':200,
@@ -350,3 +351,15 @@ class admission_bill_register(osv.osv):
         lists['value']=bill_info
         return lists
 
+class admission_payment_line(osv.osv):
+    _name = 'admission.payment.line'
+
+    _columns = {
+        'admission_payment_line_id': fields.many2one('leih.admission', 'admission payment'),
+        'date':fields.datetime("Date"),
+        'amount':fields.float('amount'),
+        'type':fields.selection([('bank','Bank'),('cash','Cash')],'Type'),
+        'card_no':fields.char('Card Number'),
+        'bank_name':fields.char('Bank Name')
+
+    }

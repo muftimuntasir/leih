@@ -12,11 +12,12 @@
 
                         <group string="Basic Information">
                             <group>
-                                <field name="pi_id"/>
-                                <field name="amount"/>
                                 <field name="date"/>
-                                <field name="type"/>
+                                <field name="admission_id"/>
                                 <field name="amount"/>
+                                <field name="type"/>
+                                <field name="card_no"/>
+                                <field name="bank_name"/>
                             </group>
 
                         </group>
@@ -55,11 +56,11 @@
             <field name="arch" type="xml">
                 <tree string="Admission List" default_order='id desc'>
 
-
+                                <field name="admission_id"/>
                                 <field name="amount"/>
-                                <field name="date"/>
                                 <field name="type"/>
-                                <field name="amount"/>
+                                <field name="card_no"/>
+                                <field name="bank_name"/>
 
 
                 </tree>
