@@ -208,7 +208,7 @@ class leih_admission(osv.osv):
             'domain': '[]',
             'context': {
                 # 'default_total':total
-                'admission_id': ids[0]
+                'default_admission_id': ids[0]
                 # 'default_price':500,
                 # 'default_name':context.get('name', False),
                 # 'default_total_amount':200,

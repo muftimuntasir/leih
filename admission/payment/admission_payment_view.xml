@@ -12,6 +12,7 @@
 
                         <group string="Basic Information">
                             <group>
+                                <field name="name"/>
                                 <field name="date"/>
                                 <field name="admission_id"/>
                                 <field name="amount"/>
@@ -56,6 +57,7 @@
             <field name="arch" type="xml">
                 <tree string="Admission List" default_order='id desc'>
 
+                                <field name="name"/>
                                 <field name="admission_id"/>
                                 <field name="amount"/>
                                 <field name="type"/>

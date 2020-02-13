@@ -78,6 +78,8 @@ membership products (schemes).
         'admission/leih_admission_cancelled_view.xml',
         'admission/release/admission_release_view.xml',
         'admission/payment/admission_payment_view.xml',
+        'admission/report/admission_report_menu.xml',
+        'admission/report/admission_report.xml',
 
 
     ],
