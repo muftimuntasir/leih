@@ -10,6 +10,7 @@
                                     <header>
                         <button string="Add Test" type="object" name="add_new_test" groups="base.group_user"/>
                                                     <button string="Add Discount" type="object" name="add_discount" groups="base.group_user"/>
+                                                    <button string="Add payment" type="object" name="btn_pay_bill" groups="base.group_user"/>
                     </header>
                 <sheet>
 
@@ -40,6 +41,23 @@
                                 </tree>
                             </field>
 
+                        </page>
+                        <page string="Payment Info">
+                            <field name="bill_register_payment_line_id" mode="tree">
+                                <tree string="Select Referance Value" editable="top">
+
+                                    <field name="date"/>
+                                    <field name="amount"/>
+                                    <field name="type"/>
+                                    <field name="card_no"/>
+                                    <field name="bank_name"/>
+
+                                </tree>
+                            </field>
+                          </page>
+
+                    </notebook>
+
                             <group>
                                 <field name="total"/>
                                 <field name="discounts"/>
@@ -49,9 +67,6 @@
                                 <field name="due"/>
                             </group>
 
-                        </page>
-
-                    </notebook>
                 </sheet>
             </form>
 

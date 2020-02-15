@@ -16,3 +16,4 @@ import ward
 import discount
 import opd
 import admission
+import money_receipt

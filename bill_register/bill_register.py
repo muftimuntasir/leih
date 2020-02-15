@@ -41,6 +41,7 @@ class bill_register(osv.osv):
         'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
         'delivery_date': fields.char("Delivery Date"),
         'bill_register_line_id': fields.one2many('bill.register.line', 'bill_register_id', 'Investigations'),
+        'bill_register_payment_line_id': fields.one2many("bill.register.payment.line", "bill_register_payment_line_id","Bill Register Payment"),
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
         # 'relation': fields.many2one("leih.investigation"),
         'total': fields.function(_totalpayable,string="Total",type='float',store=True),
@@ -123,6 +124,30 @@ class bill_register(osv.osv):
         }
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
 
+    def btn_pay_bill(self, cr, uid, ids, context=None):
+        if not ids: return []
+
+        dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'leih','bill_register_payment_form_view')
+        #
+        inv = self.browse(cr, uid, ids[0], context=context)
+        # total=inv.total
+        # import pdb
+        # pdb.set_trace()
+        return {
+            'name': _("Pay Invoice"),
+            'view_mode': 'form',
+            'view_id': view_id,
+            'view_type': 'form',
+            'res_model': 'bill.register.payment',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'domain': '[]',
+            'context': {
+                'default_bill_id': ids[0]
+            }
+        }
+        raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
 
 
     def add_discount(self,cr,uid,ids,context=None):
@@ -267,4 +292,16 @@ class test_information(osv.osv):
         # import pdb
         # pdb.set_trace()
         return tests
+class admission_payment_line(osv.osv):
+    _name = 'bill.register.payment.line'
+
+    _columns = {
+        'bill_register_payment_line_id': fields.many2one('bill.register', 'bill register payment'),
+        'date':fields.datetime("Date"),
+        'amount':fields.float('amount'),
+        'type':fields.selection([('bank','Bank'),('cash','Cash')],'Type'),
+        'card_no':fields.char('Card Number'),
+        'bank_name':fields.char('Bank Name')
+
+    }
 
