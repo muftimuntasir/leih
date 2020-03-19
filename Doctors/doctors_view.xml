@@ -19,6 +19,19 @@
                         <field name="others"/>
 
                     </group>
+                    <notebook>
+                        <page string="Bill Register">
+                            <field name="bill_info">
+                                <field name="total"/>
+
+                            </field>
+                        </page>
+                        <page string="Admission Info">
+
+                        </page>
+                        <page string="Commission">
+                        </page>
+                    </notebook>
 
                 </sheet>
             </form>
@@ -26,8 +39,6 @@
             </field>
 
         </record>
-
-
 
 
         <record id="doctors_action" model="ir.actions.act_window">

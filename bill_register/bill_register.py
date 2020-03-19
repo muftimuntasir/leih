@@ -57,17 +57,7 @@ class bill_register(osv.osv):
         dep_object = self.pool.get('leih.tests').browse(cr, uid, name, context=None)
         abc = {'total': dep_object.rate}
         tests['value'] = abc
-        # import pdb
-        # pdb.set_trace()
         return tests
-
-    # def print_bill_register(self, cr, uid, ids, context=None):
-    #     '''
-    #     This function prints the sales order and mark it as sent, so that we can see more easily the next step of the workflow
-    #     '''
-    #     assert len(ids) == 1, 'This option should only be used for a single id at a time'
-    #
-    #     return self.pool['report'].get_action(cr, uid, ids, 'sale.report_saleorder', context=context)
 
     def onchange_patient(self,cr,uid,ids,name,context=None):
         tests={}
@@ -75,20 +65,6 @@ class bill_register(osv.osv):
         abc={'mobile':dep_object.mobile,'address':dep_object.address,'age':dep_object.age,'sex':dep_object.sex}
         tests['value']=abc
         return tests
-
-    # def onchange_mobile(self,cr,uid,ids,mobile,context=None):
-    #     tests={'values':{}}
-    #     patient_id=self.pool.get('patient.info').search(cr,uid,[('mobile', '=', mobile)],context=None)
-    #     dep_object=self.pool.get('patient.info').browse(cr,uid,patient_id,context)
-    #     abc = {'patient': dep_object.name, 'address': dep_object.address, 'age': dep_object.age, 'sex': dep_object.sex}
-    #     tests['value']=abc
-    #     return tests
-
-        #
-        # import pdb
-        # pdb.set_trace()
-
-
 
     def add_new_test(self, cr, uid, ids, context=None):
         if not ids: return []
@@ -112,14 +88,6 @@ class bill_register(osv.osv):
                 'default_price':500,
                 # 'default_name':context.get('name', False),
                 'default_total_amount':200,
-                # 'default_partner_id': self.pool.get('res.partner')._find_accounting_partner(inv.partner_id).id,
-                # 'default_amount': inv.type in ('out_refund', 'in_refund') and -inv.residual or inv.residual,
-                # 'default_reference': inv.name,
-                # 'close_after_process': True,
-                # 'invoice_type': inv.type,
-                # 'invoice_id': inv.id,
-                # 'default_type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment',
-                # 'type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment'
             }
         }
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
@@ -172,17 +140,6 @@ class bill_register(osv.osv):
             'domain': '[]',
             'context': {
                 'pi_id':ids[0]
-                # 'default_price': 500,
-                # # 'default_name':context.get('name', False),
-                # 'default_total_amount': 200,
-                # 'default_partner_id': self.pool.get('res.partner')._find_accounting_partner(inv.partner_id).id,
-                # 'default_amount': inv.type in ('out_refund', 'in_refund') and -inv.residual or inv.residual,
-                # 'default_reference': inv.name,
-                # 'close_after_process': True,
-                # 'invoice_type': inv.type,
-                # 'invoice_id': inv.id,
-                # 'default_type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment',
-                # 'type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment'
             }
         }
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
@@ -233,12 +190,6 @@ class bill_register(osv.osv):
 
 
         return stored
-
-
-
-
-
-
 
 
 class test_information(osv.osv):
