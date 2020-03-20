@@ -82,6 +82,7 @@ membership products (schemes).
         'admission/report/admission_report.xml',
         'money_receipt/money_receipt_view.xml',
         'bill_register/payment/bill_register_payment_view.xml',
+        'cash_collection/cash_collection_view.xml',
 
 
     ],

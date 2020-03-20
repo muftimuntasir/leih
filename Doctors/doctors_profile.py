@@ -16,7 +16,7 @@ class doctors_profile(osv.osv):
         'type': fields.selection([('inhouse', 'In house'), ('consoled', 'Consoled'),('prttime','Part Time'),('outsid','Out Side')], string='Type', default='inhouse'),
         'status': fields.selection([('active', 'Active'), ('inactive', 'Inactive')], string='Status', default='active'),
         'others': fields.char("Others"),
-        'bill_info':fields.many2one("bill.register","Bill Register"),
+        'bill_info':fields.one2many("bill.register",'ref_doctors',"Bill Register"),
         'admission_info':fields.many2one("leih.admission","Admission Info"),
         'commission':fields.char("Commission")
         # 'nid':fields.integer("NID")

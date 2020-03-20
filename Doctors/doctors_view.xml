@@ -22,7 +22,9 @@
                     <notebook>
                         <page string="Bill Register">
                             <field name="bill_info">
+                                <group>
                                 <field name="total"/>
+                                </group>
 
                             </field>
                         </page>
