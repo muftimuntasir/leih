@@ -7,6 +7,9 @@
             <field name="model">cash.collection</field>
             <field name="arch" type="xml">
             <form string="Cash Collection">
+                <header>
+                    <button name="action_button_confirm" string="Confirm" type="object"/>
+                </header>
                 <sheet>
 
                     <group>
@@ -53,6 +56,7 @@
                         <field name="date"/>
                         <field name="type"/>
                         <field name="total"/>
+                        <field name="state"/>
 
 
             </tree>
