@@ -11,14 +11,33 @@ class cash_collection(osv.osv):
 
     @api.onchange('type')
     def _onchange_tpe(self):
+        child_list=[]
 
-        if self.type:
-           self.total = 1234
-           self.cash_collection_lines = [{
-                'mr_no':1,
-                'bill_admission_opd_id':1,
-                'amount':13
-            }]
+
+
+
+        # mr_obj = self.pool.get("leih.money.receipt").search(self.cr, self.uid, [('date','>=',self.date)])
+        if self.type=='bill':
+            mr_obj=self.env['leih.money.receipt'].search(
+            [('bill_id', '!=', False)])
+            for record in mr_obj:
+                abc = {}
+                abc['bill_admission_opd_id']=record.bill_id.name
+                abc['mr_no']=record.name
+                abc['amount']=record.amount
+                child_list.append([0, False, abc])
+        if self.type=='admission':
+            mr_obj=self.env['leih.money.receipt'].search(
+            [('admission_id', '!=', False)])
+            for record in mr_obj:
+                abc = {}
+                abc['bill_admission_opd_id']=record.admission_id.name
+                abc['mr_no']=record.name
+                abc['amount']=record.amount
+                child_list.append([0, False, abc])
+
+
+        self.cash_collection_lines = child_list
 
     def action_button_confirm(self, cr, uid, ids, context=None):
         contex = context
