@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+
+        <record id="cash_collection_pending_action" model="ir.actions.act_window">
+            <field name="name">cash.collection</field>
+            <field name="res_model">cash.collection</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+        </record>
+
+        <!-- expense type tree -->
+        <record model="ir.ui.view" id="cash_collection_pending_tree" >
+            <field name="name">cash.collection.tree</field>
+            <field name="model">cash.collection</field>
+            <field name="arch" type="xml">
+            <tree string="Cash Collection List">
+                        <field name="date"/>
+                        <field name="type"/>
+                        <field name="total"/>
+                        <field name="state"/>
+
+
+            </tree>
+            </field>
+        </record>
+
+
+<!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
+        <menuitem name="Pending Cash Collection" id="cash_collection_menu_pending_mainform" parent="leih_group_menu" action="cash_collection_pending_action"/>
+    </data>
+</openerp>

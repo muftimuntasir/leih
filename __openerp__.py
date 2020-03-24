@@ -83,6 +83,9 @@ membership products (schemes).
         'money_receipt/money_receipt_view.xml',
         'bill_register/payment/bill_register_payment_view.xml',
         'cash_collection/cash_collection_view.xml',
+        'cash_collection/cash_collection_pending_view.xml',
+        'cash_collection/cash_collection_confirmed_view.xml',
+        'cash_collection/cash_collection_cancelled_view.xml',
 
 
     ],
