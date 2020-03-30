@@ -31,7 +31,7 @@ class admission_payment(osv.osv):
     _columns = {
         'name':fields.char("Cash COllection ID", readonly=True),
         'admission_id': fields.many2one('leih.admission', 'Admission ID', readoly=True),
-        'date': fields.datetime('Date'),
+        'date': fields.date('Date'),
         'amount': fields.float('Receive Amount', required=True),
         'type': fields.selection([('bank','Bank'),('cash','Cash')],'Type'),
         'card_no':fields.char('Card No.'),

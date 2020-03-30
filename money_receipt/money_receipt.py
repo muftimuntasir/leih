@@ -8,7 +8,7 @@ class money_receipt(osv.osv):
 
     _columns = {
         'name':fields.char("MR ID"),
-        'date':fields.datetime("Date"),
+        'date':fields.date("Date"),
         'bill_id':fields.many2one("bill.register","BIll ID"),
         'admission_id':fields.many2one("leih.admission","Admission ID"),
         'amount':fields.float("amount"),

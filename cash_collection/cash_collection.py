@@ -19,7 +19,7 @@ class cash_collection(osv.osv):
         # mr_obj = self.pool.get("leih.money.receipt").search(self.cr, self.uid, [('date','>=',self.date)])
         if self.type=='bill':
             mr_obj=self.env['leih.money.receipt'].search(
-            [('bill_id', '!=', False)])
+            [('bill_id', '!=', False),('date','=',self.date)])
             for record in mr_obj:
                 abc = {}
                 abc['bill_admission_opd_id']=record.bill_id.name
@@ -28,7 +28,9 @@ class cash_collection(osv.osv):
                 child_list.append([0, False, abc])
         if self.type=='admission':
             mr_obj=self.env['leih.money.receipt'].search(
-            [('admission_id', '!=', False)])
+            [('admission_id', '!=', False),('date','=',self.date)])
+            # import pdb
+            # pdb.set_trace()
             for record in mr_obj:
                 abc = {}
                 abc['bill_admission_opd_id']=record.admission_id.name
@@ -142,7 +144,7 @@ class cash_collection_line(osv.osv):
 
     _columns = {
         'cash_collection_line_id':fields.many2one("cash.collection","Cash Collection"),
-        'mr_no':fields.many2one("leih.money.receipt","Mr No."),
+        'mr_no':fields.char("Mr No."),
         'bill_admission_opd_id':fields.char("Bill/Admission/OPD Number"),
         'amount':fields.float("Amount")
     }
