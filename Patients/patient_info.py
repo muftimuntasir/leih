@@ -77,7 +77,14 @@ class patient_info(osv.osv):
 
 
 
-
+    # def _ispatient(self,cr,uid,ids,field_name, arg, context=None):
+    #     result={}
+    #     tes_id =[]
+    #     abc=[]
+    #     patient_id=self.browse(cr,uid,ids,context=None)
+    #     for items in patient_id:
+    #         import pdb
+    #         pdb.set_trace()
 
 
 
@@ -92,7 +99,11 @@ class patient_info(osv.osv):
         'address':fields.char('Address'),
         'sex': fields.selection([('male', 'Male'), ('female', 'Female'),('others','Others')], string='Sex', default='male'),
         'bills':fields.one2many('bill.register','patient_name','Bill History',required=False),
-        'testname':fields.function(_testname,string="Test Name",type='char')
+        'testname':fields.function(_testname,string="Test Name",type='char'),
+        'state': fields.selection(
+            [('created', 'Created'), ('notcreated', 'Notcreated')],
+            'Status', default='notcreated', readonly=True),
+        # 'is_patient':fields.function(_ispatient,string="Is Patient",type='boolean')
     }
     _sql_constraints = [
         ('code_mobile_uniq', 'unique (mobile)', 'The mobile number already exist !')
@@ -131,7 +142,9 @@ class patient_info(osv.osv):
         if stored_id is not None:
             name_text = 'P-1000' + str(stored_id)
             cr.execute('update patient_info set patient_id=%s where id=%s', (name_text, stored_id))
+            cr.execute('update patient_info set state=%s where id=%s', ('created', stored_id))
             cr.commit()
+
         return stored_id
 
     @api.model

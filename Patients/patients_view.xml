@@ -16,8 +16,10 @@
                         <field name="age"/>
                         <field name="sex"/>
                         <field name="address"/>
+<!--                        <field name="is_patient"/>-->
+                        <field name="state" invisible="1"/>
                     </group>
-                    <notebook>
+                    <notebook attrs ="{'invisible':[('state','!=', 'created')]}">
                         <page string="Tests">
                             <field name="bills">
                                 <tree string="tests history">
