@@ -19,7 +19,7 @@ class examination_entry(osv.osv):
         # 'group':fields.many2one('diagnosis.group',"Group"),
         'department':fields.many2one("diagnosis.department",'Department'),
         'rate':fields.integer("Rate"),
-        'required_time':fields.char("Required time"),
+        'required_time':fields.integer("Required time(Days)"),
         'sample_req': fields.boolean("Sample Required"),
         'individual': fields.boolean("Individual"),
         'manual': fields.boolean("Manual"),

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="discount_core_type_view" model="ir.ui.view">
+            <field name="name">discount.views</field>
+            <field name="model">discount.core.type</field>
+            <field name="arch" type="xml">
+            <form string="Discount type">
+
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="category_id"/>
+                        <field name="discount_amount"/>
+                    </group>
+                </sheet>
+            </form>
+
+            </field>
+
+        </record>
+
+
+
+
+        <record id="discount_core_type_action" model="ir.actions.act_window">
+            <field name="name">Discount</field>
+            <field name="res_model">discount.core.type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+        </record>
+
+
+        <record model="ir.ui.view" id="discount_core_type_tree">
+            <field name="name">Discount</field>
+            <field name="model">discount.core.type</field>
+            <field name="arch" type="xml">
+            <tree string="Alu List">
+
+                        <field name="name"/>
+                        <field name="category_id"/>
+            </tree>
+            </field>
+        </record>
+
+        <menuitem name="Discount Type" id="discount_type_mainform" parent="leih_billing_menu" action="discount_core_type_action"/>
+
+
+    </data>
+
+</openerp>

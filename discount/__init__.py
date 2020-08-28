@@ -1,1 +1,3 @@
 import discount
+import discount_category
+import discount_core_type

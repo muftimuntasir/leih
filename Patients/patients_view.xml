@@ -17,7 +17,7 @@
                         <field name="sex"/>
                         <field name="address"/>
 <!--                        <field name="is_patient"/>-->
-                        <field name="state" invisible="1"/>
+                        <field name="state"/>
                     </group>
                     <notebook attrs ="{'invisible':[('state','!=', 'created')]}">
                         <page string="Tests">

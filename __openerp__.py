@@ -37,7 +37,6 @@ membership products (schemes).
         'blood/blood_donar.xml',
         'blood/blood_receiver.xml',
         'laundry/laundry_receive_view.xml',
-
         'diagnosis_room/report/report_diagnosis_room_layout.xml',
         'diagnosis_room/report/diagnosis_room_print_menu.xml',
         'Department/report/report_department_layout.xml',
@@ -46,21 +45,15 @@ membership products (schemes).
         'Doctors/report/doctor_print_menu.xml',
         'Patients/report/report_patients_layout.xml',
         'Patients/report/patients_print_menu.xml',
-
         'dashboards/hospital_dashboard_menu.xml',
         'dashboards/hospital_dashboard.xml',
-
-
         'expense/expense_view.xml',
         'expense/expense_pending_view.xml',
         'expense/expense_cancel_view.xml',
-
-
         'Group/report/report_group_layout.xml',
         'Group/report/group_print_menu.xml',
         'Diagnosis/report/report_diagnosis_layout.xml',
         'Diagnosis/report/diagnosis_print_menu.xml',
-
         'examine_entry/report/report_examine_entry_layout.xml',
         'examine_entry/report/examine_entry_print_menu.xml',
         'ward/wardform_view.xml',
@@ -86,6 +79,8 @@ membership products (schemes).
         'cash_collection/cash_collection_pending_view.xml',
         'cash_collection/cash_collection_confirmed_view.xml',
         'cash_collection/cash_collection_cancelled_view.xml',
+        'discount/discount_category_view.xml',
+        'discount/discount_core_type_view.xml',
 
 
     ],

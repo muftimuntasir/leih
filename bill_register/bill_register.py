@@ -1,13 +1,28 @@
+from openerp import api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from datetime import date, time
+from datetime import date, time, timedelta
+from fpdf import FPDF
+
+
+# class PDF(FPDF):
+#     def titles(self,txts):
+#         self.set_xy(0.0, 0.0)
+#         self.set_font('Arial', 'B', 16)
+#         self.set_text_color(220, 50, 50)
+#         self.cell(w=210.0, h=40.0, align='C', txt=txts, border=0)
+#     def lines(self):
+#         self.set_line_width(0.0)
+#         self.line(0,500,210,90)
+
 
 class bill_register(osv.osv):
     _name = "bill.register"
     _order = 'id desc'
+    # pdf=PDF()
 
-
-
+    # pdf.lines()
+    # pdf.titles()
 
     def _totalpayable(self, cr, uid, ids, field_name, arg, context=None):
         Percentance_calculation = {}
@@ -26,6 +41,28 @@ class bill_register(osv.osv):
                     # import pdb
                     # pdb.set_trace()
         return Percentance_calculation
+    def _delivery_dates(self, cr, uid, ids, field_name, arg, context=None):
+        delivery_date={}
+        test_delivery_date=[]
+        max_day=0
+        for items in self.pool.get("bill.register").browse(cr,uid,ids,context=None):
+            total_list=[]
+            for amount in items.bill_register_line_id:
+                for test in amount.name:
+
+                    test_delivery_date.append(test.required_time)
+
+        if len(test_delivery_date):
+            max_day=max(test_delivery_date)
+        #
+        # import pdb
+        # pdb.set_trace()
+
+            # for item in total_list:
+            #     sum=item+sum
+        for record in self.browse(cr,uid,ids,context=context):
+            delivery_date[record.id]=date.today()+timedelta(days=max_day)
+        return delivery_date
 
 
     _columns = {
@@ -39,7 +76,7 @@ class bill_register(osv.osv):
         'age': fields.char("Age",store=False),
         'sex':fields.char("Sex",store=False),
         'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
-        'delivery_date': fields.char("Delivery Date"),
+        'delivery_date': fields.function(_delivery_dates,string="Delivery Date",type='date',store=True),
         'bill_register_line_id': fields.one2many('bill.register.line', 'bill_register_id', 'Investigations'),
         'bill_register_payment_line_id': fields.one2many("bill.register.payment.line", "bill_register_payment_line_id","Bill Register Payment"),
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
@@ -88,6 +125,7 @@ class bill_register(osv.osv):
             'target': 'new',
             'domain': '[]',
             'context': {
+                'bill_id':ids[0],
                 'default_price':500,
                 # 'default_name':context.get('name', False),
                 'default_total_amount':200,
@@ -147,12 +185,14 @@ class bill_register(osv.osv):
         }
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
 
-
+  
     def create(self, cr, uid, vals, context=None):
+
         if context is None:
             context = {}
 
         stored = super(bill_register, self).create(cr, uid, vals, context) # return ID int object
+
 
         if stored is not None:
             name_text = 'Bill-1000' + str(stored)
@@ -160,6 +200,14 @@ class bill_register(osv.osv):
             cr.commit()
 
         stored_obj = self.browse(cr, uid, [stored], context=context)
+        # page_name=stored_obj.name
+        # pdf=PDF()
+        # pdf.add_page()
+        # pdf.titles(page_name)
+        # pdf.output(page_name, 'F')
+
+        # import pdb
+        # pdb.set_trace()
                         # Self means model
                         # browse means select query proepare
 
@@ -220,6 +268,7 @@ class test_information(osv.osv):
 
         'name': fields.many2one("examination.entry","Item Name",ondelete='cascade'),
         'bill_register_id': fields.many2one('bill.register', "Information"),
+        'department':fields.char("Department"),
         # 'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency",
         #                               string="Currency", readonly=True, required=True),
         # 'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
@@ -232,7 +281,7 @@ class test_information(osv.osv):
     def onchange_test(self,cr,uid,ids,name,context=None):
         tests = {'values': {}}
         dep_object = self.pool.get('examination.entry').browse(cr, uid, name, context=None)
-        abc = {'price': dep_object.rate,'total_amount':dep_object.rate}
+        abc = {'department':dep_object.department.name,'price': dep_object.rate,'total_amount':dep_object.rate}
         tests['value'] = abc
         # import pdb
         # pdb.set_trace()
@@ -246,6 +295,10 @@ class test_information(osv.osv):
         # import pdb
         # pdb.set_trace()
         return tests
+    # def create(self, cr, uid, vals, context=None):
+    #     import pdb
+    #     pdb.set_trace()
+    #     return 0
 class admission_payment_line(osv.osv):
     _name = 'bill.register.payment.line'
 
@@ -258,4 +311,7 @@ class admission_payment_line(osv.osv):
         'bank_name':fields.char('Bank Name')
 
     }
+
+
+
 

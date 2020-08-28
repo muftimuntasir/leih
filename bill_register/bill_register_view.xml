@@ -8,6 +8,9 @@
             <field name="arch" type="xml">
             <form string="Investigation">
                                     <header>
+                                        <scritt>
+
+                                        </scritt>
                         <button string="Add Test" type="object" name="add_new_test" groups="base.group_user"/>
                                                     <button string="Add Discount" type="object" name="add_discount" groups="base.group_user"/>
                                                     <button string="Add payment" type="object" name="btn_pay_bill" groups="base.group_user"/>
@@ -34,6 +37,7 @@
                                 <tree string="Select Referance Value" editable="top">
 
                                     <field name="name" on_change="onchange_test(name, context)"/>
+                                    <field name="department"/>
                                     <field name="price"/>
                                     <field name="discount" on_change="onchange_discount(name,discount,context)"/>
                                     <field name="total_amount"/>

@@ -151,11 +151,13 @@ class patient_info(osv.osv):
     def name_search(self, name, args=None, operator='ilike', limit=100):
         args = args or []
         recs = self.browse()
+        # test_val=self.search([])
 
         if name:
             recs = self.search([('patient_id', '=', name)] + args, limit=limit)
-            # import pdb
-            # pdb.set_trace()
+
+        # import pdb
+        # pdb.set_trace()
         if not recs:
             recs = self.search([('patient_id', operator, name)] + args, limit=limit)
         if not recs:
