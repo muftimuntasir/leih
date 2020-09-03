@@ -12,6 +12,7 @@
                     <group>
                         <field name="name"/>
                         <field name="category_id"/>
+                          <field name="account_id"/>
                         <field name="discount_amount"/>
                     </group>
                 </sheet>

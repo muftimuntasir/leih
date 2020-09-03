@@ -12,6 +12,7 @@ class discount_core_type(osv.osv):
 
         'name': fields.char("Discount type"),
         'category_id': fields.many2one('discount.category','Discount Category'),
+        'account_id': fields.many2one("account.account", "Account"),
         'discount_amount': fields.float("Discount Amount(%)",required=True),
 
     }

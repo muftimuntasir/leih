@@ -28,7 +28,7 @@
                                     <field name="type" on_change="onchange_type(type,context)"/>
                                     <field name="category"/>
                                     <field name="ref"/>
-                                    <field name="account_id"/>
+                                    <field name="accounts"/>
                                     <field name="fixed_amount"/>
                                     <field name="percent_amount"/>
                                 </tree>
