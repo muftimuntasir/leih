@@ -54,6 +54,21 @@ class bill_register_payment(osv.osv):
 
         mr_object=self.pool.get("leih.money.receipt")
         mr_id=mr_object.create(cr, uid, value, context=context)
+        import pdb
+        pdb.set_trace()
+        paid_amount = 0
+        # try:
+        #     paid_amount=0
+        #     bill_id = [vals.get('bill_id')]
+        #     abc = self.pool.get('bill.register').browse(cr, uid, bill_id, context=context)[0]
+        #     paid_amount = abc.paid + float(vals.get('amount'))
+        #     import pdb
+        #     pdb.set_trace()
+        #     cr.execute("update bill_register set paid=%s where id=%s", (paid_amount,bill_id))
+        #     cr.commit()
+        # except:
+        #     pass
+
         if mr_id is not None:
             mr_name='mr#' +str(mr_id)
             cr.execute('update leih_money_receipt set name=%s where id=%s',(mr_name,mr_id))

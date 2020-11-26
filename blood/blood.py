@@ -5,8 +5,6 @@ from datetime import date, time
 class blood_donar(osv.osv):
     _name = "blood.donar"
 
-
-
     _columns = {
         'name':fields.char('Name'),
         'doner_name':fields.char('Donar Name',required=True),

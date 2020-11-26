@@ -44,10 +44,10 @@
                                     <strong>Total Amount:</strong>
                                     <p t-field="o.total"/>
                                 </div>
-                                <div class="col-xs-4">
-                                    <strong>Discount:</strong>
-                                    <p t-field="o.discounts"/>
-                                </div>
+<!--                                <div class="col-xs-4">-->
+<!--                                    <strong>Discount:</strong>-->
+<!--                                    <p t-field="o.discounts"/>-->
+<!--                                </div>-->
                                 <div class="col-xs-4">
                                     <strong>Grand Total:</strong>
                                     <p t-field="o.grand_total"/>

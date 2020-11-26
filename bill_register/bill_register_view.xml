@@ -8,14 +8,11 @@
             <field name="arch" type="xml">
             <form string="Investigation">
                                     <header>
-                                        <script>
-
-
-                                        </script>
-                                        <button string="Test Javascript Onclick Method" custom="click" />
+                        <button string="Test Javascript Onclick Method" custom="click" />
                         <button string="Add Test" type="object" name="add_new_test" groups="base.group_user"/>
-                                                    <button string="Add Discount" type="object" name="add_discount" groups="base.group_user"/>
-                                                    <button string="Add payment" type="object" name="btn_pay_bill" groups="base.group_user"/>
+                        <button string="Add Discount" type="object" name="add_discount" groups="base.group_user"/>
+                        <button string="Add payment" type="object" name="btn_pay_bill" groups="base.group_user"/>
+                        <button string="Cancel" type="object" name="bill_cancel" groups="base.group_user"/>
                     </header>
                 <sheet>
 
@@ -66,6 +63,8 @@
 
                             <group>
                                 <field name="total"/>
+                                <button name="button_dummy" string="(update)" type="object" class="oe_edit_only oe_link"/>
+
                                 <field name="doctors_discounts"/>
                                 <field name="after_discount"/>
                                 <field name="other_discount"/>

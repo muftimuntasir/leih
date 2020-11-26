@@ -38,8 +38,7 @@ class bill_register(osv.osv):
 
                 for record in self.browse(cr, uid, ids, context=context):
                     Percentance_calculation[record.id] = sum
-                    # import pdb
-                    # pdb.set_trace()
+
         return Percentance_calculation
     def _delivery_dates(self, cr, uid, ids, field_name, arg, context=None):
         delivery_date={}
@@ -133,7 +132,31 @@ class bill_register(osv.osv):
             }
         }
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
+    def button_dummy(self, cr, uid, ids, context=None):
 
+
+        return True
+
+    def bill_cancel(self, cr, uid, ids, context=None):
+        ## Bill Status Will Change
+
+        cr.execute("update bill_register set state='cancelled' where id=%s", (ids))
+        cr.commit()
+        ## Lab WIll be Deleted
+
+        cr.execute("update diagnosis_sticker set state='cancel' where bill_register_id=%s", (ids))
+        cr.commit()
+
+
+
+
+
+
+
+
+
+
+        return True
     def btn_pay_bill(self, cr, uid, ids, context=None):
         if not ids: return []
 
@@ -222,7 +245,8 @@ class bill_register(osv.osv):
                 'department_id':items.name.department.name,
                 'state':'sample',
             }
-
+            # import pdb
+            # pdb.set_trace()
             tmp_dict = {}
 
             for test_item in items.name.examination_entry_line:
@@ -282,7 +306,7 @@ class test_information(osv.osv):
     def onchange_test(self,cr,uid,ids,name,context=None):
         tests = {'values': {}}
         dep_object = self.pool.get('examination.entry').browse(cr, uid, name, context=None)
-        abc = {'department':dep_object.department.name,'price': dep_object.rate,'total_amount':dep_object.rate}
+        abc = {'department':dep_object.department.name,'price': dep_object.rate,'total_amount':dep_object.rate,'bill_register_id.paid':dep_object.rate}
         tests['value'] = abc
         # import pdb
         # pdb.set_trace()
