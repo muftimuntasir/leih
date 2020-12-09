@@ -63,7 +63,7 @@
 
                             <group>
                                 <field name="total"/>
-                                <button name="button_dummy" string="(update)" type="object" class="oe_edit_only oe_link"/>
+<!--                                <button name="button_dummy" string="(update)" type="object" class="oe_edit_only oe_link"/>-->
 
                                 <field name="doctors_discounts"/>
                                 <field name="after_discount"/>
