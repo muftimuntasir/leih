@@ -1,8 +1,7 @@
 from openerp import api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from datetime import date, time, timedelta
-from fpdf import FPDF
+from datetime import date, time, timedelta, datetime
 
 
 # class PDF(FPDF):
@@ -69,7 +68,7 @@ class bill_register(osv.osv):
         # 'patient_id': fields.char("Patient ID"),
         'name':fields.char("Name"),
         'mobile': fields.char(string="Mobile",readonly=True,store=False),
-        'patient_id': fields.char(related='patient_name.patient_id',string="Patient Id"),
+        'patient_id': fields.char(related='patient_name.patient_id',string="Patient Id",readonly=True),
         'patient_name': fields.many2one('patient.info', "Patient Name"),
         'address': fields.char("Address",store=False),
         'age': fields.char("Age",store=False),
@@ -85,8 +84,9 @@ class bill_register(osv.osv):
         'after_discount': fields.float("After Discount"),
         'other_discount': fields.float("Other Discount"),
         'grand_total': fields.float("Grand Total"),
-        'paid': fields.float("Paid"),
+        'paid': fields.float(string="Paid",required=True),
         'due': fields.float("Due"),
+        'date':fields.date("Date",default=datetime.now().strftime('%Y-%m-%d'),readonly=True),
         'state': fields.selection(
             [('activated', 'Activated'), ('released', 'Released'), ('cancelled', 'Cancelled')],
             'Status', default='activated', readonly=True)
@@ -224,6 +224,9 @@ class bill_register(osv.osv):
             cr.commit()
 
         stored_obj = self.browse(cr, uid, [stored], context=context)
+
+
+
         # page_name=stored_obj.name
         # pdf=PDF()
         # pdf.add_page()
@@ -247,9 +250,10 @@ class bill_register(osv.osv):
             }
             # import pdb
             # pdb.set_trace()
-            tmp_dict = {}
+
 
             for test_item in items.name.examination_entry_line:
+                tmp_dict = {}
                 tmp_dict['test_name'] = test_item.name
                 tmp_dict['ref_value'] = test_item.reference_value
                 child_list.append([0, False, tmp_dict])
@@ -262,10 +266,34 @@ class bill_register(osv.osv):
             if sample_id is not None:
                 sample_text = 'Lab-100' + str(sample_id)
                 cr.execute('update diagnosis_sticker set name=%s where id=%s', (sample_text, sample_id))
+                # cr.commit()
+
+        if stored_obj.paid !=False:
+            for bills_vals in stored_obj:
+                # import pdb
+                # pdb.set_trace()
+                mr_value={
+                    'date':stored_obj.date,
+                    'bill_id':int(stored),
+                    'amount':stored_obj.paid
+                }
+            mr_obj = self.pool.get('leih.money.receipt')
+            mr_id = mr_obj.create(cr, uid, mr_value, context=context)
+            if mr_id is not None:
+                mr_name = 'mr#' + str(mr_id)
+                cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
                 cr.commit()
+            # if mr_id is not None:
+            #     try:
+            #         mr_name = 'mr#' + str(mr_id)
+            #         cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
+            #         cr.commit()
+            #     except:
+            #         pass
 
 
         return stored
+
 
 
 class test_information(osv.osv):

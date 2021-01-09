@@ -54,8 +54,8 @@ class bill_register_payment(osv.osv):
 
         mr_object=self.pool.get("leih.money.receipt")
         mr_id=mr_object.create(cr, uid, value, context=context)
-        import pdb
-        pdb.set_trace()
+        # import pdb
+        # pdb.set_trace()
         paid_amount = 0
         # try:
         #     paid_amount=0

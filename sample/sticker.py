@@ -18,7 +18,8 @@ class sample(osv.osv):
                                      _('Already it is sample collected.'))
             cr.execute('update diagnosis_sticker set state=%s where id=%s', (statue, id))
             cr.commit()
-        return True
+        return self.pool['report'].get_action(cr, uid, ids, 'leih.report_sample_report', context=context)
+        # return True
 
     def print_lab_report(self,cr,uid,ids,context=None):
         status='done'

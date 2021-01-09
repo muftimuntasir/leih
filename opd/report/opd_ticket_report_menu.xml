@@ -3,7 +3,7 @@
     <data>
 
         <report
-            string="Print Test Info"
+            string="Print Ticket"
             id="action_report_opd_layout"
             model="opd.ticket"
             report_type="qweb-pdf"
