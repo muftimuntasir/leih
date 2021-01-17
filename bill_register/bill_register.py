@@ -92,6 +92,9 @@ class bill_register(osv.osv):
             'Status', default='activated', readonly=True)
     }
 
+
+
+
     def onchange_total(self,cr,uid,ids,name,context=None):
         tests = {'values': {}}
         dep_object = self.pool.get('leih.tests').browse(cr, uid, name, context=None)
@@ -327,7 +330,8 @@ class test_information(osv.osv):
         # 'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
         'price': fields.integer("Price"),
         'discount': fields.integer("Discount"),
-        'total_amount': fields.integer("Total Amount")
+        'total_amount': fields.integer("Total Amount"),
+        'commission_paid': fields.boolean("Commission Paid"),
 
     }
 

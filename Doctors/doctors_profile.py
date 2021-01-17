@@ -18,7 +18,8 @@ class doctors_profile(osv.osv):
         'others': fields.char("Others"),
         'bill_info':fields.one2many("bill.register",'ref_doctors',"Bill Register"),
         'admission_info':fields.many2one("leih.admission","Admission Info"),
-        'commission':fields.char("Commission")
+        'commission':fields.char("Commission"),
+        'commission_rate':fields.float("Commission Rate (%) ")
         # 'nid':fields.integer("NID")
 
 
