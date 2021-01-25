@@ -1,6 +1,8 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from datetime import date, time
+from datetime import date
+from openerp import api
+
 
 class bill_register(osv.osv):
     _name = "opd.ticket"
@@ -40,7 +42,8 @@ class bill_register(osv.osv):
         'sex':fields.char("Sex",store=False),
         'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
         'opd_ticket_line_id': fields.one2many('opd.ticket.line', 'opd_ticket_id', 'Investigations'),
-        'total': fields.function(_totalpayable,string="Total",type='float',store=True),
+        # 'total': fields.function(_totalpayable,string="Total",type='float',store=True),
+        'total': fields.float(string="Total")
     }
 
     def onchange_total(self,cr,uid,ids,name,context=None):
@@ -85,6 +88,16 @@ class bill_register(osv.osv):
             cr.execute('update opd_ticket set name=%s where id=%s', (name_text, stored))
             cr.commit()
         return stored
+    @api.onchange('opd_ticket_line_id')
+    def onchange_total(self):
+        total=0
+        for item in self.opd_ticket_line_id:
+            total=total+item.total_amount
+        self.total=total
+        return 'O'
+
+
+
 
 
 
@@ -108,6 +121,23 @@ class test_information(osv.osv):
         'total_amount': fields.integer("Total Amount")
 
     }
+
+    @api.model
+    def create(self, vals):
+        import pdb
+        pdb.set_trace()
+        return 0
+
+    # @api.onchange('total_amount')
+    # def change_item_price(self):
+    #     opd_ticket_line_id=list()
+    #     opd_ticket_line_id.append({
+    #         'total':500
+    #     })
+    #
+    #     ticket_id=self.opd_ticket_id
+    #     return "Nothing"
+
 
     def onchange_item(self,cr,uid,ids,name,context=None):
         tests = {'values': {}}

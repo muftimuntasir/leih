@@ -61,7 +61,6 @@ class commission(osv.osv):
 
         if self.ref_doctors:
             commissioner_id=self.ref_doctors.id
-
             commission_rate = 0
             c_query = "select commission_rate from doctors_profile where id=%s"
             self._cr.execute(c_query, ([commissioner_id]))

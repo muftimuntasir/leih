@@ -79,7 +79,8 @@ class bill_register(osv.osv):
         'bill_register_payment_line_id': fields.one2many("bill.register.payment.line", "bill_register_payment_line_id","Bill Register Payment"),
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
         # 'relation': fields.many2one("leih.investigation"),
-        'total': fields.function(_totalpayable,string="Total",type='float',store=True),
+        # 'total': fields.float(_totalpayable,string="Total",type='float',store=True),
+        'total': fields.float(string="Total"),
         'doctors_discounts': fields.float("Discount(%)"),
         'after_discount': fields.float("After Discount"),
         'other_discount': fields.float("Other Discount"),
@@ -149,17 +150,8 @@ class bill_register(osv.osv):
 
         cr.execute("update diagnosis_sticker set state='cancel' where bill_register_id=%s", (ids))
         cr.commit()
-
-
-
-
-
-
-
-
-
-
         return True
+
     def btn_pay_bill(self, cr, uid, ids, context=None):
         if not ids: return []
 
@@ -296,6 +288,15 @@ class bill_register(osv.osv):
 
 
         return stored
+
+    @api.onchange('bill_register_line_id')
+    def onchange_test_bill(self):
+        sumalltest=0
+        for item in self.bill_register_line_id:
+            sumalltest=sumalltest+item.total_amount
+
+        self.total=sumalltest
+        return "X"
 
 
 
