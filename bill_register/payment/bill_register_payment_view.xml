@@ -10,7 +10,7 @@
                 <form string="PI">
                     <sheet>
 
-                        <group string="bill Information">
+                        <group string="Bill Information">
                             <group>
                                 <field name="name"/>
                                 <field name="date"/>

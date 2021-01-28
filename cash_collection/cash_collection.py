@@ -12,9 +12,7 @@ class cash_collection(osv.osv):
     @api.onchange('type')
     def _onchange_tpe(self):
         child_list=[]
-
-
-
+        total=0
 
         # mr_obj = self.pool.get("leih.money.receipt").search(self.cr, self.uid, [('date','>=',self.date)])
         if self.type=='bill':
@@ -25,6 +23,7 @@ class cash_collection(osv.osv):
                 abc['bill_admission_opd_id']=record.bill_id.name
                 abc['mr_no']=record.name
                 abc['amount']=record.amount
+                total = total +record.amount
                 child_list.append([0, False, abc])
         if self.type=='admission':
             mr_obj=self.env['leih.money.receipt'].search(
@@ -36,8 +35,9 @@ class cash_collection(osv.osv):
                 abc['bill_admission_opd_id']=record.admission_id.name
                 abc['mr_no']=record.name
                 abc['amount']=record.amount
+                total = total + record.amount
                 child_list.append([0, False, abc])
-
+        self.total=total
 
         self.cash_collection_lines = child_list
 
@@ -103,11 +103,14 @@ class cash_collection(osv.osv):
                 ## Flagging
 
 
+                try:
 
-                for line_items in cc_obj.cash_collection_lines:
-                    mr_id = line_items.mr_no.id
-                    cr.execute( "UPDATE leih_money_receipt SET already_collected=True WHERE id={0}".format(mr_id))
-                    cr.commit()
+                    for line_items in cc_obj.cash_collection_lines:
+                        mr_id = line_items.mr_no.id
+                        cr.execute( "UPDATE leih_money_receipt SET already_collected=True WHERE id={0}".format(mr_id))
+                        cr.commit()
+                except:
+                    pass
 
 
                 ## Ends here Cash collection and Flagging

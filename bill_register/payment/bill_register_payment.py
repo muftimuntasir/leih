@@ -21,15 +21,32 @@ class bill_register_payment(osv.osv):
         pay_type = payment_obj.type
         pay_card=payment_obj.card_no
         pay_bank=payment_obj.bank_name
+        current_due =payment_obj.bill_id.due
+        current_paid =payment_obj.bill_id.paid
+
+        updated_amount = current_due-pay_amount
+        updated_paid = current_paid+pay_amount
+        if updated_amount <0:
+            updated_amount=0
+
+
+
+
+
+
 
         service_dict={'date': pay_date,'amount':pay_amount,'type': pay_type,'card_no':pay_card ,'bill_register_payment_line_id': bill_id}
 
         service_id = eve_mee_obj.create(cr, uid, vals=service_dict, context=context)
 
+        cr.execute("update bill_register set due=%s,paid=%s where id=%s", (updated_amount,updated_paid,bill_id))
+        cr.commit()
+
+
         return service_id
 
     _columns = {
-        'name':fields.char("Cash COllection ID", readonly=True),
+        'name':fields.char("Cash Collection ID", readonly=True),
         'bill_id': fields.many2one('bill.register', 'Bill ID', readoly=True),
         'date': fields.date('Date'),
         'amount': fields.float('Receive Amount', required=True),

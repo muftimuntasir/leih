@@ -13,9 +13,9 @@ class sample(osv.osv):
 
         for id in ids:
             report_obj = self.browse(cr, uid, id, context=context)
-            if report_obj.state == 'lab' or report_obj.state == 'done':
-                raise osv.except_osv(_('Warning!'),
-                                     _('Already it is sample collected.'))
+            # if report_obj.state == 'lab' or report_obj.state == 'done':
+            #     raise osv.except_osv(_('Warning!'),
+            #                          _('Already it is sample collected.'))
             cr.execute('update diagnosis_sticker set state=%s where id=%s', (statue, id))
             cr.commit()
         return self.pool['report'].get_action(cr, uid, ids, 'leih.report_sample_report', context=context)
@@ -26,12 +26,12 @@ class sample(osv.osv):
 
         for id in ids:
             report_obj = self.browse(cr, uid, id, context=context)
-            if report_obj.state == 'done':
-                raise osv.except_osv(_('Warning!'),
-                                     _('Already it is Completed.'))
+            # if report_obj.state == 'done':
+            #     raise osv.except_osv(_('Warning!'),
+            #                          _('Already it is Completed.'))
             cr.execute('update diagnosis_sticker set state=%s where id=%s', (status, id))
             cr.commit()
-        return True
+        return self.pool['report'].get_action(cr, uid, ids, 'leih.report_detail', context=context)
 
 
     def set_to_lab(self,cr,uid,ids,context=None):
@@ -54,6 +54,7 @@ class sample(osv.osv):
         'name': fields.char('Name'),
         'bill_register_id':fields.many2one('bill.register','Bill register Id'),
         'department_id':fields.char('Department'),
+        'test_id':fields.many2one('examination.entry','Test Name'),
         'sticker_line_id':fields.one2many('diagnosis.sticker.line','sticker_id','Record Sample'),
         'state': fields.selection(
             [('cancel', 'Cancelled'), ('sample', 'Sample'), ('lab', 'Lab'),('done', 'Done')],
@@ -69,8 +70,8 @@ class test_sample(osv.osv):
     _columns = {
         'test_name': fields.char("Name"),
         'sticker_id':fields.many2one('diagnosis.sticker','ID'),
+        'result': fields.char('Result'),
         'ref_value': fields.char('Reference Value'),
-        'result': fields.char('Test ID'),
         'remarks': fields.char('Remarks')
 
     }

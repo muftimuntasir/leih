@@ -101,6 +101,7 @@ class bill_register(osv.osv):
 
 
 
+
 class test_information(osv.osv):
     _name = 'opd.ticket.line'
 
@@ -122,11 +123,7 @@ class test_information(osv.osv):
 
     }
 
-    @api.model
-    def create(self, vals):
-        import pdb
-        pdb.set_trace()
-        return 0
+
 
     # @api.onchange('total_amount')
     # def change_item_price(self):

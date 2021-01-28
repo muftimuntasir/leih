@@ -158,6 +158,7 @@ class bill_register(osv.osv):
         dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'leih','bill_register_payment_form_view')
         #
         inv = self.browse(cr, uid, ids[0], context=context)
+
         # total=inv.total
         # import pdb
         # pdb.set_trace()
@@ -172,7 +173,8 @@ class bill_register(osv.osv):
             'target': 'new',
             'domain': '[]',
             'context': {
-                'default_bill_id': ids[0]
+                'default_bill_id': ids[0],
+                'default_amount': inv.due
             }
         }
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
@@ -239,7 +241,7 @@ class bill_register(osv.osv):
             child_list = []
             value = {
                 'bill_register_id':int(stored),
-                'tests_id':int(items.id),
+                'test_id':int(items.name.id),
                 'department_id':items.name.department.name,
                 'state':'sample',
             }
@@ -296,7 +298,31 @@ class bill_register(osv.osv):
             sumalltest=sumalltest+item.total_amount
 
         self.total=sumalltest
+        self.due=sumalltest
         return "X"
+
+    def onchange_paid(self,cr,uid,ids,total,paid,context=None):
+        list = {}
+        abc = {'due': total-paid}
+        list['value'] = abc
+        return list
+
+
+
+    @api.onchange('doctors_discounts')
+    def onchange_doc_discount(self):
+        aft_discount=self.total - (self.total*(self.doctors_discounts/100))
+        self.after_discount=aft_discount
+        self.grand_total = aft_discount
+        self.due=aft_discount
+        return "X"
+
+    def onchange_paid(self,cr,uid,ids,total,paid,context=None):
+        list = {}
+        abc = {'due': total-paid}
+        list['value'] = abc
+        return list
+
 
 
 
