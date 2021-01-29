@@ -70,7 +70,7 @@
                                 <field name="after_discount"/>
                                 <field name="other_discount"/>
                                 <field name="grand_total"/>
-                                <field name="paid" on_change="onchange_paid(total,paid,context)"/>
+                                <field name="paid"/>
                                 <field name="due"/>
                             </group>
 

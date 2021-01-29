@@ -52,7 +52,7 @@ class sample(osv.osv):
 
     _columns = {
         'name': fields.char('Name'),
-        'bill_register_id':fields.many2one('bill.register','Bill register Id'),
+        'bill_register_id':fields.many2one('bill.register','Bill register'),
         'department_id':fields.char('Department'),
         'test_id':fields.many2one('examination.entry','Test Name'),
         'sticker_line_id':fields.one2many('diagnosis.sticker.line','sticker_id','Record Sample'),

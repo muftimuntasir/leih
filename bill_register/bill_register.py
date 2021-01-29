@@ -82,7 +82,7 @@ class bill_register(osv.osv):
         # 'total': fields.float(_totalpayable,string="Total",type='float',store=True),
         'total': fields.float(string="Total"),
         'doctors_discounts': fields.float("Discount(%)"),
-        'after_discount': fields.float("After Discount"),
+        'after_discount': fields.float("Discount Amount"),
         'other_discount': fields.float("Other Discount"),
         'grand_total': fields.float("Grand Total"),
         'paid': fields.float(string="Paid",required=True),
@@ -238,12 +238,15 @@ class bill_register(osv.osv):
 
 
         for items in stored_obj.bill_register_line_id:
+            state = 'sample'
+            if items.name.sample_req == False or items.name.sample_req == None:
+                state='lab'
             child_list = []
             value = {
                 'bill_register_id':int(stored),
                 'test_id':int(items.name.id),
                 'department_id':items.name.department.name,
-                'state':'sample',
+                'state':state,
             }
             # import pdb
             # pdb.set_trace()
@@ -298,30 +301,36 @@ class bill_register(osv.osv):
             sumalltest=sumalltest+item.total_amount
 
         self.total=sumalltest
-        self.due=sumalltest
+        after_dis = (sumalltest* (self.doctors_discounts/100))
+        self.after_discount = after_dis
+        self.grand_total=sumalltest -  self.other_discount - after_dis
+        self.due=sumalltest - after_dis -  self.other_discount- self.paid
+
         return "X"
 
-    def onchange_paid(self,cr,uid,ids,total,paid,context=None):
-        list = {}
-        abc = {'due': total-paid}
-        list['value'] = abc
-        return list
+    @api.onchange('paid')
+    def onchange_paid(self):
+        self.due = self.grand_total - self.paid
+        return 'x'
 
 
 
     @api.onchange('doctors_discounts')
     def onchange_doc_discount(self):
-        aft_discount=self.total - (self.total*(self.doctors_discounts/100))
+        aft_discount=(self.total*(self.doctors_discounts/100))
         self.after_discount=aft_discount
-        self.grand_total = aft_discount
-        self.due=aft_discount
+        self.grand_total = self.total - aft_discount - self.other_discount
+        self.due=self.total - aft_discount - self.other_discount- self.paid
+
         return "X"
 
-    def onchange_paid(self,cr,uid,ids,total,paid,context=None):
-        list = {}
-        abc = {'due': total-paid}
-        list['value'] = abc
-        return list
+    @api.onchange('other_discount')
+    def onchange_other_discount(self):
+        self.grand_total = self.total - self.after_discount - self.other_discount
+        self.due=self.total - self.after_discount - self.other_discount- self.paid
+        return 'True'
+
+
 
 
 
