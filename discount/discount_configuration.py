@@ -21,6 +21,43 @@ class discount_configuration(osv.osv):
 
     }
 
+    @api.model
+    def create(self, vals):
+        record = super(discount_configuration, self).create(vals)
+        return record
+
+    @api.onchange('overall_discount')
+    def onchange_overall_discount(self):
+
+
+            query = "select id,name,rate,department from examination_entry"
+
+            self._cr.execute(query)
+
+            all_data = self._cr.dictfetchall()
+
+            discount_configuration_line_ids = list()
+
+
+            for items in all_data:
+                # import pdb
+                # pdb.set_trace()
+
+
+                discount_configuration_line_ids.append({
+
+                    'test_id': items.get('id'),
+                    'test_price': items.get('rate'),
+                    'department_id': items.get('department'),
+                    'variance_amount':self.overall_discount
+
+                })
+
+            self.discount_donfiguration_line_ids = discount_configuration_line_ids
+
+
+            return "xXxXxXxXxX"
+
 
 class discount_configuration_line(osv.osv):
     _name = "discount.configuration.line"
