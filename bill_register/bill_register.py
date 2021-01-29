@@ -86,6 +86,9 @@ class bill_register(osv.osv):
         'other_discount': fields.float("Other Discount"),
         'grand_total': fields.float("Grand Total"),
         'paid': fields.float(string="Paid",required=True),
+        'type': fields.selection([('cash', 'Cash'),('bank', 'Bank')], 'Payment Type'),
+        'card_no': fields.char('Card No.'),
+        'bank_name': fields.char('Bank Name'),
         'due': fields.float("Due"),
         'date':fields.date("Date",default=datetime.now().strftime('%Y-%m-%d'),readonly=True),
         'state': fields.selection(
@@ -216,7 +219,7 @@ class bill_register(osv.osv):
 
 
         if stored is not None:
-            name_text = 'Bill-1000' + str(stored)
+            name_text = 'Bill-0' + str(stored)
             cr.execute('update bill_register set name=%s where id=%s', (name_text, stored))
             cr.commit()
 
@@ -293,6 +296,11 @@ class bill_register(osv.osv):
 
 
         return stored
+
+    def write(self, cr, uid, ids, vals, context=None):
+
+
+        return super(bill_register, self).write(cr, uid, ids, vals, context=context)
 
     @api.onchange('bill_register_line_id')
     def onchange_test_bill(self):

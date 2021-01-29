@@ -70,6 +70,9 @@
                                 <field name="after_discount"/>
                                 <field name="other_discount"/>
                                 <field name="grand_total"/>
+                                <field name="type"/>
+                                <field name="card_no"/>
+                                <field name="bank_name"/>
                                 <field name="paid"/>
                                 <field name="due"/>
                             </group>
