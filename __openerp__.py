@@ -84,6 +84,7 @@ membership products (schemes).
         'discount/discount_category_view.xml',
         'discount/discount_core_type_view.xml',
         'commission/commission_view.xml',
+        'commission/commission_configuration_view.xml',
 
 
     ],
