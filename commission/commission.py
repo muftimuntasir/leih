@@ -35,6 +35,32 @@ class commission(osv.osv):
 
     _order = 'id desc'
 
+
+
+    def btn_pay_bill(self, cr, uid, ids, context=None):
+        if not ids: return []
+
+        dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'leih','bill_register_payment_form_view')
+        #
+        inv = self.browse(cr, uid, ids[0], context=context)
+
+        return {
+            'name': _("Pay Invoice"),
+            'view_mode': 'form',
+            'view_id': view_id,
+            'view_type': 'form',
+            'res_model': 'bill.register.payment',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'domain': '[]',
+            'context': {
+                'default_bill_id': ids[0],
+                'default_amount': inv.due
+            }
+        }
+        raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
+
     def confirm_commission(self, cr, uid, ids, context=None):
 
 
@@ -57,7 +83,7 @@ class commission(osv.osv):
     def create(self, vals):
         record = super(commission, self).create(vals)
 
-        record.name = 'CC-0'+ str(record.id)
+        record.name = 'Com-0'+ str(record.id)
         return record
 
     @api.onchange('ref_doctors')

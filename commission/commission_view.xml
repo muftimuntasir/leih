@@ -12,6 +12,7 @@
                     <header>
                         <button string="Confirm" type="object" name="confirm_commission" groups="base.group_user"/>
                         <button string="Cancel" type="object" name="cancel_commission" groups="base.group_user"/>
+                        <button string="Add payment" type="object" name="btn_pay_bill" groups="base.group_user"/>
 
 
 

@@ -3,6 +3,10 @@ from openerp.tools.translate import _
 from datetime import date, time
 from openerp import api
 
+
+
+
+
 class commissionconfiguration(osv.osv):
     _name = "commission.configuration"
 
@@ -35,6 +39,13 @@ class commissionconfiguration(osv.osv):
     }
 
     _order = 'id desc'
+
+    @api.model
+    def create(self, vals):
+        record = super(commissionconfiguration, self).create(vals)
+
+        record.name = 'CA-0' + str(record.id)
+        return record
 
     @api.onchange('overall_commission_rate')
     def add_tests_ids_in_line_with_rate(self):
@@ -130,9 +141,28 @@ class commissionconfiguration(osv.osv):
         cr.execute("update commission_configuration set state='done' where id=%s", (ids))
         cr.commit()
 
+        config_data = self.browse(cr, uid, ids, context=context)
+        doc_id = config_data.doctor_id.id
+
+        if config_data.state == 'done':
+            raise osv.except_osv(_('Already Confirmed!'),
+                                 _('Already Confirmed'))
+
+
+        cr.execute("update doctors_profile set cc_id=%s where id=%s", ([doc_id,ids[0]]))
+        cr.commit()
+
+
+
+
         return True
 
     def cancel_configuration(self, cr, uid, ids, context=None):
+        config_data = self.browse(cr, uid, ids, context=context)
+
+        if config_data.state == 'done':
+            raise osv.except_osv(_('Already Confirmed!'),
+                                 _('Already Confirmed'))
 
         cr.execute("update commission_configuration set state='cancelled' where id=%s", (ids))
         cr.commit()
@@ -161,4 +191,11 @@ class commissionconfigurationline(osv.osv):
 
     }
 
+
+class doctors_profile(osv.osv):
+    _inherit = "doctors.profile"
+    _columns = {
+
+        'cc_id': fields.many2one('commission.configuration', 'Commission Rule')
+    }
 
