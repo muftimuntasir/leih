@@ -19,6 +19,7 @@ class commissionconfiguration(osv.osv):
         'overall_default_discount': fields.float('Overall Discount Rate (%)'),
         'max_default_discount': fields.float('Max Discount Rate (%)'),
         'deduct_from_discount': fields.boolean("Deduct Excess Discount From Commission"),
+        'add_few_departments': fields.boolean("Add by Department"),
         'department_ids':fields.many2one('diagnosis.department','Department List'),
 
         'commission_configuration_line_ids':fields.one2many("commission.configuration.line",'commission_configuration_line_ids',"Commission Lines"),
@@ -34,6 +35,100 @@ class commissionconfiguration(osv.osv):
     }
 
     _order = 'id desc'
+
+    @api.onchange('overall_commission_rate')
+    def add_tests_ids_in_line_with_rate(self):
+        line_data =[]
+        if self.overall_commission_rate:
+            try:
+                comm_rate = round((self.overall_commission_rate/100),2)
+            except:
+                comm_rate=0
+            if self.commission_configuration_line_ids:
+                for items in self.commission_configuration_line_ids:
+                    est_comm = round((comm_rate*items.test_price),2)
+
+                    line_data.append({
+
+                        'department_id': items.department_id,
+                        'test_id': items.test_id,
+                        'applicable': items.applicable,
+                        'fixed_amount': items.fixed_amount,
+                        'variance_amount': comm_rate,
+                        'test_price': items.test_price,
+                        'est_commission_amount': est_comm,
+                        'max_commission_amount': items.max_commission_amount
+
+                    })
+        self.commission_configuration_line_ids=line_data
+
+
+        return 'x'
+
+
+    @api.onchange('department_ids')
+    def add_tests_ids_in_line(self):
+        comm_rate=0
+        if self.overall_commission_rate:
+            try:
+                comm_rate = round((self.overall_commission_rate / 100), 2)
+            except:
+                comm_rate=0
+        if self.department_ids:
+            depet_id=self.department_ids.id
+            query="select id,name,department,rate from examination_entry where id=%s"
+            self._cr.execute(query, ([depet_id]))
+
+            all_data = self._cr.dictfetchall()
+            configure_line=[]
+
+
+            if self.commission_configuration_line_ids:
+                for items in self.commission_configuration_line_ids:
+                    est_comm = round((comm_rate*items.test_price),2)
+
+                    configure_line.append({
+
+                        'department_id': items.department_id,
+                        'test_id': items.test_id,
+                        'applicable': items.applicable,
+                        'fixed_amount': items.fixed_amount,
+                        'variance_amount': comm_rate,
+                        'test_price': items.test_price,
+                        'est_commission_amount': est_comm,
+                        'max_commission_amount': items.max_commission_amount
+
+                    })
+
+
+            for items in all_data:
+                est_amnt=round((comm_rate*items.get('rate')),2)
+                configure_line.append(
+                    {
+
+                        'department_id': items.get('department'),
+                        'test_id': items.get('id'),
+                        'applicable':True ,
+                        'fixed_amount': 0,
+                        'variance_amount':0 ,
+                        'test_price': items.get('rate'),
+                        'est_commission_amount': est_amnt,
+                        'max_commission_amount': 0
+
+                    }
+                )
+            self.commission_configuration_line_ids=configure_line
+
+
+
+
+
+
+
+
+        return "xXxXxXxXxX"
+
+
 
 
 
