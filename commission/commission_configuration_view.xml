@@ -86,10 +86,10 @@
             <field name="model">commission.configuration</field>
             <field name="arch" type="xml">
                 <tree string="Commission Configuration List">
-                    <field name="id"/>
                     <field name="name"/>
                     <field name="doctor_id"/>
                     <field name="start_date"/>
+                    <field name="end_date"/>
                     <field name="state"/>
 
                 </tree>
