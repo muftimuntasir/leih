@@ -9,7 +9,7 @@ class commission(osv.osv):
 
     _columns = {
 
-        'name': fields.char("Doctor Name"),
+        'name': fields.char("Commission Calculation"),
         'ref_doctors': fields.many2one('doctors.profile', 'Doctor/Broker Name'),
         'commission_configuration_id': fields.many2one('commission.configuration', 'Commission Rule'),
         'commission_rate': fields.float('Commission Rate'),
@@ -35,22 +35,20 @@ class commission(osv.osv):
 
     _order = 'id desc'
 
-    def make_confirm(self, cr, uid, ids, context=None):
-
-        id_list = ids
-        stock_packing_ids = []
-
-        for element in id_list:
-            ids = [element]
+    def confirm_commission(self, cr, uid, ids, context=None):
 
 
+        if ids is not None:
+            cr.execute("update commission set state='done' where id=%s", (ids))
+            cr.commit()
 
-            if ids is not None:
-                cr.execute("update commission set state='done' where id=%s", (ids))
-                cr.commit()
+        return 'True'
 
+    def cancel_commission(self, cr, uid, ids, context=None):
 
-
+        if ids is not None:
+            cr.execute("update commission set state='cancelled' where id=%s", (ids))
+            cr.commit()
 
         return 'True'
 
@@ -58,6 +56,8 @@ class commission(osv.osv):
     @api.model
     def create(self, vals):
         record = super(commission, self).create(vals)
+
+        record.name = 'CC-0'+ str(record.id)
         return record
 
     @api.onchange('ref_doctors')
@@ -78,43 +78,82 @@ class commission(osv.osv):
                 commission_rate=0
 
 
+            ## Get all Commission Configuration List
+
+            comm_query = "select commission_configuration_line.test_id,commission_configuration_line.fixed_amount,commission_configuration_line.test_price,commission_configuration_line.applicable,commission_configuration_line.variance_amount,commission_configuration_line.est_commission_amount,commission_configuration_line.department_id,commission_configuration_line.max_commission_amount from commission_configuration,commission_configuration_line where commission_configuration.id= commission_configuration_line.commission_configuration_line_ids and commission_configuration_line.applicable = True and commission_configuration.doctor_id=%s"
+            self._cr.execute(comm_query, ([commissioner_id]))
+
+            comm_configuration_data = self._cr.dictfetchall()
 
 
-            query = "select bill_register_line.name,bill_register_line.total_amount,bill_register.ref_doctors from bill_register_line,bill_register where bill_register_line.bill_register_id=bill_register.id and (bill_register_line.commission_paid = FALSE or bill_register_line.commission_paid is NULL)and bill_register.ref_doctors =%s"
+            configured_test_ids = [items.get('test_id') for items in comm_configuration_data]
+
+            ## Ends Here
+
+            query = "select bill_register_line.name,bill_register_line.total_amount,bill_register.ref_doctors from bill_register_line,bill_register where bill_register_line.bill_register_id=bill_register.id and (bill_register_line.commission_paid = FALSE or bill_register_line.commission_paid is NULL)and bill_register.ref_doctors =%s and bill_register_line.name in %s"
 
 
-            self._cr.execute(query, ([commissioner_id]))
+            self._cr.execute(query, (commissioner_id,tuple(configured_test_ids)))
 
             all_data = self._cr.dictfetchall()
-
 
 
             order_payment_line = list()
 
             total_amount = 0
+            total_billing_amount=0
+            total_test_count = 0
 
 
             for bill_items in all_data:
-                try:
-                    pay_amount = round((commission_rate * bill_items.get('total_amount')),2)
-                except:
-                    pay_amount=0
 
-                total_amount = total_amount + pay_amount
+                for c_items in comm_configuration_data:
+                    if c_items.get('test_id') == bill_items.get('name') and c_items.get('applicable') == True:
+                        total_test_count = total_test_count + 1
 
-                order_payment_line.append({
+                        max_cap_amnt = c_items.get('max_commission_amount')
+                        fixed_amnt = c_items.get('fixed_amount')
+                        var_amnt = c_items.get('variance_amount')
+                        billed_amont = bill_items.get('total_amount')
+                        total_billing_amount = total_billing_amount + billed_amont
+
+                        cal_pay_amnt = 0
+
+                        if var_amnt > 0.00:
+                            cal_pay_amnt = round((billed_amont *(var_amnt/100)),2)
+
+                        if fixed_amnt > 0.00:
+                            cal_pay_amnt = round(fixed_amnt,2)
 
 
-                    'name': bill_items.get('name'),
-                    'amount': bill_items.get('total_amount'),
-                    'commission_rate': commission_rate_raw,
-                    'payable_amount': pay_amount,
 
-                })
+
+                        if max_cap_amnt > 0.00:
+
+                            if cal_pay_amnt > max_cap_amnt:
+                                cal_pay_amnt = round(max_cap_amnt,2)
+
+
+                        order_payment_line.append({
+
+
+                            'department_id': c_items.get('department_id'),
+                            'name': bill_items.get('name'),
+                            'discount_amount': bill_items.get('name'),
+                            'test_amount': billed_amont,
+                            'mou_payable_comm_var': var_amnt,
+                            'mou_payable_comm_fixed': fixed_amnt,
+                            'mou_payable_comm_max_cap': max_cap_amnt,
+                            'payable_amount':cal_pay_amnt,
+
+                        })
+                        break
 
             self.commission_line_ids = order_payment_line
             self.total_amount=total_amount
             self.commission_rate=commission_rate_raw
+            self.total_bill=total_billing_amount
+            self.total_tests=total_test_count
 
         return "xXxXxXxXxX"
 
