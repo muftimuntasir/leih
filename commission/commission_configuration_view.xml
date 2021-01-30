@@ -10,6 +10,8 @@
             <field name="arch" type="xml">
                 <form string="Commission Configuration">
                     <header>
+                        <button string="Confirm" type="object" name="confirm_configuration" groups="base.group_user"/>
+                        <button string="Cancel" type="object" name="cancel_configuration" groups="base.group_user"/>
 
                     </header>
 

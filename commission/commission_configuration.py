@@ -121,12 +121,24 @@ class commissionconfiguration(osv.osv):
 
 
 
-
-
-
-
-
         return "xXxXxXxXxX"
+
+
+
+    def confirm_configuration(self, cr, uid, ids, context=None):
+
+        cr.execute("update commission_configuration set state='done' where id=%s", (ids))
+        cr.commit()
+
+        return True
+
+    def cancel_configuration(self, cr, uid, ids, context=None):
+
+        cr.execute("update commission_configuration set state='cancelled' where id=%s", (ids))
+        cr.commit()
+
+        return True
+
 
 
 
