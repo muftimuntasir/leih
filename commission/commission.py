@@ -7,16 +7,20 @@ class commission(osv.osv):
     _name = "commission"
 
 
-
-
     _columns = {
 
         'name': fields.char("Doctor Name"),
-        'ref_doctors': fields.many2one('doctors.profile', 'Doctor Name'),
+        'ref_doctors': fields.many2one('doctors.profile', 'Doctor/Broker Name'),
+        'commission_configuration_id': fields.many2one('commission.configuration', 'Commission Rule'),
         'commission_rate': fields.float('Commission Rate'),
-        'given_discount_amount': fields.float('Total Discount'),
+        'cal_st_date': fields.date("Calculation Start Date", required=True),
+        'cal_end_date': fields.date("Calculation End Date", required=True),
         'total_amount': fields.float('Total Commission Amount'),
-        'date': fields.date("Commission Date"),
+        'given_discount_amount': fields.float('Total Discount'),
+        'total_payable_amount': fields.float('Total Payable Amount'),
+        'total_patient': fields.float('Total Patients'),
+        'total_bill': fields.float('Total Billing Amount'),
+        'total_tests': fields.float('Total Tests in All Billing'),
         'commission_line_ids':fields.one2many("commission.line",'commission_line_ids',"Commission Lines"),
         'state': fields.selection(
             [('pending', 'Pending'), ('done', 'Confirmed'), ('cancelled', 'Cancelled')],
@@ -128,10 +132,17 @@ class commission_line(osv.osv):
 
     _columns = {
         'commission_line_ids': fields.many2one('commission', 'commission'),
-        'name': fields.many2one("examination.entry", "Exam Name"),
-        'amount': fields.float('Amount'),
-        'commission_rate': fields.float('Commission Amount'),
+        'department_id': fields.many2one("diagnosis.department", "Department"),
+        'name': fields.many2one("examination.entry", "Test Name"),
+        'discount_amount': fields.float('Discount Amount'),
+        'test_amount': fields.float('Test Amount'),
+        'mou_payable_comm_var': fields.float('MOU Payable Commission Amount (%)'),
+        'mou_payable_comm_fixed': fields.float('MOU Payable Commission Fixed'),
+        'mou_payable_comm_max_cap': fields.float('MOU Max CAP Amount'),
+        'after_discount': fields.float('After Discount Amount'),
         'payable_amount': fields.float('Payable Amount'),
+
+
         'bill_line_id': fields.many2one("bill.register.line",'Bill Register Line ID'),
     }
 
