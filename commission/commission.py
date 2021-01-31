@@ -21,6 +21,7 @@ class commission(osv.osv):
         'total_patient': fields.float('Total Patients'),
         'total_bill': fields.float('Total Billing Amount'),
         'total_tests': fields.float('Total Tests in All Billing'),
+        'paid_amount': fields.float('Paid Amount'),
         'commission_line_ids':fields.one2many("commission.line",'commission_line_ids',"Commission Lines"),
         'state': fields.selection(
             [('pending', 'Pending'), ('done', 'Confirmed'), ('cancelled', 'Cancelled')],
@@ -40,23 +41,25 @@ class commission(osv.osv):
     def btn_pay_bill(self, cr, uid, ids, context=None):
         if not ids: return []
 
-        dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'leih','bill_register_payment_form_view')
+        dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'leih','commission_payment_form_view')
         #
         inv = self.browse(cr, uid, ids[0], context=context)
 
+
         return {
-            'name': _("Pay Invoice"),
+            'name': _("Payment"),
             'view_mode': 'form',
             'view_id': view_id,
             'view_type': 'form',
-            'res_model': 'bill.register.payment',
+            'res_model': 'commission.payment',
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
             'domain': '[]',
             'context': {
-                'default_bill_id': ids[0],
-                'default_amount': inv.due
+                'default_cc_id': ids[0],
+                'default_doctor_id': inv.ref_doctors.id,
+                'default_paid_amount': inv.total_payable_amount
             }
         }
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))

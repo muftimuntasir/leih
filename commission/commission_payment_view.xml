@@ -11,6 +11,8 @@
                 <form string="Commission Payment">
                     <header>
 
+
+
                     </header>
 
                     <sheet>
@@ -33,6 +35,10 @@
                             </group>
 
                         </group>
+                        <footer>
+                        <button name="button_add_payment_action" string="Pay" class="oe_highlight" type="object"/> or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
 
 
                     </sheet>
@@ -63,6 +69,7 @@
             <field name="arch" type="xml">
                 <tree string="Commission Payment List">
                     <field name="id"/>
+                    <field name="name"/>
                     <field name="date"/>
                     <field name="doctor_id"/>
                     <field name="cc_id"/>
@@ -72,6 +79,7 @@
                     <field name="due_amount"/>
                     <field name="period_id"/>
                     <field name="note"/>
+                    <field name="journal_id"/>
                     <field name="state"/>
 
                 </tree>

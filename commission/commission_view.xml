@@ -98,6 +98,7 @@
                     <field name="cal_end_date"/>
                     <field name="total_amount"/>
                     <field name="total_payable_amount"/>
+                    <field name="paid_amount"/>
                     <field name="state"/>
 
 
