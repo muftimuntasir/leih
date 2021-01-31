@@ -88,6 +88,7 @@ membership products (schemes).
         'commission/commission_calculation_view.xml',
         'commission/report/report_commission.xml',
         'commission/report/report_commission_menu.xml',
+        'commission/commission_payment_view.xml',
 
 
     ],
