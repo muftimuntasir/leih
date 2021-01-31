@@ -24,7 +24,7 @@ class commission(osv.osv):
         'paid_amount': fields.float('Paid Amount'),
         'commission_line_ids':fields.one2many("commission.line",'commission_line_ids',"Commission Lines"),
         'state': fields.selection(
-            [('pending', 'Pending'), ('done', 'Confirmed'), ('cancelled', 'Cancelled')],
+            [('pending', 'Pending'), ('done', 'Confirmed'),('paid', 'Paid & Close'), ('cancelled', 'Cancelled')],
             'Status', default='pending', readonly=True)
 
     }

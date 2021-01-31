@@ -65,11 +65,18 @@ class commissionpayment(osv.osv):
 
         payment_obj.journal_id = journal_id
 
-
-
-
-
         ## Ends Here
+
+
+        ## Update Balance Here
+        paid_amoount = payment_obj.paid_amount
+        query = "update commission set state='paid',paid_amount=%s where id=%s"
+
+        cr.execute(query, (paid_amoount, payment_obj.cc_id.id))
+        cr.commit()
+
+
+        ## Ends Update Balnce of CC Here
 
 
 
