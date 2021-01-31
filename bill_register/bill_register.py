@@ -92,8 +92,8 @@ class bill_register(osv.osv):
         'due': fields.float("Due"),
         'date':fields.date("Date",default=datetime.now().strftime('%Y-%m-%d'),readonly=True),
         'state': fields.selection(
-            [('activated', 'Activated'), ('released', 'Released'), ('cancelled', 'Cancelled')],
-            'Status', default='activated', readonly=True)
+            [('pending', 'Pending'), ('confirmed', 'Released'), ('cancelled', 'Cancelled')],
+            'Status', default='pending', readonly=True)
     }
 
 

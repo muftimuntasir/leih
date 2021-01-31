@@ -79,6 +79,18 @@ class commissionpayment(osv.osv):
         ## Ends Update Balnce of CC Here
 
 
+        ## Update Commission Calculation Date
+
+
+        end_date = payment_obj.cc_id.cal_end_date
+        doc_id = payment_obj.cc_id.ref_doctors.id
+        query = "update doctors_profile set last_commission_calculation_date=%s where id=%s"
+
+        cr.execute(query, (end_date, doc_id))
+        cr.commit()
+
+        ## Ends Here
+
 
 
         return payment_obj.id

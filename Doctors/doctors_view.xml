@@ -66,6 +66,7 @@
                         <field name="type"/>
                         <field name="status"/>
                         <field name="others"/>
+                        <field name="last_commission_calculation_date"/>
 
             </tree>
             </field>

@@ -92,7 +92,14 @@ class commission(osv.osv):
     @api.onchange('ref_doctors')
     def customer_on_select(self):
 
+
+
         if self.ref_doctors:
+            if self.cal_st_date == False or self.cal_end_date == False:
+                raise osv.except_osv(_('Select'), _('Please select Start and End Date od Calcualtion'))
+
+            st_date = self.cal_st_date
+            end_date = self.cal_end_date
             commissioner_id=self.ref_doctors.id
             commission_rate = 0
             c_query = "select commission_rate from doctors_profile where id=%s"
@@ -119,10 +126,10 @@ class commission(osv.osv):
 
             ## Ends Here
 
-            query = "select bill_register_line.name,bill_register_line.total_amount,bill_register.ref_doctors from bill_register_line,bill_register where bill_register_line.bill_register_id=bill_register.id and (bill_register_line.commission_paid = FALSE or bill_register_line.commission_paid is NULL)and bill_register.ref_doctors =%s and bill_register_line.name in %s"
+            query = "select bill_register_line.name,bill_register_line.total_amount,bill_register.ref_doctors from bill_register_line,bill_register where bill_register_line.bill_register_id=bill_register.id and (bill_register_line.commission_paid = FALSE or bill_register_line.commission_paid is NULL)and bill_register.ref_doctors =%s and bill_register_line.name in %s and bill_register.date >=%s and bill_register.date <=%s"
 
 
-            self._cr.execute(query, (commissioner_id,tuple(configured_test_ids)))
+            self._cr.execute(query, (commissioner_id,tuple(configured_test_ids),st_date,end_date))
 
             all_data = self._cr.dictfetchall()
 

@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
             <form string="Investigation">
                                     <header>
-                        <button string="Test Javascript Onclick Method" custom="click" />
+
                         <button string="Add Test" type="object" name="add_new_test" groups="base.group_user"/>
                         <button string="Add Discount" type="object" name="add_discount" groups="base.group_user"/>
                         <button string="Add payment" type="object" name="btn_pay_bill" groups="base.group_user"/>
@@ -111,6 +111,7 @@
                         <field name="grand_total"/>
                         <field name="paid"/>
                         <field name="due"/>
+                        <field name="state"/>
 
 
             </tree>
