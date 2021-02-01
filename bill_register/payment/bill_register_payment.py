@@ -23,6 +23,7 @@ class bill_register_payment(osv.osv):
         pay_bank=payment_obj.bank_name
         current_due =payment_obj.bill_id.due
         current_paid =payment_obj.bill_id.paid
+        money_receipt_id =payment_obj.money_receipt_id.id
 
         updated_amount = current_due-pay_amount
         updated_paid = current_paid+pay_amount
@@ -35,7 +36,7 @@ class bill_register_payment(osv.osv):
 
 
 
-        service_dict={'date': pay_date,'amount':pay_amount,'type': pay_type,'card_no':pay_card ,'bill_register_payment_line_id': bill_id}
+        service_dict={'date': pay_date,'amount':pay_amount,'type': pay_type,'card_no':pay_card ,'bill_register_payment_line_id': bill_id,'money_receipt_id':money_receipt_id}
 
         service_id = eve_mee_obj.create(cr, uid, vals=service_dict, context=context)
 
@@ -50,9 +51,10 @@ class bill_register_payment(osv.osv):
         'bill_id': fields.many2one('bill.register', 'Bill ID', readoly=True),
         'date': fields.date('Date'),
         'amount': fields.float('Receive Amount', required=True),
-        'type': fields.selection([('bank','Bank'),('cash','Cash')],'Type'),
+        'type': fields.selection([('bank','Bank'),('cash','Cash')],'Type', required=True),
         'card_no':fields.char('Card No.'),
         'bank_name':fields.char('Bank Name'),
+        'money_receipt_id': fields.many2one('leih.money.receipt', 'Money Receipt ID'),
     }
 
     def create(self,cr,uid,vals,context):
@@ -71,34 +73,13 @@ class bill_register_payment(osv.osv):
 
         mr_object=self.pool.get("leih.money.receipt")
         mr_id=mr_object.create(cr, uid, value, context=context)
-        # import pdb
-        # pdb.set_trace()
-        paid_amount = 0
-        # try:
-        #     paid_amount=0
-        #     bill_id = [vals.get('bill_id')]
-        #     abc = self.pool.get('bill.register').browse(cr, uid, bill_id, context=context)[0]
-        #     paid_amount = abc.paid + float(vals.get('amount'))
-        #     import pdb
-        #     pdb.set_trace()
-        #     cr.execute("update bill_register set paid=%s where id=%s", (paid_amount,bill_id))
-        #     cr.commit()
-        # except:
-        #     pass
+
 
         if mr_id is not None:
-            mr_name='mr#' +str(mr_id)
+            mr_name='MR#' +str(mr_id)
             cr.execute('update leih_money_receipt set name=%s where id=%s',(mr_name,mr_id))
+            cr.execute('update bill_register_payment set money_receipt_id=%s where id=%s',(mr_id,stored))
             cr.commit()
+
+
         return stored
-
-
-
-# class inherited_admision(osv.osv):
-#     _inherits = "leih.admission"
-#
-#     _columns = {
-#         ''
-#     }
-#
-

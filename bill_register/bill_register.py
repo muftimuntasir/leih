@@ -4,15 +4,6 @@ from openerp.tools.translate import _
 from datetime import date, time, timedelta, datetime
 
 
-# class PDF(FPDF):
-#     def titles(self,txts):
-#         self.set_xy(0.0, 0.0)
-#         self.set_font('Arial', 'B', 16)
-#         self.set_text_color(220, 50, 50)
-#         self.cell(w=210.0, h=40.0, align='C', txt=txts, border=0)
-#     def lines(self):
-#         self.set_line_width(0.0)
-#         self.line(0,500,210,90)
 
 
 class bill_register(osv.osv):
@@ -92,9 +83,76 @@ class bill_register(osv.osv):
         'due': fields.float("Due"),
         'date':fields.date("Date",default=datetime.now().strftime('%Y-%m-%d'),readonly=True),
         'state': fields.selection(
-            [('pending', 'Pending'), ('confirmed', 'Released'), ('cancelled', 'Cancelled')],
+            [('pending', 'Pending'), ('confirmed', 'Confirmed'), ('cancelled', 'Cancelled')],
             'Status', default='pending', readonly=True)
     }
+
+
+    def bill_confirm(self, cr, uid, ids, context=None):
+        ## Bill Status Will Change
+
+        cr.execute("update bill_register set state='confirmed' where id=%s", (ids))
+        cr.commit()
+
+        stored_obj = self.browse(cr, uid, [ids[0]], context=context)
+        stored = int(ids[0])
+
+        for items in stored_obj.bill_register_line_id:
+            state = 'sample'
+            if items.name.sample_req == False or items.name.sample_req == None:
+                state='lab'
+            child_list = []
+            value = {
+                'bill_register_id':int(stored),
+                'test_id':int(items.name.id),
+                'department_id':items.name.department.name,
+                'state':state,
+            }
+
+
+
+            for test_item in items.name.examination_entry_line:
+                tmp_dict = {}
+                tmp_dict['test_name'] = test_item.name
+                tmp_dict['ref_value'] = test_item.reference_value
+                child_list.append([0, False, tmp_dict])
+            value['sticker_line_id']=child_list
+
+
+            sample_obj = self.pool.get('diagnosis.sticker')
+            sample_id = sample_obj.create(cr, uid, value, context=context)
+
+            if sample_id is not None:
+                sample_text = 'Lab-100' + str(sample_id)
+                cr.execute('update diagnosis_sticker set name=%s where id=%s', (sample_text, sample_id))
+                # cr.commit()
+        import pdb
+        pdb.set_trace()
+        if stored_obj.paid !=False:
+            for bills_vals in stored_obj:
+                # import pdb
+                # pdb.set_trace()
+                mr_value={
+                    'date':stored_obj.date,
+                    'bill_id':int(stored),
+                    'amount':stored_obj.paid
+                }
+            mr_obj = self.pool.get('leih.money.receipt')
+            mr_id = mr_obj.create(cr, uid, mr_value, context=context)
+            if mr_id is not None:
+                mr_name = 'mr#' + str(mr_id)
+                cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
+                cr.commit()
+            # if mr_id is not None:
+            #     try:
+            #         mr_name = 'mr#' + str(mr_id)
+            #         cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
+            #         cr.commit()
+            #     except:
+            #         pass
+
+
+        return True
 
 
 
@@ -223,76 +281,6 @@ class bill_register(osv.osv):
             cr.execute('update bill_register set name=%s where id=%s', (name_text, stored))
             cr.commit()
 
-        stored_obj = self.browse(cr, uid, [stored], context=context)
-
-
-
-        # page_name=stored_obj.name
-        # pdf=PDF()
-        # pdf.add_page()
-        # pdf.titles(page_name)
-        # pdf.output(page_name, 'F')
-
-        # import pdb
-        # pdb.set_trace()
-                        # Self means model
-                        # browse means select query proepare
-
-
-
-        for items in stored_obj.bill_register_line_id:
-            state = 'sample'
-            if items.name.sample_req == False or items.name.sample_req == None:
-                state='lab'
-            child_list = []
-            value = {
-                'bill_register_id':int(stored),
-                'test_id':int(items.name.id),
-                'department_id':items.name.department.name,
-                'state':state,
-            }
-            # import pdb
-            # pdb.set_trace()
-
-
-            for test_item in items.name.examination_entry_line:
-                tmp_dict = {}
-                tmp_dict['test_name'] = test_item.name
-                tmp_dict['ref_value'] = test_item.reference_value
-                child_list.append([0, False, tmp_dict])
-            value['sticker_line_id']=child_list
-
-
-            sample_obj = self.pool.get('diagnosis.sticker')
-            sample_id = sample_obj.create(cr, uid, value, context=context)
-
-            if sample_id is not None:
-                sample_text = 'Lab-100' + str(sample_id)
-                cr.execute('update diagnosis_sticker set name=%s where id=%s', (sample_text, sample_id))
-                # cr.commit()
-
-        if stored_obj.paid !=False:
-            for bills_vals in stored_obj:
-                # import pdb
-                # pdb.set_trace()
-                mr_value={
-                    'date':stored_obj.date,
-                    'bill_id':int(stored),
-                    'amount':stored_obj.paid
-                }
-            mr_obj = self.pool.get('leih.money.receipt')
-            mr_id = mr_obj.create(cr, uid, mr_value, context=context)
-            if mr_id is not None:
-                mr_name = 'mr#' + str(mr_id)
-                cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
-                cr.commit()
-            # if mr_id is not None:
-            #     try:
-            #         mr_name = 'mr#' + str(mr_id)
-            #         cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
-            #         cr.commit()
-            #     except:
-            #         pass
 
 
         return stored
@@ -409,7 +397,8 @@ class admission_payment_line(osv.osv):
         'amount':fields.float('amount'),
         'type':fields.selection([('bank','Bank'),('cash','Cash')],'Type'),
         'card_no':fields.char('Card Number'),
-        'bank_name':fields.char('Bank Name')
+        'bank_name':fields.char('Bank Name'),
+        'money_receipt_id': fields.many2one('leih.money.receipt', 'Money Receipt ID'),
 
     }
 

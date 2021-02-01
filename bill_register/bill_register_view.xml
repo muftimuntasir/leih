@@ -12,6 +12,7 @@
                         <button string="Add Test" type="object" name="add_new_test" groups="base.group_user"/>
                         <button string="Add Discount" type="object" name="add_discount" groups="base.group_user"/>
                         <button string="Add payment" type="object" name="btn_pay_bill" groups="base.group_user"/>
+                        <button string="Confirm and Print" type="object" name="bill_confirm" groups="base.group_user"/>
                         <button string="Cancel" type="object" name="bill_cancel" groups="base.group_user"/>
                     </header>
                 <sheet>
@@ -55,6 +56,7 @@
                                     <field name="type"/>
                                     <field name="card_no"/>
                                     <field name="bank_name"/>
+                                    <field name="money_receipt_id"/>
 
                                 </tree>
                             </field>
