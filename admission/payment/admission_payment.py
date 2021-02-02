@@ -58,7 +58,7 @@ class admission_payment(osv.osv):
         mr_object=self.pool.get("leih.money.receipt")
         mr_id=mr_object.create(cr, uid, value, context=context)
         if mr_id is not None:
-            mr_name='mr#' +str(mr_id)
+            mr_name='MR#' +str(mr_id)
             cr.execute('update leih_money_receipt set name=%s where id=%s',(mr_name,mr_id))
             cr.commit()
 
