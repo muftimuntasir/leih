@@ -83,6 +83,7 @@ membership products (schemes).
         'cash_collection/cash_collection_cancelled_view.xml',
         'discount/discount_category_view.xml',
         'discount/discount_configuration_view.xml',
+        'discount/corporate_discount_view.xml',
         'commission/commission_view.xml',
         'commission/commission_configuration_view.xml',
         'commission/commission_calculation_view.xml',
