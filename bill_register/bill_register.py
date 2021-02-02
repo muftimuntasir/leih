@@ -123,11 +123,10 @@ class bill_register(osv.osv):
             sample_id = sample_obj.create(cr, uid, value, context=context)
 
             if sample_id is not None:
-                sample_text = 'Lab-100' + str(sample_id)
+                sample_text = 'Lab-0' + str(sample_id)
                 cr.execute('update diagnosis_sticker set name=%s where id=%s', (sample_text, sample_id))
                 # cr.commit()
-        import pdb
-        pdb.set_trace()
+
         if stored_obj.paid !=False:
             for bills_vals in stored_obj:
                 # import pdb
@@ -135,7 +134,8 @@ class bill_register(osv.osv):
                 mr_value={
                     'date':stored_obj.date,
                     'bill_id':int(stored),
-                    'amount':stored_obj.paid
+                    'amount':stored_obj.paid,
+                    'type':stored_obj.type,
                 }
             mr_obj = self.pool.get('leih.money.receipt')
             mr_id = mr_obj.create(cr, uid, mr_value, context=context)
