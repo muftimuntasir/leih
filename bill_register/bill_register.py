@@ -128,7 +128,6 @@ class bill_register(osv.osv):
                 # cr.commit()
 
 
-
         if stored_obj.paid !=False:
             for bills_vals in stored_obj:
                 # import pdb
