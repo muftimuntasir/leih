@@ -27,6 +27,7 @@ class examination_entry(osv.osv):
         'dependency': fields.boolean("Dependency"),
         'sample_type':fields.many2one('sample.type','Sample Type'),
         'examination_entry_line':fields.one2many('examination.entry.line','examinationentry_id','Parameters'),
+        'merge_ids':fields.one2many('examination.merge.line','merge_id','Merge IDs'),
 
     }
     def onchange_group(self,cr,uid,ids,group,context=None):
@@ -83,5 +84,17 @@ class testentryparamaerte(osv.osv):
         'examinationentry_id': fields.many2one('examination.entry', "Test Entry"),
         'reference_value': fields.char("Reference Value"),
         'others': fields.char("Others")
+    }
+
+
+class mergetestentryparamaerte(osv.osv):
+    _name = 'examination.merge.line'
+    _columns = {
+
+
+        'merge_id': fields.many2one('examination.entry', "Test Entry"),
+        'examinationentry_id': fields.many2one('examination.entry', "Merged Test Entry"),
+        'name': fields.char("Name"),
+
     }
 
