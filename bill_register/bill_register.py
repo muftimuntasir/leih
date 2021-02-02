@@ -123,11 +123,13 @@ class bill_register(osv.osv):
             sample_id = sample_obj.create(cr, uid, value, context=context)
 
             if sample_id is not None:
-                sample_text = 'Lab-100' + str(sample_id)
+                sample_text = 'Lab-0' + str(sample_id)
                 cr.execute('update diagnosis_sticker set name=%s where id=%s', (sample_text, sample_id))
                 # cr.commit()
+
         # import pdb
         # pdb.set_trace()
+
         if stored_obj.paid !=False:
             for bills_vals in stored_obj:
                 # import pdb
@@ -135,17 +137,18 @@ class bill_register(osv.osv):
                 mr_value={
                     'date':stored_obj.date,
                     'bill_id':int(stored),
-                    'amount':stored_obj.paid
+                    'amount':stored_obj.paid,
+                    'type':stored_obj.type,
                 }
             mr_obj = self.pool.get('leih.money.receipt')
             mr_id = mr_obj.create(cr, uid, mr_value, context=context)
             if mr_id is not None:
-                mr_name = 'mr#' + str(mr_id)
+                mr_name = 'MR#' + str(mr_id)
                 cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
                 cr.commit()
             # if mr_id is not None:
             #     try:
-            #         mr_name = 'mr#' + str(mr_id)
+            #         mr_name = 'MR#' + str(mr_id)
             #         cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
             #         cr.commit()
             #     except:
@@ -263,31 +266,6 @@ class bill_register(osv.osv):
             'domain': '[]',
             'context': {
                 'pi_id':ids[0]
-            }
-        }
-        raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
-    def btn_corporate_discount(self, cr, uid, ids, context=None):
-        if not ids: return []
-
-        dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'leih','corporate_discount_form_view')
-        #
-        inv = self.browse(cr, uid, ids[0], context=context)
-        # import pdb
-        # pdb.set_trace()
-
-        return {
-            'name': _("Payment"),
-            'view_mode': 'form',
-            'view_id': view_id,
-            'view_type': 'form',
-            'res_model': 'corporate.discount',
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'new',
-            'domain': '[]',
-            'context': {
-                'default_bill_id': inv.name
-                # 'default_paid_amount': inv.total_payable_amount
             }
         }
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))

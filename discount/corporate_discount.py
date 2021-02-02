@@ -33,35 +33,34 @@ class corporatediscount(osv.osv):
 
     _order = 'id desc'
 
-# class bill_register_inherit(osv.osv):
-#     _inherit ="bill.register"
+class bill_register_inherit(osv.osv):
+    _inherit ="bill.register"
 
-    # def btn_corporate_discount(self, cr, uid, ids, context=None):
-    #     if not ids: return []
-    #
-    #     dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'leih',
-    #                                                                          'corporate_discount_form_view')
-    #     #
-    #     inv = self.browse(cr, uid, ids[0], context=context)
-    #     # import pdb
-    #     # pdb.set_trace()
-    #
-    #     return {
-    #         'name': _("Payment"),
-    #         'view_mode': 'form',
-    #         'view_id': view_id,
-    #         'view_type': 'form',
-    #         'res_model': 'bill.register',
-    #         'type': 'ir.actions.act_window',
-    #         'nodestroy': True,
-    #         'target': 'new',
-    #         'domain': '[]',
-    #         'context': {
-    #             'default_bill_id': inv.name
-    #             # 'default_paid_amount': inv.total_payable_amount
-    #         }
-    #     }
-    #     raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
+    def btn_corporate_discount(self, cr, uid, ids, context=None):
+        if not ids: return []
+
+        dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'leih','corporate_discount_form_view')
+        #
+        inv = self.browse(cr, uid, ids[0], context=context)
+        # import pdb
+        # pdb.set_trace()
+
+        return {
+            'name': _("Payment"),
+            'view_mode': 'form',
+            'view_id': view_id,
+            'view_type': 'form',
+            'res_model': 'corporate.discount',
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'domain': '[]',
+            'context': {
+                'default_bill_id': inv.name
+                # 'default_paid_amount': inv.total_payable_amount
+            }
+        }
+        raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
 
 
 
