@@ -24,7 +24,7 @@
                                 <field name="id" invisible="1"/>
                                 <field name="name"/>
                                 <field name="bill_id"/>
-                                <field name="corporate_id"/>
+                                <field name="corporate_id" on_change="onchange_corporate_client(corporate_id,bill_id,context)"/>
                                 <field name="total_amount"/>
                                 <field name="discount_amount"/>
                                 <field name="state"/>

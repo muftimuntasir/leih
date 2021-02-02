@@ -12,7 +12,7 @@ class corporatediscount(osv.osv):
         'name': fields.char("Corporate Disocunt ID"),
         'bill_id': fields.many2one('bill.register', 'Bill ID'),
         'date':fields.date('Date'),
-        'corporate_id': fields.many2one('discount.configuration', 'Corporate ID'),
+        'corporate_id':fields.many2one('discount.configuration', 'Corporate ID'),
         # 'debit_id': fields.many2one('account.account', 'Debit Account'),
         # 'credit_id': fields.many2one('account.account', 'Credit Account'),
         'discount_amount': fields.float('Discount Amount'),
@@ -32,6 +32,41 @@ class corporatediscount(osv.osv):
     }
 
     _order = 'id desc'
+
+
+    # @api.onchange('corporate_id')
+    def onchange_corporate_client(self,cr,uid,ids,corporate_id,bill_id,context=None):
+        if corporate_id:
+        # import pdb
+        # pdb.set_trace()
+        # bill_ids=bill_id['default_bill_id']
+            bill_object=self.pool.get('bill.register').browse(cr, uid, bill_id, context=context)
+            # self.bill_id.bill_register_line_id.name
+            testdict=[item.name for item in bill_object.bill_register_line_id]
+            # corporate_id=self.corporate_id
+
+
+            #query for discount configuration
+            query = "select discount_configuration_line.test_id,discount_configuration_line.after_discount,discount_configuration_line.applicable from discount_configuration,discount_configuration_line where discount_configuration_line.discount_donfiguration_line_ids=discount_configuration.id and discount_configuration_line.applicable = True and discount_configuration.id =%s"
+            cr.execute(query, ([corporate_id]))
+
+            all_data = cr.dictfetchall()
+
+            total_discount=0
+            for bill_item in testdict:
+                for discount_item in all_data:
+
+                    if discount_item.get('test_id') == bill_item.id and discount_item.get('applicable') == True:
+                        # import pdb
+                        # pdb.set_trace()
+                        total_discount = total_discount + discount_item.get('after_discount')
+                        break
+
+            tests = {'values': {}}
+            abc = {'discount_amount': total_discount}
+            tests['value'] = abc
+            return tests
+
 
 class bill_register_inherit(osv.osv):
     _inherit ="bill.register"
@@ -56,7 +91,7 @@ class bill_register_inherit(osv.osv):
             'target': 'new',
             'domain': '[]',
             'context': {
-                'default_bill_id': inv.name
+                'default_bill_id': ids[0]
                 # 'default_paid_amount': inv.total_payable_amount
             }
         }

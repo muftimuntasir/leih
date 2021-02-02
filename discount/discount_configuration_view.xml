@@ -19,7 +19,7 @@
                         <group string="Basic Information">
                             <group>
                                 <field name="id" invisible="1"/>
-                                <field name="client_name"/>
+                                <field name="name"/>
                                 <field name="type"/>
                                 <field name="overall_discount"/>
                                 <field name="department"/>
@@ -81,7 +81,7 @@
                 <tree string="Disocunt Configuration List">
                     <field name="id"/>
                     <field name="name"/>
-                    <field name="client_name"/>
+                    <field name="name"/>
                     <field name="from_date"/>
                     <field name="to_date"/>
 
