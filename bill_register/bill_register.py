@@ -389,6 +389,11 @@ class test_information(osv.osv):
     #     import pdb
     #     pdb.set_trace()
     #     return 0
+
+    # def write(self, cr, uid, vals, context=None):
+    #     import pdb
+    #     pdb.set_trace()
+
 class admission_payment_line(osv.osv):
     _name = 'bill.register.payment.line'
 

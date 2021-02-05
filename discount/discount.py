@@ -101,21 +101,21 @@ class discount_line(osv.osv):
 
     _columns = {
 
-        'type':fields.many2one('discount.core.type', 'Discount Type'),
-        'category':fields.char('Category'),
+        'category':fields.many2one('discount.category', 'Discount Category'),
+        # 'category':fields.char('Category'),
         'ref': fields.char("Reference"),
-        'accounts':fields.char("Account Name"),
+        'accounts':fields.many2one("account.account","Account Name"),
         'fixed_amount': fields.integer("Amount(fixed)"),
         'percent_amount': fields.integer("Amount(%)"),
-        'discount_id': fields.many2one("discount","discount Id"),
+        'discount_id': fields.many2one("discount","discount Id")
     }
 
-    def onchange_type(self,cr,uid,ids,type,context=None):
-        values={}
-        discount_type_obj=self.pool.get('discount.core.type').browse(cr,uid,type,context=None)
-        category_id=discount_type_obj.category_id.name
-        amount=discount_type_obj.discount_amount
-        accounts=discount_type_obj.account_id
-        new_dict={'category':category_id,'percent_amount':amount,'accounts':accounts}
-        values['value']=new_dict
-        return values
+    # def onchange_type(self,cr,uid,ids,type,context=None):
+    #     values={}
+    #     discount_type_obj=self.pool.get('discount.core.type').browse(cr,uid,type,context=None)
+    #     category_id=discount_type_obj.category_id.name
+    #     amount=discount_type_obj.discount_amount
+    #     accounts=discount_type_obj.account_id
+    #     new_dict={'category':category_id,'percent_amount':amount,'accounts':accounts}
+    #     values['value']=new_dict
+    #     return values

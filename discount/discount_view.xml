@@ -24,8 +24,6 @@
 
                             <field name="discount_line_id" mode="tree">
                                 <tree string="Select Referance Value" editable="top">
-
-                                    <field name="type" on_change="onchange_type(type,context)"/>
                                     <field name="category"/>
                                     <field name="ref"/>
                                     <field name="accounts"/>
