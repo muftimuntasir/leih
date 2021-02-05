@@ -127,8 +127,6 @@ class bill_register(osv.osv):
                 cr.execute('update diagnosis_sticker set name=%s where id=%s', (sample_text, sample_id))
                 # cr.commit()
 
-        # import pdb
-        # pdb.set_trace()
 
         if stored_obj.paid !=False:
             for bills_vals in stored_obj:
