@@ -64,13 +64,13 @@ class cash_collection(osv.osv):
                 line_ids = []
 
                 line_ids.append((0, 0, {
-                    'name': 'mufti Muntasir Ahmed',
+                    'name':  cc_obj.name,
                     'account_id': 237,
                     'debit': cc_obj.total,
                 }))
 
                 line_ids.append((0, 0, {
-                    'name': 'mufti Muntasir Ahmed',
+                    'name':cc_obj.name,
                     'account_id': 2742,
                     'credit': cc_obj.total,
                 }))
@@ -79,7 +79,7 @@ class cash_collection(osv.osv):
                           'journal_id': 7,
                           'date': fields.date.today(),
                           'period_id': period_id,
-                          'ref': 'mufti',
+                          'ref': cc_obj.name,
                           'line_id': line_ids
 
                           }
@@ -157,6 +157,8 @@ class cash_collection(osv.osv):
         'state': 'pending',
 
     }
+
+    _order = 'id desc'
 
 
 
