@@ -71,6 +71,7 @@
                                         <th>S.N.</th>
                                         <th>Test Name</th>
                                         <th>Amount</th>
+                                        <th>Delivery Date</th>
 
                                     </tr>
                                 </thead>
@@ -91,7 +92,10 @@
                                                 <span t-field="z.total_amount"/>
 
                                             </td>
+                                            <td>
+                                                <span t-field="z.delivery_date"/>
 
+                                            </td>
 
 
                                         </tr>

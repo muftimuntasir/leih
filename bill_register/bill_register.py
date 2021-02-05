@@ -390,10 +390,15 @@ class test_information(osv.osv):
         # deliry_min_time
         stored = super(test_information, self).create(cr, uid, vals, context)
         bill_register_line_object=self.browse(cr, uid, stored, context=context)
+        test_name=bill_register_line_object.name
+        required_time=test_name.required_time
+        today = date.today()
+        delivery_date=today+timedelta(days=required_time)
+        cr.execute("update bill_register_line set delivery_date=%s where id=%s", (delivery_date,stored))
+        cr.commit()
 
+        # today = datetime.datetime.strftime(datetime.datetime.today(), '%d/%m/%Y-%Hh/%Mm')
 
-        import pdb
-        pdb.set_trace()
         return 0
 
     # def write(self, cr, uid, vals, context=None):
