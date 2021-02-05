@@ -26,11 +26,12 @@
                         </h1>
                         <group string="Basic Information">
                             <group>
+                                <field name="cal_st_date"/>
+                                <field name="cal_end_date"/>
                                 <field name="id" invisible="1"/>
                                 <field name="ref_doctors"/>
                                 <field name="commission_configuration_id" />
-                                <field name="cal_st_date"/>
-                                <field name="cal_end_date"/>
+
                                 <field name="total_amount" />
                                 <field name="given_discount_amount" />
                                 <field name="total_payable_amount"/>
