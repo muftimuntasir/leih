@@ -26,6 +26,7 @@
                         <field name="name"/>
                         <field name="bill_register_id"/>
                         <field name="department_id"/>
+                        <field name="doctor_id"/>
                          <field name="state"/>
 
 

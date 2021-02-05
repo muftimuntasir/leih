@@ -54,6 +54,7 @@ class sample(osv.osv):
         'name': fields.char('Name'),
         'bill_register_id':fields.many2one('bill.register','Bill register'),
         'department_id':fields.char('Department'),
+        'doctor_id':fields.many2one('doctors.profile','Checked By'),
         'test_id':fields.many2one('examination.entry','Test Name'),
         'sticker_line_id':fields.one2many('diagnosis.sticker.line','sticker_id','Record Sample'),
         'state': fields.selection(

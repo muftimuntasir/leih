@@ -25,6 +25,7 @@ class examination_entry(osv.osv):
         'manual': fields.boolean("Manual"),
         'merge': fields.boolean("Merge"),
         'dependency': fields.boolean("Dependency"),
+        'lab_not_required': fields.boolean("No Lab Required"),
         'sample_type':fields.many2one('sample.type','Sample Type'),
         'examination_entry_line':fields.one2many('examination.entry.line','examinationentry_id','Parameters'),
         'merge_ids':fields.one2many('examination.merge.line','merge_id','Merge IDs'),
