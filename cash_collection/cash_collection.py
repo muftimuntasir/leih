@@ -120,9 +120,27 @@ class cash_collection(osv.osv):
 
         return True
 
+    def create(self, cr, uid, vals, context=None):
+
+        if context is None:
+            context = {}
+
+        stored = super(cash_collection, self).create(cr, uid, vals, context) # return ID int object
+
+
+        if stored is not None:
+            name_text = 'Cash-0' + str(stored)
+            cr.execute('update cash_collection set name=%s where id=%s', (name_text, stored))
+            cr.commit()
+
+
+
+        return stored
+
 
     _columns = {
 
+        'name': fields.char("Cash Collection No"),
         'date': fields.date("Date"),
         'type': fields.selection([('bill','Bill'),('opd','OPD'),('admission','Admission')], 'Type'),
         'total': fields.float("Total"),

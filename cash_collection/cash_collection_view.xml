@@ -65,6 +65,6 @@
 
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
-        <menuitem name="Cash Collection" id="cash_collection_menu_mainform" parent="leih_group_menu" action="cash_collection_action"/>
+<!--        <menuitem name="Cash Collection" id="cash_collection_menu_mainform" parent="leih_group_menu" action="cash_collection_action"/>-->
     </data>
 </openerp>

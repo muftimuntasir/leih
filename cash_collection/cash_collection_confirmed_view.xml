@@ -19,6 +19,7 @@
             <field name="model">cash.collection</field>
             <field name="arch" type="xml">
             <tree string="Cash Collection List">
+                        <field name="name"/>
                         <field name="date"/>
                         <field name="type"/>
                         <field name="total"/>
