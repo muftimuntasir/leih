@@ -358,6 +358,7 @@ class test_information(osv.osv):
         'name': fields.many2one("examination.entry","Item Name",ondelete='cascade'),
         'bill_register_id': fields.many2one('bill.register', "Information"),
         'department':fields.char("Department"),
+        'delivery_date':fields.date("Delivery Date"),
         # 'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency",
         #                               string="Currency", readonly=True, required=True),
         # 'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
@@ -385,10 +386,15 @@ class test_information(osv.osv):
         # import pdb
         # pdb.set_trace()
         return tests
-    # def create(self, cr, uid, vals, context=None):
-    #     import pdb
-    #     pdb.set_trace()
-    #     return 0
+    def create(self, cr, uid, vals, context=None):
+        # deliry_min_time
+        stored = super(test_information, self).create(cr, uid, vals, context)
+        bill_register_line_object=self.browse(cr, uid, stored, context=context)
+
+
+        import pdb
+        pdb.set_trace()
+        return 0
 
     # def write(self, cr, uid, vals, context=None):
     #     import pdb
