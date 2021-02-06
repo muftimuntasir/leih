@@ -17,7 +17,7 @@ class cash_collection(osv.osv):
         # mr_obj = self.pool.get("leih.money.receipt").search(self.cr, self.uid, [('date','>=',self.date)])
         if self.type=='bill':
             mr_obj=self.env['leih.money.receipt'].search(
-            [('bill_id', '!=', False),('date','=',self.date)])
+            [('bill_id', '!=', False),('date','=',self.date),('already_collected','!=',True)])
             for record in mr_obj:
                 abc = {}
                 abc['bill_admission_opd_id']=record.bill_id.name
@@ -27,7 +27,7 @@ class cash_collection(osv.osv):
                 child_list.append([0, False, abc])
         if self.type=='admission':
             mr_obj=self.env['leih.money.receipt'].search(
-            [('admission_id', '!=', False),('date','=',self.date)])
+            [('admission_id', '!=', False),('date','=',self.date),('already_collected','!=',True)])
             # import pdb
             # pdb.set_trace()
             for record in mr_obj:

@@ -104,18 +104,20 @@ class leih_admission(osv.osv):
         values={}
         if not package_name:
             return {}
-        # import pdb
-        # pdb.set_trace()
+        total_amount = 0.0
         abc={'leih_admission_line_id':[]}
         package_object=self.pool.get('examine.package').browse(cr,uid,package_name,context=None)
-        # import pdb
-        # pdb.set_trace()
+
         for item in package_object.examine_package_line_id:
-            items=item.name
-            for itemid in items:
-                car=itemid.id
-                abc['leih_admission_line_id'].append([0, False, {'name':car}])
+            items=item.name.id
+
+            total_amount = total_amount + item.total_amount
+
+
+            abc['leih_admission_line_id'].append([0, False, {'name':item.name.id,'total_amount':item.total_amount}])
         values['value']=abc
+
+
         return values
 
     def add_new_test(self, cr, uid, ids, context=None):

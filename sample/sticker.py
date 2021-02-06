@@ -51,7 +51,8 @@ class sample(osv.osv):
 
 
     _columns = {
-        'name': fields.char('Name'),
+        'name': fields.char('No #'),
+        'full_name': fields.char('Name'),
         'bill_register_id':fields.many2one('bill.register','Bill register'),
         'department_id':fields.char('Department'),
         'doctor_id':fields.many2one('doctors.profile','Checked By'),

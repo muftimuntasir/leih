@@ -18,6 +18,7 @@
                     <group>
 
                         <field name="name"/>
+                        <field name="full_name"/>
                         <field name="test_id"/>
                         <field name="bill_register_id"/>
                         <field name="department_id"/>
@@ -63,6 +64,7 @@
             <field name="arch" type="xml">
              <tree string="Alu List">
                         <field name="test_id"/>
+                        <field name="full_name"/>
                         <field name="name"/>
                         <field name="bill_register_id"/>
                         <field name="department_id"/>

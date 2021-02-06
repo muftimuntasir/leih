@@ -88,44 +88,95 @@ class bill_register(osv.osv):
     }
 
 
+
     def bill_confirm(self, cr, uid, ids, context=None):
+
+        stored_obj = self.browse(cr, uid, [ids[0]], context=context)
         ## Bill Status Will Change
+
+        if stored_obj.state == 'confirmed':
+            raise osv.except_osv(_('Warning!'),
+                                 _('Already this Bill is Confirmed.'))
 
         cr.execute("update bill_register set state='confirmed' where id=%s", (ids))
         cr.commit()
 
-        stored_obj = self.browse(cr, uid, [ids[0]], context=context)
+
         stored = int(ids[0])
+
+        ### check and merged with Lab report
+
+        get_all_tested_ids = []
+
+        for items in stored_obj.bill_register_line_id:
+            get_all_tested_ids.append(items.name.id)
+
+
+        ### Ends here merged Section
+
+        already_merged = []
+        custom_name=''
+
+
 
         for items in stored_obj.bill_register_line_id:
             state = 'sample'
             if items.name.sample_req == False or items.name.sample_req == None:
                 state='lab'
-            child_list = []
-            value = {
-                'bill_register_id':int(stored),
-                'test_id':int(items.name.id),
-                'department_id':items.name.department.name,
-                'state':state,
-            }
+
+            custom_name = custom_name + str(items.name.name)
 
 
 
-            for test_item in items.name.examination_entry_line:
-                tmp_dict = {}
-                tmp_dict['test_name'] = test_item.name
-                tmp_dict['ref_value'] = test_item.reference_value
-                child_list.append([0, False, tmp_dict])
-            value['sticker_line_id']=child_list
+            if items.name.id not in already_merged:
+
+                child_list = []
+                value = {
+                    'bill_register_id':int(stored),
+                    'test_id':int(items.name.id),
+                    'department_id':items.name.department.name,
+                    'state':state,
+                }
 
 
-            sample_obj = self.pool.get('diagnosis.sticker')
-            sample_id = sample_obj.create(cr, uid, value, context=context)
 
-            if sample_id is not None:
-                sample_text = 'Lab-0' + str(sample_id)
-                cr.execute('update diagnosis_sticker set name=%s where id=%s', (sample_text, sample_id))
-                # cr.commit()
+                for test_item in items.name.examination_entry_line:
+
+                    tmp_dict = {}
+                    tmp_dict['test_name'] = test_item.name
+                    tmp_dict['ref_value'] = test_item.reference_value
+                    child_list.append([0, False, tmp_dict])
+
+                if items.name.merge == True:
+
+
+                    for entry in items.name.merge_ids:
+                        test_id=entry.examinationentry_id.id
+                        custom_name = custom_name + str(entry.examinationentry_id.name)
+                        if test_id in get_all_tested_ids:
+                            already_merged.append(test_id)
+                            for m_test_line in entry.examinationentry_id.examination_entry_line:
+
+                                tmp_dict = {}
+                                tmp_dict['test_name'] = m_test_line.name
+                                tmp_dict['ref_value'] = m_test_line.reference_value
+                                child_list.append([0, False, tmp_dict])
+
+
+
+
+                value['sticker_line_id']=child_list
+
+                value['full_name']=custom_name
+
+
+                sample_obj = self.pool.get('diagnosis.sticker')
+                sample_id = sample_obj.create(cr, uid, value, context=context)
+
+                if sample_id is not None:
+                    sample_text = 'Lab-0' + str(sample_id)
+                    cr.execute('update diagnosis_sticker set name=%s where id=%s', (sample_text, sample_id))
+                    cr.commit()
 
 
         if stored_obj.paid !=False:
@@ -411,7 +462,7 @@ class admission_payment_line(osv.osv):
     _columns = {
         'bill_register_payment_line_id': fields.many2one('bill.register', 'bill register payment'),
         'date':fields.datetime("Date"),
-        'amount':fields.float('amount'),
+        'amount':fields.float('Amount'),
         'type':fields.selection([('bank','Bank'),('cash','Cash')],'Type'),
         'card_no':fields.char('Card Number'),
         'bank_name':fields.char('Bank Name'),
