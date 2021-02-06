@@ -117,7 +117,6 @@ class leih_admission(osv.osv):
             abc['leih_admission_line_id'].append([0, False, {'name':item.name.id,'total_amount':item.total_amount}])
         values['value']=abc
 
-
         return values
 
     def add_new_test(self, cr, uid, ids, context=None):
