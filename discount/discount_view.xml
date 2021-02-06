@@ -15,6 +15,7 @@
                 <sheet>
                     <group>
                         <field name="bill_no" on_change="onchange_bill(bill_no, context)"/>
+                        <field name="admission_id" on_change="onchange_admission(admission_id, context)"/>
                         <field name="patient_name"/>
                         <field name="mobile"/>
                         <field name="state"/>
@@ -70,6 +71,7 @@
 
                         <field name="name"/>
                         <field name="bill_no"/>
+                        <field name="admission_id"/>
                         <field name="patient_name"/>
                         <field name="mobile"/>
                         <field name="amount"/>

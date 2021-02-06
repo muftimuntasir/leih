@@ -10,9 +10,10 @@ class discount(osv.osv):
 
     _columns = {
 
+        'name': fields.char("Discount Number"),
+        'admission_id':fields.many2one("leih.admission","Admission ID"),
         'bill_no': fields.many2one('bill.register','Bill No'),
         'patient_name': fields.char("Patient Name",required=True),
-        'name': fields.char("Discount Number"),
         'mobile': fields.char("Mobile Number", required=True),
         'total_discount':fields.float('Total Discount'),
         'amount': fields.integer("Amount"),
@@ -40,7 +41,16 @@ class discount(osv.osv):
         dep_object = self.pool.get('bill.register').browse(cr, uid,bill_no, context=None)
         patient_name=dep_object.patient_name.name
         mobile=dep_object.patient_name.mobile
-        amount=dep_object.total
+        amount=dep_object.grand_total
+        abc = {'patient_name': patient_name,'mobile':mobile,'amount':amount}
+        tests['value'] = abc
+        return tests
+    def onchange_admission(self,cr,uid,ids,admission_id,context=None):
+        tests = {'values': {}}
+        dep_object = self.pool.get('leih.admission').browse(cr, uid,admission_id, context=None)
+        patient_name=dep_object.patient_name.name
+        mobile=dep_object.patient_name.mobile
+        amount=dep_object.grand_total
         abc = {'patient_name': patient_name,'mobile':mobile,'amount':amount}
         tests['value'] = abc
         return tests
@@ -51,24 +61,51 @@ class discount(osv.osv):
 
         stored = super(discount, self).create(cr, uid, vals, context)  # return ID int object
         bill_id=vals.get('bill_no')
-        bill_object=self.pool.get('bill.register').browse(cr,uid,bill_id,context=None)
-        stored_obj = self.browse(cr, uid, [stored], context=context)
-        discount_values=[]
-        discount_fixed_amount=[]
-        for item in stored_obj.discount_line_id:
-            discount_amount_percent=int(item.percent_amount)
-            discount_fixed=item.fixed_amount
-            discount_values.append(discount_amount_percent)
-            discount_fixed_amount.append(discount_fixed)
-        total_percent=sum(discount_values)
-        total_fixed=sum(discount_fixed_amount)
-        total_amount=stored_obj.amount
-        percent_discounted_amount=(total_amount*total_percent)/100
-        total_discount=percent_discounted_amount+total_fixed
+        admission_id=vals.get('admission_id')
+        # import pdb
+        # pdb.set_trace()
 
-        cr.execute('update discount set total_discount=%s where id=%s', (total_discount, stored))
-        cr.execute('update bill_register set other_discount=%s where id=%s', (total_discount, bill_id))
-        cr.commit()
+        if bill_id !=False:
+
+            bill_object=self.pool.get('bill.register').browse(cr,uid,bill_id,context=None)
+            stored_obj = self.browse(cr, uid, [stored], context=context)
+            discount_values=[]
+            discount_fixed_amount=[]
+            for item in stored_obj.discount_line_id:
+                discount_amount_percent=int(item.percent_amount)
+                discount_fixed=item.fixed_amount
+                discount_values.append(discount_amount_percent)
+                discount_fixed_amount.append(discount_fixed)
+            total_percent=sum(discount_values)
+            total_fixed=sum(discount_fixed_amount)
+            total_amount=stored_obj.amount
+            percent_discounted_amount=(total_amount*total_percent)/100
+            total_discount=percent_discounted_amount+total_fixed
+
+            cr.execute('update discount set total_discount=%s where id=%s', (total_discount, stored))
+            cr.execute('update bill_register set other_discount=%s where id=%s', (total_discount, bill_id))
+            cr.commit()
+        elif admission_id !=False:
+            # import pdb
+            # pdb.set_trace()
+            admission_object=self.pool.get('leih.admission').browse(cr,uid,admission_id,context=None)
+            stored_obj = self.browse(cr, uid, [stored], context=context)
+            discount_values=[]
+            discount_fixed_amount=[]
+            for item in stored_obj.discount_line_id:
+                discount_amount_percent=int(item.percent_amount)
+                discount_fixed=item.fixed_amount
+                discount_values.append(discount_amount_percent)
+                discount_fixed_amount.append(discount_fixed)
+            total_percent=sum(discount_values)
+            total_fixed=sum(discount_fixed_amount)
+            total_amount=stored_obj.amount
+            percent_discounted_amount=(total_amount*total_percent)/100
+            total_discount=percent_discounted_amount+total_fixed
+
+            cr.execute('update discount set total_discount=%s where id=%s', (total_discount, stored))
+            cr.execute('update leih_admission set other_discount=%s where id=%s', (total_discount, admission_id))
+            cr.commit()
 
 
         # if stored is not None:
