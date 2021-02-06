@@ -13,12 +13,7 @@ class examine_package(osv.osv):
         'end_date': fields.date(string="End Date"),
         'active': fields.boolean("Active"),
         'examine_package_line_id':fields.one2many('examine.package.line', 'examine_package_id', 'Add test', required=True),
-        'total': fields.float("Total"),
-        'discounts': fields.float("Discount(%)", required=True),
-        'flat_discount': fields.float("Flat Discount"),
-        'grand_total': fields.float("Grand Total"),
-        'paid': fields.float("Paid"),
-        'due': fields.float("Due"),
+        'total': fields.float("Total")
     }
 
 

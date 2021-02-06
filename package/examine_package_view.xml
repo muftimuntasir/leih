@@ -25,7 +25,6 @@
                                     <field name="price"/>
                                     <field name="discount"/>
                                     <field name="total_amount"/>
-
                                 </tree>
                             </field>
 
@@ -33,11 +32,6 @@
                     </notebook>
                     <group>
                                 <field name="total"/>
-                                <field name="discounts"/>
-                                <field name="flat_discount"/>
-                                <field name="grand_total"/>
-                                <field name="paid"/>
-                                <field name="due"/>
                     </group>
                 </sheet>
             </form>
