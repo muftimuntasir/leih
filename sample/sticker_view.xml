@@ -80,6 +80,7 @@
 
             <tree string="Alu List">
                         <field name="name"/>
+                    <field name="full_name"/>
                         <field name="bill_register_id"/>
                         <field name="department_id"/>
                         <field name="state">[('state','=','lab')]</field>
