@@ -16,6 +16,7 @@
                     <group>
 
                         <field name="name"/>
+                        <field name="full_name"/>
                         <field name="test_id"/>
                         <field name="bill_register_id"/>
                         <field name="department_id"/>
