@@ -51,6 +51,7 @@ class leih_admission(osv.osv):
         'total': fields.function(_totalpayable,string="Total",type='float',store=True),
         'discounts': fields.float("Discount(%)", required=True),
         'flat_discount': fields.float("Flat Discount"),
+        'other_discount': fields.float("Other Discount"),
         'grand_total': fields.float("Grand Total"),
         'paid': fields.float("Paid"),
         'due': fields.float("Due"),
