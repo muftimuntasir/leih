@@ -9,6 +9,7 @@
             <form string="Room">
 
                     <group>
+                            <field name="admission_id"/>
                             <field name="total"/>
                             <field name="paid"/>
                             <field name="unpaid"/>

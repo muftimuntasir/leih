@@ -276,19 +276,9 @@ class leih_admission(osv.osv):
             'target': 'new',
             'domain': '[]',
             'context': {
-                'default_total':total
-                # 'loan_id': ids[0]
-                # 'default_price':500,
-                # 'default_name':context.get('name', False),
-                # 'default_total_amount':200,
-                # 'default_partner_id': self.pool.get('res.partner')._find_accounting_partner(inv.partner_id).id,
-                # 'default_amount': inv.type in ('out_refund', 'in_refund') and -inv.residual or inv.residual,
-                # 'default_reference': inv.name,
-                # 'close_after_process': True,
-                # 'invoice_type': inv.type,
-                # 'invoice_id': inv.id,
-                # 'default_type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment',
-                # 'type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment'
+                'default_total':total,
+                'default_admission_id': ids[0]
+
             }
         }
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
