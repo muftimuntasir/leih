@@ -30,6 +30,8 @@
 
 
 
+
+
         <record id="opd_ticekt_entry_action" model="ir.actions.act_window">
             <field name="name">OPD</field>
             <field name="res_model">opd.ticket.entry</field>

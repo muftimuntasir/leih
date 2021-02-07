@@ -27,6 +27,17 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="mr_graph_view">
+                <field name="name">MR Graph</field>
+                <field name="model">leih.money.receipt</field>
+                <field name="arch" type="xml">
+                    <graph string="">
+                        <field name="type"/>
+
+                    </graph>
+                </field>
+        </record>
+
 
 
         <!--proforma_invoice starting action-->
@@ -34,7 +45,7 @@
 			<field name="name">Money receipt</field>
 			<field name="res_model">leih.money.receipt</field>
 			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
+			<field name="view_mode">tree,form,graph</field>
 			<field name="context" eval="{'search_default_my_courses': 1}"/>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">Click to create a new Payment.
