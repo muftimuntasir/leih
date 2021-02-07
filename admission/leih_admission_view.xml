@@ -81,8 +81,8 @@
 
                     <group>
                                 <field name="total"/>
-                                <field name="discounts"/>
-                                <field name="flat_discount"/>
+                                <field name="doctors_discounts"/>
+                                <field name="after_discount"/>
                                 <field name="other_discount"/>
                                 <field name="grand_total"/>
                                 <field name="paid"/>

@@ -1,5 +1,6 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+from openerp import api
 from datetime import date, time
 PACKAGE_FIELDS=('name','price')
 
@@ -49,11 +50,10 @@ class leih_admission(osv.osv):
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
         # 'relation': fields.many2one("leih.investigation"),
         'total': fields.function(_totalpayable,string="Total",type='float',store=True),
-        'discounts': fields.float("Discount(%)", required=True),
-        'flat_discount': fields.float("Flat Discount"),
+        'doctors_discounts': fields.float("Discount(%)"),
+        'after_discount': fields.float("Discount Amount"),
         'other_discount': fields.float("Other Discount"),
-        'grand_total': fields.float("Grand Total"),
-        'paid': fields.float("Paid"),
+        'grand_total': fields.float("Grand Total"),        'paid': fields.float("Paid"),
         'due': fields.float("Due"),
         'state': fields.selection(
             [('activated', 'Activated'), ('released', 'Released'), ('cancelled', 'Cancelled')],
@@ -266,6 +266,40 @@ class leih_admission(osv.osv):
 
 
         return stored
+
+    @api.onchange('leih_admission_line_id')
+    def onchange_admission_line(self):
+        sumalltest=0
+        for item in self.leih_admission_line_id:
+            sumalltest=sumalltest+item.total_amount
+
+        self.total=sumalltest
+        after_dis = (sumalltest* (self.doctors_discounts/100))
+        self.after_discount = after_dis
+        self.grand_total=sumalltest -  self.other_discount - after_dis
+        self.due=sumalltest - after_dis -  self.other_discount- self.paid
+
+        return "X"
+
+    @api.onchange('paid')
+    def onchange_paid(self):
+        self.due = self.grand_total - self.paid
+        return 'x'
+
+    @api.onchange('doctors_discounts')
+    def onchange_doc_discount(self):
+        aft_discount=(self.total*(self.doctors_discounts/100))
+        self.after_discount=aft_discount
+        self.grand_total = self.total - aft_discount - self.other_discount
+        self.due=self.total - aft_discount - self.other_discount- self.paid
+
+        return "X"
+
+    @api.onchange('other_discount')
+    def onchange_other_discount(self):
+        self.grand_total = self.total - self.after_discount - self.other_discount
+        self.due=self.total - self.after_discount - self.other_discount- self.paid
+        return 'True'
 
 
 
