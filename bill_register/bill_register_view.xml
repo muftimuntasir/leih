@@ -87,6 +87,16 @@
 
         </record>
 
+        <record model="ir.ui.view" id="openacademy_session_graph_view">
+                <field name="name">Bill Register Graph</field>
+                <field name="model">bill.register</field>
+                <field name="arch" type="xml">
+                    <graph string="">
+                        <field name="patient_id"/>
+
+                    </graph>
+                </field>
+        </record>
 
 
 
@@ -95,7 +105,7 @@
             <field name="res_model">bill.register</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="context">{}</field>
         </record>
 

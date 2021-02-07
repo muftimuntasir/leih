@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
+        <record model="ir.ui.view" id="cc_graph_view">
+                <field name="name">Cash Collection Graph</field>
+                <field name="model">cash.collection</field>
+                <field name="arch" type="xml">
+                    <graph string="">
+                        <field name="type"/>
+
+                    </graph>
+                </field>
+        </record>
 
 
         <record id="cash_collection_pending_action" model="ir.actions.act_window">
@@ -8,7 +18,7 @@
             <field name="res_model">cash.collection</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('state','=','pending')]</field>
             <field name="context">{}</field>
         </record>
