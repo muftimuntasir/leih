@@ -54,6 +54,7 @@ class sample(osv.osv):
         'name': fields.char('No #'),
         'full_name': fields.char('Name'),
         'bill_register_id':fields.many2one('bill.register','Bill register'),
+        'admission_id':fields.many2one('leih.admission','Admission ID'),
         'department_id':fields.char('Department'),
         'doctor_id':fields.many2one('doctors.profile','Checked By'),
         'test_id':fields.many2one('examination.entry','Test Name'),
