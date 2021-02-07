@@ -21,10 +21,20 @@ class admission_payment(osv.osv):
         pay_type = payment_obj.type
         pay_card=payment_obj.card_no
         pay_bank=payment_obj.bank_name
+        current_due =payment_obj.admission_id.due
+        current_paid =payment_obj.admission_id.paid
+        money_receipt_id =payment_obj.money_receipt_id.id
 
-        service_dict={'date': pay_date,'amount':pay_amount,'type': pay_type,'card_no':pay_card ,'admission_payment_line_id': admission_id}
+        updated_amount = current_due-pay_amount
+        updated_paid = current_paid+pay_amount
+        if updated_amount <0:
+            updated_amount=0
+
+        service_dict={'date': pay_date,'amount':pay_amount,'type': pay_type,'card_no':pay_card ,'admission_payment_line_id': admission_id,'money_receipt_id':money_receipt_id}
 
         service_id = eve_mee_obj.create(cr, uid, vals=service_dict, context=context)
+        cr.execute("update leih_admission set due=%s,paid=%s where id=%s", (updated_amount, updated_paid, admission_id))
+        cr.commit()
 
         return service_id
 
@@ -36,6 +46,7 @@ class admission_payment(osv.osv):
         'type': fields.selection([('bank','Bank'),('cash','Cash')],'Type'),
         'card_no':fields.char('Card No.'),
         'bank_name':fields.char('Bank Name'),
+        'money_receipt_id': fields.many2one('leih.money.receipt', 'Money Receipt ID'),
 
 
     }
@@ -60,6 +71,7 @@ class admission_payment(osv.osv):
         if mr_id is not None:
             mr_name='MR#' +str(mr_id)
             cr.execute('update leih_money_receipt set name=%s where id=%s',(mr_name,mr_id))
+            cr.execute('update admission_payment set money_receipt_id=%s where id=%s', (mr_id, stored))
             cr.commit()
 
 
