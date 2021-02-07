@@ -209,7 +209,8 @@ class leih_admission(osv.osv):
             'target': 'new',
             'domain': '[]',
             'context': {
-                'default_admission_id': ids[0]
+                'default_admission_id': ids[0],
+                'default_amount': inv.due
             }
         }
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
