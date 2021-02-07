@@ -21,19 +21,18 @@ class cash_collection(osv.osv):
             for record in mr_obj:
                 abc = {}
                 abc['bill_admission_opd_id']=record.bill_id.name
-                abc['mr_no']=record.name
+                abc['mr_no']=record.id
                 abc['amount']=record.amount
                 total = total +record.amount
                 child_list.append([0, False, abc])
         if self.type=='admission':
             mr_obj=self.env['leih.money.receipt'].search(
             [('admission_id', '!=', False),('date','=',self.date),('already_collected','!=',True)])
-            # import pdb
-            # pdb.set_trace()
+
             for record in mr_obj:
                 abc = {}
                 abc['bill_admission_opd_id']=record.admission_id.name
-                abc['mr_no']=record.name
+                abc['mr_no']=record.id
                 abc['amount']=record.amount
                 total = total + record.amount
                 child_list.append([0, False, abc])
@@ -104,7 +103,6 @@ class cash_collection(osv.osv):
 
 
                 try:
-
                     for line_items in cc_obj.cash_collection_lines:
                         mr_id = line_items.mr_no.id
                         cr.execute( "UPDATE leih_money_receipt SET already_collected=True WHERE id={0}".format(mr_id))
@@ -167,7 +165,7 @@ class cash_collection_line(osv.osv):
 
     _columns = {
         'cash_collection_line_id':fields.many2one("cash.collection","Cash Collection"),
-        'mr_no':fields.char("Mr No."),
+        'mr_no':fields.many2one('leih.money.receipt', 'MR No. '),
         'bill_admission_opd_id':fields.char("Bill/Admission/OPD Number"),
         'amount':fields.float("Amount")
     }
