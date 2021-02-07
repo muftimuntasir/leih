@@ -56,8 +56,8 @@ class leih_admission(osv.osv):
         'grand_total': fields.float("Grand Total"),        'paid': fields.float("Paid"),
         'due': fields.float("Due"),
         'state': fields.selection(
-            [('activated', 'Activated'), ('released', 'Released'), ('cancelled', 'Cancelled')],
-            'Status',default='activated', readonly=True,
+            [('pending', 'Pending'),('activated', 'Admitted'), ('released', 'Released'), ('cancelled', 'Cancelled')],
+            'Status',default='pending', readonly=True,
         ),
     }
 
@@ -118,6 +118,111 @@ class leih_admission(osv.osv):
         values['value']=abc
 
         return values
+
+
+    def change_status(self, cr, uid, ids, context=None):
+        values = {}
+
+        stored_obj = self.browse(cr, uid, [ids[0]], context=context)
+        ## Bill Status Will Change
+
+        if stored_obj.state == 'activated':
+            raise osv.except_osv(_('Warning!'),
+                                 _('Already this Bill is Confirmed.'))
+        cr.execute("update leih_admission set state='activated' where id=%s", (ids))
+        cr.commit()
+
+        stored = int(ids[0])
+
+        ### check and merged with Lab report
+
+        get_all_tested_ids = []
+
+        for items in stored_obj.leih_admission_line_id:
+            get_all_tested_ids.append(items.name.id)
+
+        ### Ends here merged Section
+
+        already_merged = []
+        custom_name = ''
+
+        for items in stored_obj.leih_admission_line_id:
+            state = 'sample'
+            if items.name.sample_req == False or items.name.sample_req == None:
+                state = 'lab'
+
+            custom_name = custom_name + str(items.name.name)
+
+            if items.name.id not in already_merged:
+
+                child_list = []
+                value = {
+                    'admission_id': int(stored),
+                    'test_id': int(items.name.id),
+                    'department_id': items.name.department.name,
+                    'state': state,
+                }
+
+                for test_item in items.name.examination_entry_line:
+                    tmp_dict = {}
+                    tmp_dict['test_name'] = test_item.name
+                    tmp_dict['ref_value'] = test_item.reference_value
+                    child_list.append([0, False, tmp_dict])
+
+                if items.name.merge == True:
+
+                    for entry in items.name.merge_ids:
+                        test_id = entry.examinationentry_id.id
+                        custom_name = custom_name + str(entry.examinationentry_id.name)
+                        if test_id in get_all_tested_ids:
+                            already_merged.append(test_id)
+                            for m_test_line in entry.examinationentry_id.examination_entry_line:
+                                tmp_dict = {}
+                                tmp_dict['test_name'] = m_test_line.name
+                                tmp_dict['ref_value'] = m_test_line.reference_value
+                                child_list.append([0, False, tmp_dict])
+
+                value['sticker_line_id'] = child_list
+
+                value['full_name'] = custom_name
+
+                sample_obj = self.pool.get('diagnosis.sticker')
+                sample_id = sample_obj.create(cr, uid, value, context=context)
+
+                if sample_id is not None:
+                    sample_text = 'Lab-0' + str(sample_id)
+                    cr.execute('update diagnosis_sticker set name=%s where id=%s', (sample_text, sample_id))
+                    cr.commit()
+
+        # if stored_obj.paid != False:
+        #     for bills_vals in stored_obj:
+        #         # import pdb
+        #         # pdb.set_trace()
+        #         mr_value = {
+        #             'date': stored_obj.date,
+        #             'bill_id': int(stored),
+        #             'amount': stored_obj.paid,
+        #             'type': stored_obj.type,
+        #         }
+        #     mr_obj = self.pool.get('leih.money.receipt')
+        #     mr_id = mr_obj.create(cr, uid, mr_value, context=context)
+        #     if mr_id is not None:
+        #         mr_name = 'MR#' + str(mr_id)
+        #         cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
+        #         cr.commit()
+        #         # if mr_id is not None:
+                #     try:
+                #         mr_name = 'MR#' + str(mr_id)
+                #         cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
+                #         cr.commit()
+                #     except:
+                #         pass
+
+
+
+
+        return values
+
 
     def add_new_test(self, cr, uid, ids, context=None):
         if not ids: return []

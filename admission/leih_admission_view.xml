@@ -8,10 +8,11 @@
             <field name="arch" type="xml">
             <form string="Investigation">
                                     <header>
+                        <button string="Confirm" type="object" name="change_status" groups="base.group_user"/>
                         <button string="Add Test" type="object" name="add_new_test" groups="base.group_user"/>
-                                        <button string="Add Discount" type="object" name="add_discount" groups="base.group_user"/>
-                                        <button string="Final Settlement" type="object" name="btn_final_settlement" groups="base.group_user"/>
-                                        <button string="Payment" type="object" name="btn_pay" groups="base.group_user"/>
+                        <button string="Add Discount" type="object" name="add_discount" groups="base.group_user"/>
+                        <button string="Final Settlement" type="object" name="btn_final_settlement" groups="base.group_user"/>
+                        <button string="Payment" type="object" name="btn_pay" groups="base.group_user"/>
                     </header>
                 <sheet>
 
