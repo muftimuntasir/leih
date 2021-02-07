@@ -14,7 +14,6 @@
                 <sheet>
 
                     <group>
-
                         <field name="name"/>
                         <field name="full_name"/>
                         <field name="test_id"/>
