@@ -12,7 +12,7 @@ class money_receipt(osv.osv):
         'bill_id':fields.many2one("bill.register","BIll ID"),
         'admission_id':fields.many2one("leih.admission","Admission ID"),
         'amount':fields.float("amount"),
-        'already_collected':fields.boolean("Collected"),
+        'already_collected':fields.boolean("Collected", default=False),
         'type':fields.selection([('bank','Bank'),('cash','Cash')],string="Type"),
         'user_id':fields.many2one('res.users','Current User', default=lambda self: self.env.user.id)
     }
