@@ -204,7 +204,7 @@ class bill_register(osv.osv):
             #         pass
 
 
-        return True
+        return self.pool['report'].get_action(cr, uid, ids, 'leih.report_bill_register', context=context)
 
 
 
