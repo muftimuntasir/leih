@@ -69,13 +69,23 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="commission_graph_view">
+                <field name="name">Commission Graph</field>
+                <field name="model">commission</field>
+                <field name="arch" type="xml">
+                    <graph string="">
+                        <field name="ref_doctors"/>
+                    </graph>
+                </field>
+        </record>
+
 
         <!--commission starting action-->
         <record model="ir.actions.act_window" id="commission_new_action" >
 			<field name="name">Commission List</field>
 			<field name="res_model">commission</field>
 			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
+			<field name="view_mode">tree,form,graph</field>
 			<field name="context" eval="{'search_default_my_courses': 1}"/>
 			<field name="help" type="html">
 				<p class="oe_view_nocontent_create">Click to create a new commission list.
