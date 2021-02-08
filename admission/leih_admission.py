@@ -194,29 +194,20 @@ class leih_admission(osv.osv):
                     cr.execute('update diagnosis_sticker set name=%s where id=%s', (sample_text, sample_id))
                     cr.commit()
 
-        # if stored_obj.paid != False:
-        #     for bills_vals in stored_obj:
-        #         # import pdb
-        #         # pdb.set_trace()
-        #         mr_value = {
-        #             'date': stored_obj.date,
-        #             'bill_id': int(stored),
-        #             'amount': stored_obj.paid,
-        #             'type': stored_obj.type,
-        #         }
-        #     mr_obj = self.pool.get('leih.money.receipt')
-        #     mr_id = mr_obj.create(cr, uid, mr_value, context=context)
-        #     if mr_id is not None:
-        #         mr_name = 'MR#' + str(mr_id)
-        #         cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
-        #         cr.commit()
-        #         # if mr_id is not None:
-                #     try:
-                #         mr_name = 'MR#' + str(mr_id)
-                #         cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
-                #         cr.commit()
-                #     except:
-                #         pass
+        if stored_obj.paid != False:
+
+
+            ad_vals = {
+                'date':'2021-01-01',
+                'admission_id':stored_obj.id,
+                'amount':stored_obj.paid,
+                'type':'cash',
+            }
+            ad_obj = self.pool.get('admission.payment')
+            ad_payment_id = ad_obj.create(cr, uid, ad_vals, context=context)
+
+            assign_payment_line = self.pool.get('admission.payment').button_add_payment_action(cr, uid, [ad_payment_id], context=context)
+
 
 
 
