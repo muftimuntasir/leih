@@ -122,10 +122,6 @@
                                     <strong>Total Amount:</strong>
                                     <span t-field="o.total"/>
                                 </div>
-                            <div align="right">
-                                    <strong>Discount:</strong>
-                                    <span t-field="o.discounts"/>
-                                </div>
                                  <div align="right">
                                     <strong>Grand Total:</strong>
                                     <span t-field="o.grand_total"/>
