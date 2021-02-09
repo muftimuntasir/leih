@@ -54,7 +54,8 @@ class leih_admission(osv.osv):
         'doctors_discounts': fields.float("Discount(%)"),
         'after_discount': fields.float("Discount Amount"),
         'other_discount': fields.float("Other Discount"),
-        'grand_total': fields.float("Grand Total"),        'paid': fields.float("Paid"),
+        'grand_total': fields.float("Grand Total"),
+        'paid': fields.float("Paid"),
         'due': fields.float("Due"),
         'state': fields.selection(
             [('pending', 'Pending'),('activated', 'Admitted'), ('released', 'Released'), ('cancelled', 'Cancelled')],

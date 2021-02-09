@@ -115,6 +115,7 @@ class corporatediscount(osv.osv):
                                     'discount':discount_item.get('after_discount')
                                 })
                                 cr.execute("update bill_register_line set discount=%s where id=%s",(discount_item.get('after_discount'),bill_dict[index]['id']))
+
                                 cr.commit()
                                 # bill_register_lines = self.pool.get('bill.register.line')
 

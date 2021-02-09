@@ -82,9 +82,27 @@ class discount(osv.osv):
             percent_discounted_amount=(total_amount*total_percent)/100
             total_discount=percent_discounted_amount+total_fixed
 
+            #fetching data from bill_register
+            query = "select grand_total,paid,due from bill_register where id=%s"
+            cr.execute(query, ([bill_id]))
+            all_data = cr.dictfetchall()
+            grand_total=0
+            paid_amount=0
+            due_amount=0
+            for item in all_data:
+                grand_total=item.get('grand_total')
+                paid_amount=item.get('paid')
+                due_amount=item.get('due')
+            if due_amount<=total_discount:
+                total_discount=due_amount
+            elif due_amount>total_discount:
+                grand_total=grand_total-total_discount
+                due_amount=due_amount-total_discount
+
             cr.execute('update discount set total_discount=%s where id=%s', (total_discount, stored))
-            cr.execute('update bill_register set other_discount=%s where id=%s', (total_discount, bill_id))
+            cr.execute('update bill_register set other_discount=%s,grand_total=%s,due=%s where id=%s', (total_discount,grand_total,due_amount, bill_id))
             cr.commit()
+
         elif admission_id !=False:
             # import pdb
             # pdb.set_trace()
@@ -103,8 +121,24 @@ class discount(osv.osv):
             percent_discounted_amount=(total_amount*total_percent)/100
             total_discount=percent_discounted_amount+total_fixed
 
+            query = "select grand_total,paid,due from leih_admission where id=%s"
+            cr.execute(query, ([admission_id]))
+            all_data = cr.dictfetchall()
+            grand_total=0
+            paid_amount=0
+            due_amount=0
+            for item in all_data:
+                grand_total=item.get('grand_total')
+                paid_amount=item.get('paid')
+                due_amount=item.get('due')
+            if due_amount<=total_discount:
+                total_discount=due_amount
+            elif due_amount>total_discount:
+                grand_total=grand_total-total_discount
+                due_amount=due_amount-total_discount
+
             cr.execute('update discount set total_discount=%s where id=%s', (total_discount, stored))
-            cr.execute('update leih_admission set other_discount=%s where id=%s', (total_discount, admission_id))
+            cr.execute('update leih_admission set other_discount=%s,grand_total=%s,due=%s where id=%s', (total_discount,grand_total,due_amount,admission_id))
             cr.commit()
 
 
