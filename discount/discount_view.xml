@@ -87,7 +87,7 @@
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
 
-        <menuitem name="Discount" id="discount_menu_mainform" parent="leih_billing_menu" action="discount_action"/>
+<!--        <menuitem name="Discount" id="discount_menu_mainform" parent="leih_billing_menu" action="discount_action"/>-->
 
 
     </data>
