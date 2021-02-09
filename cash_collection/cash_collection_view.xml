@@ -24,6 +24,7 @@
                                 <tree string="Select Referance Value" editable="top">
 
                                     <field name="mr_no"/>
+                                    <field name="opd_id"/>
                                     <field name="bill_admission_opd_id"/>
                                     <field name="amount"/>
 

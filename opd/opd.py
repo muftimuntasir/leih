@@ -40,6 +40,8 @@ class bill_register(osv.osv):
         'address': fields.char("Address",store=False),
         'age': fields.char("Age",store=False),
         'sex':fields.char("Sex",store=False),
+        'already_collected':fields.boolean("Money Collected"),
+        'date':fields.date("Date"),
         'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
         'opd_ticket_line_id': fields.one2many('opd.ticket.line', 'opd_ticket_id', 'Investigations'),
         # 'total': fields.function(_totalpayable,string="Total",type='float',store=True),

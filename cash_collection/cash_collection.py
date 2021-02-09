@@ -41,6 +41,22 @@ class cash_collection(osv.osv):
                 abc['amount']=record.amount
                 total = total + record.amount
                 child_list.append([0, False, abc])
+
+        if self.type=='opd':
+            vals_parameter = [('already_collected', '!=', True)]
+            if self.date:
+                vals_parameter.append(('date', '=', self.date))
+            mr_obj=self.env['opd.ticket'].search(vals_parameter)
+
+            for record in mr_obj:
+                abc = {}
+                abc['bill_admission_opd_id']=record.name
+                abc['opd_id']=record.id
+                abc['amount']=record.total
+                total = total + record.total
+                child_list.append([0, False, abc])
+
+
         self.total=total
 
         self.cash_collection_lines = child_list
@@ -109,9 +125,18 @@ class cash_collection(osv.osv):
 
                 try:
                     for line_items in cc_obj.cash_collection_lines:
-                        mr_id = line_items.mr_no.id
-                        cr.execute( "UPDATE leih_money_receipt SET already_collected=True WHERE id={0}".format(mr_id))
-                        cr.commit()
+                        if line_items.mr_no.id != False:
+                            mr_id = line_items.mr_no.id
+                            cr.execute( "UPDATE leih_money_receipt SET already_collected=True WHERE id={0}".format(mr_id))
+                            cr.commit()
+                        else:
+                            mr_id = line_items.opd_id.id
+                            cr.execute("UPDATE opd_ticket SET already_collected=True WHERE id={0}".format(mr_id))
+                            cr.commit()
+
+
+
+
                 except:
                     pass
 
@@ -171,6 +196,7 @@ class cash_collection_line(osv.osv):
     _columns = {
         'cash_collection_line_id':fields.many2one("cash.collection","Cash Collection"),
         'mr_no':fields.many2one('leih.money.receipt', 'MR No. '),
+        'opd_id':fields.many2one('opd.ticket', 'OPD No. '),
         'bill_admission_opd_id':fields.char("Bill/Admission/OPD Number"),
         'amount':fields.float("Amount")
     }
