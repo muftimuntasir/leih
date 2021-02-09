@@ -82,6 +82,9 @@
                 <field name="name"/>
                 <field name="patient_name"/>
                 <field name="mobile"/>
+                <field name="age"/>
+                <field name="sex"/>
+                <field name="total"/>
 
             </tree>
             </field>

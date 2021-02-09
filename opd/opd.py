@@ -62,17 +62,6 @@ class bill_register(osv.osv):
         tests['value']=abc
         return tests
 
-    # def onchange_mobile(self,cr,uid,ids,mobile,context=None):
-    #     tests={'values':{}}
-    #     patient_id=self.pool.get('patient.info').search(cr,uid,[('mobile', '=', mobile)],context=None)
-    #     dep_object=self.pool.get('patient.info').browse(cr,uid,patient_id,context)
-    #     abc = {'patient': dep_object.name, 'address': dep_object.address, 'age': dep_object.age, 'sex': dep_object.sex}
-    #     tests['value']=abc
-    #     return tests
-
-        #
-        # import pdb
-        # pdb.set_trace()
 
 
 
@@ -88,6 +77,7 @@ class bill_register(osv.osv):
             cr.execute('update opd_ticket set name=%s where id=%s', (name_text, stored))
             cr.commit()
         return stored
+
     @api.onchange('opd_ticket_line_id')
     def onchange_total(self):
         total=0

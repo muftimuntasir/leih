@@ -55,7 +55,7 @@
                                 <t t-if="o.ref_doctors">
                                 <div class="col-xs-3">
                                     <span> <b>Reff. Doctor</b>#
-                                          <span t-esc="o.ref_doctors"/>
+                                          <span t-esc="o.ref_doctors.name"/>
                                     </span>
                                 </div>
                                 </t>
