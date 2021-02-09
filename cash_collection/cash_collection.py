@@ -16,8 +16,11 @@ class cash_collection(osv.osv):
 
         # mr_obj = self.pool.get("leih.money.receipt").search(self.cr, self.uid, [('date','>=',self.date)])
         if self.type=='bill':
-            mr_obj=self.env['leih.money.receipt'].search(
-            [('bill_id', '!=', False),('date','=',self.date),('already_collected','!=',True)])
+            vals_parameter = [('bill_id', '!=', False),('already_collected','!=',True)]
+            if self.date:
+                vals_parameter.append(('date','=',self.date))
+            mr_obj=self.env['leih.money.receipt'].search(vals_parameter)
+
             for record in mr_obj:
                 abc = {}
                 abc['bill_admission_opd_id']=record.bill_id.name
@@ -26,8 +29,10 @@ class cash_collection(osv.osv):
                 total = total +record.amount
                 child_list.append([0, False, abc])
         if self.type=='admission':
-            mr_obj=self.env['leih.money.receipt'].search(
-            [('admission_id', '!=', False),('date','=',self.date),('already_collected','!=',True)])
+            vals_parameter = [('admission_id', '!=', False), ('already_collected', '!=', True)]
+            if self.date:
+                vals_parameter.append(('date', '=', self.date))
+            mr_obj=self.env['leih.money.receipt'].search(vals_parameter)
 
             for record in mr_obj:
                 abc = {}
