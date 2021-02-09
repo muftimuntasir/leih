@@ -11,7 +11,7 @@ It installs the profile for associations to manage events, registrations, member
 membership products (schemes).
     """,
     'author': 'BLF Team',
-    'depends': [],
+    'depends': ['sale', 'report_xls'],
     'data': [
   
         #'security/leih_security.xml',
