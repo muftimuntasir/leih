@@ -33,8 +33,32 @@
 
                             <div class="row">
                                 <div class="col-xs-4">
-                                    <strong>Bill Register ID:</strong>
+                                    <strong>Bill No #</strong>
                                     <p t-field="o.bill_register_id"/>
+                                </div>
+                                <div class="col-xs-4">
+                                    <strong>Patient Name #</strong>
+                                    <p t-field="o.bill_register_id.patient_name.name"/>
+                                </div>
+                                <div class="col-xs-4">
+                                    <strong>Age #</strong>
+                                    <p t-field="o.bill_register_id.age"/>
+                                </div>
+                                <div class="col-xs-4">
+                                    <strong>Gender #</strong>
+                                    <p t-field="o.bill_register_id.sex"/>
+                                </div>
+                                <div class="col-xs-4">
+                                    <strong>Address #</strong>
+                                    <p t-field="o.bill_register_id.address"/>
+                                </div>
+                                <div class="col-xs-4">
+                                    <strong>Refferred By #</strong>
+                                    <p t-field="o.bill_register_id.ref_doctors.name"/>
+                                </div>
+                                 <div class="col-xs-4">
+                                    <strong>Checked By #</strong>
+                                    <p t-field="o.doctor_id.name"/>
                                 </div>
 
 
