@@ -13,6 +13,10 @@ membership products (schemes).
     'author': 'BLF Team',
     'depends': [],
     'data': [
+  
+        #'security/leih_security.xml',
+        #'security/ir.model.access.csv',
+       
         'diagnosis_room/diagnosis_room_view.xml',
         'Department/department_view.xml',
         'Doctors/doctors_view.xml',
@@ -90,6 +94,9 @@ membership products (schemes).
         'commission/report/report_commission.xml',
         'commission/report/report_commission_menu.xml',
         'commission/commission_payment_view.xml',
+        
+        'wizard/custom_report_filter_view.xml',
+        'report/custom_report_xls_view.xml',
 
 
     ],

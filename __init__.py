@@ -19,3 +19,4 @@ import admission
 import money_receipt
 import cash_collection
 import commission
+import custom_wizard_to_xls_report
