@@ -120,58 +120,65 @@ class bill_register(osv.osv):
 
 
         for items in stored_obj.bill_register_line_id:
+            custom_name = ''
             state = 'sample'
+            ### Create LAB/SAMPLE From Here
             if items.name.sample_req == False or items.name.sample_req == None:
                 state='lab'
 
-            custom_name = custom_name + str(items.name.name)
+            if items.name.manual != True or items.name.lab_not_required != True:
+
+                custom_name = custom_name + str(items.name.name)
 
 
 
-            if items.name.id not in already_merged:
+                if items.name.id not in already_merged:
 
-                child_list = []
-                value = {
-                    'bill_register_id':int(stored),
-                    'test_id':int(items.name.id),
-                    'department_id':items.name.department.name,
-                    'state':state,
-                }
-
-
-
-                for test_item in items.name.examination_entry_line:
-
-                    tmp_dict = {}
-                    tmp_dict['test_name'] = test_item.name
-                    tmp_dict['ref_value'] = test_item.reference_value
-                    child_list.append([0, False, tmp_dict])
-
-                if items.name.merge == True:
-
-
-                    for entry in items.name.merge_ids:
-                        test_id=entry.examinationentry_id.id
-                        custom_name = custom_name + str(entry.examinationentry_id.name)
-                        if test_id in get_all_tested_ids:
-                            already_merged.append(test_id)
-                            for m_test_line in entry.examinationentry_id.examination_entry_line:
-
-                                tmp_dict = {}
-                                tmp_dict['test_name'] = m_test_line.name
-                                tmp_dict['ref_value'] = m_test_line.reference_value
-                                child_list.append([0, False, tmp_dict])
+                    child_list = []
+                    value = {
+                        'bill_register_id':int(stored),
+                        'test_id':int(items.name.id),
+                        'department_id':items.name.department.name,
+                        'state':state,
+                    }
 
 
 
+                    for test_item in items.name.examination_entry_line:
 
-                value['sticker_line_id']=child_list
+                        tmp_dict = {}
+                        tmp_dict['test_name'] = test_item.name
+                        tmp_dict['ref_value'] = test_item.reference_value
+                        child_list.append([0, False, tmp_dict])
 
-                value['full_name']=custom_name
+                    if items.name.merge == True:
 
 
-                sample_obj = self.pool.get('diagnosis.sticker')
-                sample_id = sample_obj.create(cr, uid, value, context=context)
+                        for entry in items.name.merge_ids:
+                            test_id=entry.examinationentry_id.id
+
+                            if test_id in get_all_tested_ids:
+                                custom_name = custom_name + ', '+str(entry.examinationentry_id.name)
+                                already_merged.append(test_id)
+                                for m_test_line in entry.examinationentry_id.examination_entry_line:
+
+                                    tmp_dict = {}
+                                    tmp_dict['test_name'] = m_test_line.name
+                                    tmp_dict['ref_value'] = m_test_line.reference_value
+                                    child_list.append([0, False, tmp_dict])
+
+
+
+
+                    value['sticker_line_id']=child_list
+
+                    value['full_name']=custom_name
+
+
+                    sample_obj = self.pool.get('diagnosis.sticker')
+                    sample_id = sample_obj.create(cr, uid, value, context=context)
+
+                ### Ends Here LAB/SAMPLE From Here
 
                 if sample_id is not None:
                     sample_text = 'Lab-0' + str(sample_id)
