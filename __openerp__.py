@@ -95,8 +95,6 @@ membership products (schemes).
         'commission/report/report_commission_menu.xml',
         'commission/commission_payment_view.xml',
         
-        'wizard/custom_report_filter_view.xml',
-        'report/custom_report_xls_view.xml',
 
 
     ],
