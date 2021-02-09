@@ -89,15 +89,16 @@
                                                 <span t-field="z.test_name"/>
 
                                             </td>
+                                            <td>
+                                                <span t-field="z.result"/>
+
+                                            </td>
 
                                             <td>
                                                 <span t-field="z.ref_value"/>
 
                                             </td>
-                                            <td>
-                                                <span t-field="z.result"/>
 
-                                            </td>
  <td>
                                                 <span t-field="z.remarks"/>
 

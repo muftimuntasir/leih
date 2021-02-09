@@ -33,6 +33,7 @@
                         <field name="date"/>
                         <field name="type"/>
                         <field name="total"/>
+                        <field name="journal_id"/>
                         <field name="state"/>
 
 

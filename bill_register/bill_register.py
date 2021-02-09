@@ -128,7 +128,7 @@ class bill_register(osv.osv):
 
             if items.name.manual != True or items.name.lab_not_required != True:
 
-                custom_name = custom_name + str(items.name.name)
+                custom_name = custom_name + ' ' + str(items.name.name)
 
 
 

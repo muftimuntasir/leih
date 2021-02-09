@@ -149,11 +149,12 @@ class leih_admission(osv.osv):
         custom_name = ''
 
         for items in stored_obj.leih_admission_line_id:
+            custom_name = ''
             state = 'sample'
             if items.name.sample_req == False or items.name.sample_req == None:
                 state = 'lab'
 
-            custom_name = custom_name + str(items.name.name)
+            custom_name = custom_name + ' ' + str(items.name.name)
 
             if items.name.id not in already_merged:
 
@@ -175,8 +176,9 @@ class leih_admission(osv.osv):
 
                     for entry in items.name.merge_ids:
                         test_id = entry.examinationentry_id.id
-                        custom_name = custom_name + str(entry.examinationentry_id.name)
+
                         if test_id in get_all_tested_ids:
+                            custom_name = custom_name + str(entry.examinationentry_id.name)
                             already_merged.append(test_id)
                             for m_test_line in entry.examinationentry_id.examination_entry_line:
                                 tmp_dict = {}
