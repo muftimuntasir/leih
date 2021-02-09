@@ -90,7 +90,7 @@
                     <field name="period_id"/>
                     <field name="note"/>
                     <field name="journal_id"/>
-                    <field name="state"/>
+
 
                 </tree>
             </field>

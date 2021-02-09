@@ -129,9 +129,14 @@ class commission(osv.osv):
             query = "select bill_register_line.name,bill_register_line.total_amount,bill_register.ref_doctors from bill_register_line,bill_register where bill_register_line.bill_register_id=bill_register.id and (bill_register_line.commission_paid = FALSE or bill_register_line.commission_paid is NULL)and bill_register.ref_doctors =%s and bill_register_line.name in %s and bill_register.date >=%s and bill_register.date <=%s"
 
 
-            self._cr.execute(query, (commissioner_id,tuple(configured_test_ids),st_date,end_date))
+            if len(configured_test_ids)>0:
 
-            all_data = self._cr.dictfetchall()
+                self._cr.execute(query, (commissioner_id,tuple(configured_test_ids),st_date,end_date))
+
+                all_data = self._cr.dictfetchall()
+            else:
+                all_data=[]
+
 
 
             order_payment_line = list()
