@@ -80,13 +80,15 @@ class corporatediscount(osv.osv):
                 test_dict={
                     'id':item.id,
                     'name':item.name,
+                    'price':item.price,
+                    'total_amount':item.total_amount,
                 }
                 bill_dict.append(test_dict)
                 # import pdb
                 # pdb.set_trace()
 
-
-
+            sub_total = 0
+            grand_total = bill_object.after_discount + bill_object.other_discount
 
 
             # corporate_id=self.corporate_id
@@ -99,7 +101,9 @@ class corporatediscount(osv.osv):
             all_data = cr.dictfetchall()
 
             total_discount=0
-            bill_register_line=list()
+
+
+
 
             for index in range(len(bill_dict)):
                 for key in bill_dict[index]:
@@ -110,28 +114,24 @@ class corporatediscount(osv.osv):
                             if discount_item.get('test_id') == bill_dict[index]['name'].id and discount_item.get('applicable') == True:
 
                                 total_discount = total_discount + discount_item.get('after_discount')
-                                bill_register_line.append({
-                                    'id':131,
-                                    'discount':discount_item.get('after_discount')
-                                })
-                                cr.execute("update bill_register_line set discount=%s where id=%s",(discount_item.get('after_discount'),bill_dict[index]['id']))
 
+                                bill_line_id=bill_dict[index]['id']
+                                line_discount_amount = discount_item.get('after_discount')
+                                after_discount_amount=bill_dict[index]['total_amount'] -line_discount_amount
+                                sub_total = sub_total + after_discount_amount
+
+
+
+                                cr.execute("update bill_register_line set discount=%s,total_amount=%s where id=%s",(line_discount_amount,after_discount_amount,bill_line_id))
                                 cr.commit()
-                                # bill_register_lines = self.pool.get('bill.register.line')
 
-                                # bill_register_lines = self.pool.get('bill.register.line').browse(cr,uid, bill_object.bill_register_line_id[0].id,context)
-                                # service_id = bill_register_lines.write(cr, uid, bill_object.bill_register_line_id[0], {'discount': 50}, context=context)
-
-
-
-
-
-                                #
-                                #
-                                #
-                                # import pdb
-                                # pdb.set_trace()
                                 break
+
+            grand_total = sub_total - grand_total
+
+            due_amount = grand_total - bill_object.paid
+            cr.execute("update bill_register set total=%s,grand_total=%s, due=%s where id=%s",(sub_total, grand_total,due_amount, bill_object.id))
+            cr.commit()
 
 
 
