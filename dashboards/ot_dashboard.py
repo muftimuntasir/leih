@@ -10,11 +10,20 @@ class hospital_dashboard(osv.osv):
         v1 = v2 = v3 = v4 = v5 = v6 = v7 = v8 = 0
 
 
-        cr.execute("select sum(total) as total, patient_name from bill_register group by patient_name")
+        cr.execute("select sum(total) as total from bill_register")
         all_data = cr.fetchall()
         if len(all_data) >0:
             v1=all_data[0][0]
+
+        ## Cash Collection Query
+        cr.execute("select sum(total) as total from cash_collection")
+        all_data = cr.fetchall()
+        if len(all_data) >0:
             v2=all_data[0][0]
+
+
+
+
 
         cr.execute("select sum(total) as total, ref_doctors, (select name from doctors_profile where doctors_profile.id=ref_doctors) as dr_name from bill_register group by ref_doctors limit 10")
         doctor_data = cr.fetchall()

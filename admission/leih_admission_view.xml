@@ -12,6 +12,7 @@
                         <button string="Add Test" type="object" name="add_new_test" groups="base.group_user"/>
                         <button string="Add Discount" type="object" name="add_discount" groups="base.group_user"/>
                         <button string="Final Settlement" type="object" name="btn_final_settlement" groups="base.group_user"/>
+                        <button string="Covert to Admission" type="object" name="btn_convert_to_admission" groups="base.group_user" attrs="{'invisible': [('emergency', '=', False)]}"/>
                         <button string="Payment" type="object" name="btn_pay" groups="base.group_user"/>
                     </header>
                 <sheet>
@@ -28,7 +29,7 @@
                         <field name="sex"/>
                         <field name="ref_doctors"/>
                         <field name="package_name" on_change="onchange_package(package_name,context)"/>
-                        <field name="delivery_date"/>
+                        <field name="emergency"/>
                         <field name="release_note" readonly="1"/>
 
                     </group>
@@ -65,7 +66,6 @@
                                     <field name="type"/>
                                     <field name="card_no"/>
                                     <field name="bank_name"/>
-
                                 </tree>
                             </field>
                           </page>
@@ -114,7 +114,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
-            <field name="domain">[('state','=','pending')]</field>
+            <field name="domain">[('state','=','pending'),('emergency','=',False)]</field>
             <field name="context">{}</field>
         </record>
 

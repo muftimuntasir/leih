@@ -37,28 +37,16 @@
                                     <p t-field="o.patient_name"/>
                                 </div>
                                 <div class="col-xs-4">
+                                    <strong>Age:</strong>
+                                    <p t-field="o.patient_name.age"/>
+                                </div>
+                                <div class="col-xs-4">
+                                    <strong>Sex:</strong>
+                                    <p t-field="o.patient_name.sex"/>
+                                </div>
+                                <div class="col-xs-4">
                                     <strong>Reffered By:</strong>
                                     <p t-field="o.ref_doctors"/>
-                                </div>
-                                <div class="col-xs-4">
-                                    <strong>Total Amount:</strong>
-                                    <p t-field="o.total"/>
-                                </div>
-<!--                                <div class="col-xs-4">-->
-<!--                                    <strong>Discount:</strong>-->
-<!--                                    <p t-field="o.discounts"/>-->
-<!--                                </div>-->
-                                <div class="col-xs-4">
-                                    <strong>Grand Total:</strong>
-                                    <p t-field="o.grand_total"/>
-                                </div>
-                                <div class="col-xs-4">
-                                    <strong>Paid Amount:</strong>
-                                    <p t-field="o.paid"/>
-                                </div>
-                                <div class="col-xs-4">
-                                    <strong>Due:</strong>
-                                    <p t-field="o.due"/>
                                 </div>
 
                             </div>
@@ -105,6 +93,34 @@
                                 </tbody>
 
                             </table>
+                                                         <div align="right">
+                                    <strong>Sub Total:</strong>
+                                    <span t-field="o.total"/>
+                                </div>
+                                <div align="right">
+                                    <strong>Referral  Discount:</strong>
+                                    <span t-field="o.after_discount"/>
+                                </div>
+                                <div align="right">
+                                    <strong>Others  Discount:</strong>
+                                    <span t-field="o.other_discount"/>
+                                </div>
+
+                                 <div align="right">
+                                    <strong>Grand Total:</strong>
+                                    <span t-field="o.grand_total"/>
+                                </div>
+                                 <div align="right">
+                                    <strong>Paid Amount:</strong>
+                                    <span t-field="o.paid"/>
+                                </div>
+                                 <div align="right">
+                                    <strong>Due Amount:</strong>
+                                    <span t-field="o.due"/>
+                                </div>
+
+
+
 
 
                         </div>

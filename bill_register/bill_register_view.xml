@@ -87,12 +87,12 @@
 
         </record>
 
-        <record model="ir.ui.view" id="openacademy_session_graph_view">
+        <record model="ir.ui.view" id="bill_graph_view">
                 <field name="name">Bill Register Graph</field>
                 <field name="model">bill.register</field>
                 <field name="arch" type="xml">
                     <graph string="">
-                        <field name="patient_id"/>
+                        <field name="state"/>
 
                     </graph>
                 </field>

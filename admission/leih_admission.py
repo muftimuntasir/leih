@@ -48,8 +48,7 @@ class leih_admission(osv.osv):
         'guarantor_line_id':fields.one2many("patient.guarantor","admission_id","Guarantor Name"),
         'bill_register_admission_line_id': fields.one2many("bill.register.admission.line","admission_line_id","Bill Register"),
         'admission_payment_line_id': fields.one2many("admission.payment.line","admission_payment_line_id","Admission Payment"),
-        # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
-        # 'relation': fields.many2one("leih.investigation"),
+        'emergency':fields.boolean("Emergency Department"),
         'total': fields.function(_totalpayable,string="Total",type='float',store=True),
         'doctors_discounts': fields.float("Discount(%)"),
         'after_discount': fields.float("Discount Amount"),
@@ -61,6 +60,7 @@ class leih_admission(osv.osv):
             [('pending', 'Pending'),('activated', 'Admitted'), ('released', 'Released'), ('cancelled', 'Cancelled')],
             'Status',default='pending', readonly=True,
         ),
+        'emergency_covert_time':fields.datetime("Admission Convert time")
     }
 
     def onchange_total(self,cr,uid,ids,name,context=None):
@@ -347,13 +347,22 @@ class leih_admission(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
+        # import pdb
+        # pdb.set_trace()
+        stored = super(leih_admission, self).create(cr, uid, vals, context)  # return ID int object
 
-        stored = super(leih_admission, self).create(cr, uid, vals, context) # return ID int object
+        if vals.get("emergency")==False:
 
-        if stored is not None:
-            name_text = 'A-1000' + str(stored)
-            cr.execute('update leih_admission set name=%s where id=%s', (name_text, stored))
-            cr.commit()
+
+            if stored is not None:
+                name_text = 'A-1000' + str(stored)
+                cr.execute('update leih_admission set name=%s where id=%s', (name_text, stored))
+                cr.commit()
+        else:
+            if stored is not None:
+                name_text = 'E-1000' + str(stored)
+                cr.execute('update leih_admission set name=%s where id=%s', (name_text, stored))
+                cr.commit()
 
 
         return stored
