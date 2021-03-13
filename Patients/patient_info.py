@@ -73,27 +73,10 @@ class patient_info(osv.osv):
 
 
 
-
-
-
-
-    # def _ispatient(self,cr,uid,ids,field_name, arg, context=None):
-    #     result={}
-    #     tes_id =[]
-    #     abc=[]
-    #     patient_id=self.browse(cr,uid,ids,context=None)
-    #     for items in patient_id:
-    #         import pdb
-    #         pdb.set_trace()
-
-
-
-
-
     _columns = {
 
-        'mobile': fields.char("Mobile No",required=True),
-        'patient_id': fields.char("Patient Id"),
+        'mobile': fields.char("Mobile No"),
+        'patient_id': fields.char("Patient Id", readonly=True),
         'name':fields.char("Name"),
         'age':fields.char('Age'),
         'address':fields.char('Address'),

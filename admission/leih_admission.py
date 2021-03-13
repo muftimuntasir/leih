@@ -60,7 +60,7 @@ class leih_admission(osv.osv):
             [('pending', 'Pending'),('activated', 'Admitted'), ('released', 'Released'), ('cancelled', 'Cancelled')],
             'Status',default='pending', readonly=True,
         ),
-        'emergency_covert_time':fields.datetime("Admission Convert time")
+        'emergency_covert_time':fields.datetime("Admission Convert time"),
     }
 
     def onchange_total(self,cr,uid,ids,name,context=None):
