@@ -11,10 +11,10 @@
 
                     <group>
                         <field name="patient_id"/>
-                        <field name="mobile"/>
                         <field name="name"/>
                         <field name="age"/>
                         <field name="sex"/>
+                         <field name="mobile"/>
                         <field name="address"/>
 <!--                        <field name="is_patient"/>-->
                         <field name="state"/>
@@ -68,11 +68,12 @@
             <field name="arch" type="xml">
             <tree string="Alu List">
                         <field name="patient_id"/>
-                        <field name="mobile"/>
                         <field name="name"/>
                         <field name="age"/>
+                          <field name="sex"/>
+                        <field name="mobile"/>
                         <field name="address"/>
-                        <field name="sex"/>
+
 
 
 
