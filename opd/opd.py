@@ -48,7 +48,7 @@ class bill_register(osv.osv):
         'total': fields.float(string="Total")
     }
     _defaults = {
-        'opd_ticket_line_id':[[0, False, {'department': 'Medicine', 'price': 100, 'name': 1, 'total_amount': 100}]],
+        # 'opd_ticket_line_id':[[0, False, {'department': 'Medicine', 'price': 100, 'name': 1, 'total_amount': 100}]],
     }
 
 
