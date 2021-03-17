@@ -1,4 +1,5 @@
 from openerp import api
+from openerp.exceptions import ValidationError
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from datetime import date, time
@@ -53,6 +54,18 @@ class patient_info(osv.osv):
 
         return result
 
+    @api.multi
+    @api.constrains('mobile')
+    def _check_mobile(self):
+
+        for rec in self:
+
+            if rec.mobile and len(rec.mobile) != 11:
+
+                raise ValidationError(_("Mobile Number Should be 11 digit"))
+
+        return True
+
 
 
 
@@ -79,7 +92,7 @@ class patient_info(osv.osv):
         'patient_id': fields.char("Patient Id", readonly=True),
         'name':fields.char("Name"),
         'age':fields.char('Age'),
-        'address':fields.char('Address'),
+        'address':fields.char('Address',required=True),
         'sex': fields.selection([('male', 'Male'), ('female', 'Female'),('others','Others')], string='Sex', default='male'),
         'bills':fields.one2many('bill.register','patient_name','Bill History',required=False),
         'testname':fields.function(_testname,string="Test Name",type='char'),
@@ -93,26 +106,26 @@ class patient_info(osv.osv):
     ]
 
     def create(self, cr, uid, vals, context=None):
-        mobile_number = None
-        mobile_number = vals.get('mobile')
-        if len(mobile_number) <11:
-            raise osv.except_osv(_('Error!'), _('Mobile number should minimum 11 digit'))
-        if len(mobile_number)>11:
-            x=mobile_number.split()
-            number=x[0]
-            if((number[0]=='0' or number[1]=='0' or number[2]=='0' or number[3]=='0') and len(number)>11):
-                number=number[:-1]
-            back = len(number) - 11
-            if len(number)>11:
-                listnumber=[]
-                for item in range(len(number)-1,back-1,-1):
-                    singlenumber=number[item]
-                    listnumber.append(singlenumber)
-                reverse_number=''.join(listnumber)
-                final_number=reverse_number[::-1]
-                vals['mobile'] = final_number
-            else:
-                vals['mobile']=number
+        # mobile_number = None
+        # mobile_number = vals.get('mobile')
+        # if len(mobile_number) <11:
+        #     raise osv.except_osv(_('Error!'), _('Mobile number should minimum 11 digit'))
+        # if len(mobile_number)>11:
+        #     x=mobile_number.split()
+        #     number=x[0]
+        #     if((number[0]=='0' or number[1]=='0' or number[2]=='0' or number[3]=='0') and len(number)>11):
+        #         number=number[:-1]
+        #     back = len(number) - 11
+        #     if len(number)>11:
+        #         listnumber=[]
+        #         for item in range(len(number)-1,back-1,-1):
+        #             singlenumber=number[item]
+        #             listnumber.append(singlenumber)
+        #         reverse_number=''.join(listnumber)
+        #         final_number=reverse_number[::-1]
+        #         vals['mobile'] = final_number
+        #     else:
+        #         vals['mobile']=number
 
             # import pdb
             # pdb.set_trace()

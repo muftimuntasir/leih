@@ -1,6 +1,6 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from datetime import date
+from datetime import date, time, datetime
 from openerp import api
 
 
@@ -41,14 +41,14 @@ class bill_register(osv.osv):
         'age': fields.char("Age",store=False),
         'sex':fields.char("Sex",store=False),
         'already_collected':fields.boolean("Money Collected"),
-        'date':fields.datetime("Date"),
+        'date':fields.datetime("Date", readonly=True,default=lambda self: fields.datetime.now()),
         'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
         'opd_ticket_line_id': fields.one2many('opd.ticket.line', 'opd_ticket_id', 'Investigations'),
         # 'total': fields.function(_totalpayable,string="Total",type='float',store=True),
         'total': fields.float(string="Total")
     }
     _defaults = {
-        'date': fields.datetime.now()
+        'opd_ticket_line_id':[[0, False, {'department': 'Medicine', 'price': 100, 'name': 1, 'total_amount': 100}]],
     }
 
 
@@ -79,6 +79,7 @@ class bill_register(osv.osv):
         stored = super(bill_register, self).create(cr, uid, vals, context) # return ID int object
 
         if stored is not None:
+
             name_text = 'OPD-1000' + str(stored)
             cr.execute('update opd_ticket set name=%s where id=%s', (name_text, stored))
             cr.commit()
