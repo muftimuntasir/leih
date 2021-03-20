@@ -11,6 +11,12 @@
                     <button name="print_lab_report" string="Complete and Print Report" type="object" />
                      <button name="set_to_lab" string="Set to Lab" type="object" />
                      <button name="set_to_sample" string="Set to Sample" type="object" />
+                     <button string="Haematology" type="object" name="haematology_report" groups="base.group_user"/>
+                        <button string="Serology" type="object" name="serology_report" groups="base.group_user"/>
+                        <button string="Microbiology" type="object" name="microbiology_report" groups="base.group_user"/>
+                        <button string="Biochemistry" type="object" name="biochemistry_report" groups="base.group_user"/>
+                        <button string="Urine" type="object" name="urine_report" groups="base.group_user"/>
+                        <button string="Stool" type="object" name="stool_report" groups="base.group_user"/>
 
 </header>
                 <sheet>

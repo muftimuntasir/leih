@@ -81,7 +81,7 @@ class bill_register(osv.osv):
         'card_no': fields.char('Card No.'),
         'bank_name': fields.char('Bank Name'),
         'due': fields.float("Due"),
-        'date':fields.date("Date",default=datetime.now().strftime('%Y-%m-%d'),readonly=True),
+        'date':fields.datetime("Date", readonly=True,default=lambda self: fields.datetime.now()),
         'state': fields.selection(
             [('pending', 'Pending'), ('confirmed', 'Confirmed'), ('cancelled', 'Cancelled')],
             'Status', default='pending', readonly=True)

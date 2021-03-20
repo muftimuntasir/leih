@@ -32,6 +32,73 @@ class sample(osv.osv):
             cr.execute('update diagnosis_sticker set state=%s where id=%s', (status, id))
             cr.commit()
         return self.pool['report'].get_action(cr, uid, ids, 'leih.report_detail', context=context)
+    def haematology_report(self,cr,uid,ids,context=None):
+        status = 'done'
+        for id in ids:
+            report_obj = self.browse(cr, uid, id, context=context)
+            # if report_obj.state == 'done':
+            #     raise osv.except_osv(_('Warning!'),
+            #                          _('Already it is Completed.'))
+            cr.execute('update diagnosis_sticker set state=%s where id=%s', (status, id))
+            cr.commit()
+        return self.pool['report'].get_action(cr, uid, ids, 'leih.report_haematology', context=context)
+
+    #call the report for serology
+
+    def serology_report(self,cr,uid,ids,context=None):
+        status = 'done'
+        for id in ids:
+            report_obj = self.browse(cr, uid, id, context=context)
+            # if report_obj.state == 'done':
+            #     raise osv.except_osv(_('Warning!'),
+            #                          _('Already it is Completed.'))
+            cr.execute('update diagnosis_sticker set state=%s where id=%s', (status, id))
+            cr.commit()
+        return self.pool['report'].get_action(cr, uid, ids, 'leih.report_serology', context=context)
+
+    def microbiology_report(self,cr,uid,ids,context=None):
+        status = 'done'
+        for id in ids:
+            report_obj = self.browse(cr, uid, id, context=context)
+            # if report_obj.state == 'done':
+            #     raise osv.except_osv(_('Warning!'),
+            #                          _('Already it is Completed.'))
+            cr.execute('update diagnosis_sticker set state=%s where id=%s', (status, id))
+            cr.commit()
+        return self.pool['report'].get_action(cr, uid, ids, 'leih.report_microbiology', context=context)
+
+    def biochemistry_report(self,cr,uid,ids,context=None):
+        status = 'done'
+        for id in ids:
+            report_obj = self.browse(cr, uid, id, context=context)
+            # if report_obj.state == 'done':
+            #     raise osv.except_osv(_('Warning!'),
+            #                          _('Already it is Completed.'))
+            cr.execute('update diagnosis_sticker set state=%s where id=%s', (status, id))
+            cr.commit()
+        return self.pool['report'].get_action(cr, uid, ids, 'leih.report_biochemistry', context=context)
+
+    def urine_report(self,cr,uid,ids,context=None):
+        status = 'done'
+        for id in ids:
+            report_obj = self.browse(cr, uid, id, context=context)
+            # if report_obj.state == 'done':
+            #     raise osv.except_osv(_('Warning!'),
+            #                          _('Already it is Completed.'))
+            cr.execute('update diagnosis_sticker set state=%s where id=%s', (status, id))
+            cr.commit()
+        return self.pool['report'].get_action(cr, uid, ids, 'leih.report_urine', context=context)
+
+    def stool_report(self,cr,uid,ids,context=None):
+        status = 'done'
+        for id in ids:
+            report_obj = self.browse(cr, uid, id, context=context)
+            # if report_obj.state == 'done':
+            #     raise osv.except_osv(_('Warning!'),
+            #                          _('Already it is Completed.'))
+            cr.execute('update diagnosis_sticker set state=%s where id=%s', (status, id))
+            cr.commit()
+        return self.pool['report'].get_action(cr, uid, ids, 'leih.report_stool', context=context)
 
 
     def set_to_lab(self,cr,uid,ids,context=None):
