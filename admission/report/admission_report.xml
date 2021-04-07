@@ -76,7 +76,7 @@
                                     <tr>
                                         <th>Service Name</th>
                                         <th>Price</th>
-                                        <th>Package Name</th>
+<!--                                        <th>Package Name</th>-->
                                         <th>Total Amount</th>
 
                                     </tr>
@@ -85,10 +85,10 @@
                                     <t t-set="i" t-value="1" />
                                     <t t-foreach="o.leih_admission_line_id" t-as="z">
                                         <tr>
-                                            <td>
-                                                <span t-esc="i"/>
-                                                <t t-set="i" t-value="i+1"/>
-                                            </td>
+<!--                                            <td>-->
+<!--                                                <span t-esc="i"/>-->
+<!--                                                <t t-set="i" t-value="i+1"/>-->
+<!--                                            </td>-->
                                             <td>
                                                 <span t-field="z.name"/>
 
@@ -98,10 +98,10 @@
                                                 <span t-field="z.price"/>
 
                                             </td>
-                                            <td>
-                                                <span t-field="z.name"/>
+<!--                                            <td>-->
+<!--                                                <span t-field="z.name"/>-->
 
-                                            </td>
+<!--                                            </td>-->
                                             <td>
                                                 <span t-field="z.total_amount"/>
 

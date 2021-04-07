@@ -101,6 +101,28 @@ class sample(osv.osv):
         return self.pool['report'].get_action(cr, uid, ids, 'leih.report_stool', context=context)
 
 
+    def done_radiology(self,cr,uid,ids,context=None):
+        status = 'done'
+        for id in ids:
+            report_obj = self.browse(cr, uid, id, context=context)
+            # if report_obj.state == 'done':
+            #     raise osv.except_osv(_('Warning!'),
+            #                          _('Already it is Completed.'))
+            cr.execute('update diagnosis_sticker set state=%s where id=%s', (status, id))
+            cr.commit()
+        return True
+
+    def delivered(self,cr,uid,ids,context=None):
+        status = 'delivered'
+        for id in ids:
+            report_obj = self.browse(cr, uid, id, context=context)
+            # if report_obj.state == 'done':
+            #     raise osv.except_osv(_('Warning!'),
+            #                          _('Already it is Completed.'))
+            cr.execute('update diagnosis_sticker set state=%s where id=%s', (status, id))
+            cr.commit()
+        return True
+
     def set_to_lab(self,cr,uid,ids,context=None):
         status = 'lab'
 
@@ -127,10 +149,9 @@ class sample(osv.osv):
         'test_id':fields.many2one('examination.entry','Test Name'),
         'sticker_line_id':fields.one2many('diagnosis.sticker.line','sticker_id','Record Sample'),
         'state': fields.selection(
-            [('cancel', 'Cancelled'), ('sample', 'Sample'), ('lab', 'Lab'),('done', 'Done')],
+            [('cancel', 'Cancelled'), ('sample', 'Sample'), ('lab', 'Lab'),('done', 'Done'),('delivered','Delivered')],
             'Status', required=True, readonly=True, copy=False,
             ),
-
     }
 
 
@@ -142,6 +163,8 @@ class test_sample(osv.osv):
         'sticker_id':fields.many2one('diagnosis.sticker','ID'),
         'result': fields.char('Result'),
         'ref_value': fields.char('Reference Value'),
+        'bold':fields.boolean('Bold'),
+        'group_by':fields.boolean('Group By'),
         'remarks': fields.char('Remarks')
 
     }

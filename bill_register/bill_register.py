@@ -97,121 +97,131 @@ class bill_register(osv.osv):
         if stored_obj.state == 'confirmed':
             raise osv.except_osv(_('Warning!'),
                                  _('Already this Bill is Confirmed.'))
-
-        cr.execute("update bill_register set state='confirmed' where id=%s", (ids))
-        cr.commit()
-
-
-        stored = int(ids[0])
-
-        ### check and merged with Lab report
-
-        get_all_tested_ids = []
-
-        for items in stored_obj.bill_register_line_id:
-            get_all_tested_ids.append(items.name.id)
+        grand_total=stored_obj.grand_total
+        paid_amount=stored_obj.paid
+        percent_amount=(paid_amount*100)/grand_total
+        if percent_amount>49:
+            cr.execute("update bill_register set state='confirmed' where id=%s", (ids))
+            cr.commit()
 
 
-        ### Ends here merged Section
+            stored = int(ids[0])
 
-        already_merged = []
-        custom_name=''
+            ### check and merged with Lab report
+
+            get_all_tested_ids = []
+
+            for items in stored_obj.bill_register_line_id:
+                get_all_tested_ids.append(items.name.id)
 
 
+            ### Ends here merged Section
 
-        for items in stored_obj.bill_register_line_id:
-            custom_name = ''
-            state = 'sample'
-            ### Create LAB/SAMPLE From Here
-            if items.name.sample_req == False or items.name.sample_req == None:
-                state='lab'
-
-            if items.name.manual != True or items.name.lab_not_required != True:
-
-                custom_name = custom_name + ' ' + str(items.name.name)
+            already_merged = []
+            custom_name=''
 
 
 
-                if items.name.id not in already_merged:
+            for items in stored_obj.bill_register_line_id:
+                custom_name = ''
+                state = 'sample'
+                ### Create LAB/SAMPLE From Here
+                if items.name.sample_req == False or items.name.sample_req == None:
+                    state='lab'
 
-                    child_list = []
-                    value = {
-                        'bill_register_id':int(stored),
-                        'test_id':int(items.name.id),
-                        'department_id':items.name.department.name,
-                        'state':state,
+                if items.name.manual != True or items.name.lab_not_required != True:
+
+                    custom_name = custom_name + ' ' + str(items.name.name)
+
+
+
+                    if items.name.id not in already_merged:
+
+                        child_list = []
+                        value = {
+                            'bill_register_id':int(stored),
+                            'test_id':int(items.name.id),
+                            'department_id':items.name.department.name,
+                            'state':state,
+                        }
+
+
+
+                        for test_item in items.name.examination_entry_line:
+
+                            tmp_dict = {}
+                            tmp_dict['test_name'] = test_item.name
+                            tmp_dict['ref_value'] = test_item.reference_value
+                            tmp_dict['bold']=test_item.bold
+                            tmp_dict['group_by']=test_item.group_by
+                            child_list.append([0, False, tmp_dict])
+
+                        if items.name.merge == True:
+
+
+                            for entry in items.name.merge_ids:
+                                test_id=entry.examinationentry_id.id
+
+                                if test_id in get_all_tested_ids:
+                                    custom_name = custom_name + ', '+str(entry.examinationentry_id.name)
+                                    already_merged.append(test_id)
+                                    for m_test_line in entry.examinationentry_id.examination_entry_line:
+
+                                        tmp_dict = {}
+                                        tmp_dict['test_name'] = m_test_line.name
+                                        tmp_dict['ref_value'] = m_test_line.reference_value
+                                        tmp_dict['bold'] = m_test_line.bold
+                                        tmp_dict['group_by'] = m_test_line.group_by
+                                        child_list.append([0, False, tmp_dict])
+
+
+
+
+                        value['sticker_line_id']=child_list
+
+                        value['full_name']=custom_name
+
+
+                        sample_obj = self.pool.get('diagnosis.sticker')
+                        sample_id = sample_obj.create(cr, uid, value, context=context)
+
+                    ### Ends Here LAB/SAMPLE From Here
+
+                    if sample_id is not None:
+                        sample_text = 'Lab-0' + str(sample_id)
+                        cr.execute('update diagnosis_sticker set name=%s where id=%s', (sample_text, sample_id))
+                        cr.commit()
+
+
+            if stored_obj.paid !=False:
+                for bills_vals in stored_obj:
+                    # import pdb
+                    # pdb.set_trace()
+                    mr_value={
+                        'date':stored_obj.date,
+                        'bill_id':int(stored),
+                        'amount':stored_obj.paid,
+                        'type':stored_obj.type,
                     }
-
-
-
-                    for test_item in items.name.examination_entry_line:
-
-                        tmp_dict = {}
-                        tmp_dict['test_name'] = test_item.name
-                        tmp_dict['ref_value'] = test_item.reference_value
-                        child_list.append([0, False, tmp_dict])
-
-                    if items.name.merge == True:
-
-
-                        for entry in items.name.merge_ids:
-                            test_id=entry.examinationentry_id.id
-
-                            if test_id in get_all_tested_ids:
-                                custom_name = custom_name + ', '+str(entry.examinationentry_id.name)
-                                already_merged.append(test_id)
-                                for m_test_line in entry.examinationentry_id.examination_entry_line:
-
-                                    tmp_dict = {}
-                                    tmp_dict['test_name'] = m_test_line.name
-                                    tmp_dict['ref_value'] = m_test_line.reference_value
-                                    child_list.append([0, False, tmp_dict])
-
-
-
-
-                    value['sticker_line_id']=child_list
-
-                    value['full_name']=custom_name
-
-
-                    sample_obj = self.pool.get('diagnosis.sticker')
-                    sample_id = sample_obj.create(cr, uid, value, context=context)
-
-                ### Ends Here LAB/SAMPLE From Here
-
-                if sample_id is not None:
-                    sample_text = 'Lab-0' + str(sample_id)
-                    cr.execute('update diagnosis_sticker set name=%s where id=%s', (sample_text, sample_id))
+                mr_obj = self.pool.get('leih.money.receipt')
+                mr_id = mr_obj.create(cr, uid, mr_value, context=context)
+                if mr_id is not None:
+                    mr_name = 'MR#' + str(mr_id)
+                    cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
                     cr.commit()
+                # if mr_id is not None:
+                #     try:
+                #         mr_name = 'MR#' + str(mr_id)
+                #         cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
+                #         cr.commit()
+                #     except:
+                #         pass
 
 
-        if stored_obj.paid !=False:
-            for bills_vals in stored_obj:
-                # import pdb
-                # pdb.set_trace()
-                mr_value={
-                    'date':stored_obj.date,
-                    'bill_id':int(stored),
-                    'amount':stored_obj.paid,
-                    'type':stored_obj.type,
-                }
-            mr_obj = self.pool.get('leih.money.receipt')
-            mr_id = mr_obj.create(cr, uid, mr_value, context=context)
-            if mr_id is not None:
-                mr_name = 'MR#' + str(mr_id)
-                cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
-                cr.commit()
-            # if mr_id is not None:
-            #     try:
-            #         mr_name = 'MR#' + str(mr_id)
-            #         cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
-            #         cr.commit()
-            #     except:
-            #         pass
-
-
-        return self.pool['report'].get_action(cr, uid, ids, 'leih.report_bill_register', context=context)
+            return self.pool['report'].get_action(cr, uid, ids, 'leih.report_bill_register', context=context)
+        else:
+            raise osv.except_osv(_('Warning!'),
+                                 _('PLease Pay minimum amount.'))
 
 
 

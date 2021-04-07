@@ -81,6 +81,43 @@
                                 <tbody class="sample_report_tbody">
                                     <t t-set="i" t-value="1" />
                                     <t t-foreach="o.sticker_line_id" t-as="z">
+<!--                                        if t has bold item-->
+                                        <t t-if="z.bold==True">
+                                            <tr>
+                                            <td>
+                                                <span t-esc="i"/>
+                                                <t t-set="i" t-value="i+1"/>
+                                            </td>
+                                            <td>
+                                                <b><span t-field="z.test_name"/></b>
+
+                                            </td>
+                                            <td>
+                                                <b><span t-field="z.result"/></b>
+
+                                            </td>
+
+                                            <td>
+                                                <b><span t-field="z.ref_value"/></b>
+
+                                            </td>
+
+ <td>
+                                                <span t-field="z.remarks"/>
+
+                                            </td>
+
+
+
+                                        </tr>
+                                            <t t-if="z.group_by==True">
+                                                <br/>
+                                            </t>
+
+
+                                        </t>
+                                        <t t-else="">
+
                                         <tr>
                                             <td>
                                                 <span t-esc="i"/>
@@ -88,6 +125,7 @@
                                             </td>
                                             <td>
                                                 <span t-field="z.test_name"/>
+
 
                                             </td>
                                             <td>
@@ -103,11 +141,17 @@
  <td>
                                                 <span t-field="z.remarks"/>
 
+
+
                                             </td>
 
 
 
                                         </tr>
+                                            <t t-if="z.group_by==True">
+                                                <br/>
+                                            </t>
+                                        </t>
 
                                     </t>
 

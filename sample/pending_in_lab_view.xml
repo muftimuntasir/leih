@@ -40,8 +40,6 @@
                         <field name="doctor_id"/>
                         <field name="state"/>
 
-
-
             </tree>
             </field>
         </record>

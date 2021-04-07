@@ -5,6 +5,7 @@ from datetime import date, time
 
 class discount(osv.osv):
     _name = "discount"
+    _order = 'id desc'
     # _rec_name = 'patient_id'
 
 
@@ -21,10 +22,66 @@ class discount(osv.osv):
             ('pending', 'Pending'),
             ('approve', 'Approved'),
             ('cancel', 'Cancelled')],'State',default='pending',readonly=True),
-        'discount_line_id': fields.one2many("discount.line",'discount_id','Discount Line    ',required=True),
+        'discount_line_id': fields.one2many("discount.line",'discount_id','Discount Line',required=True),
     }
 
     def approve_discount(self,cr,uid,ids,context=None):
+        discount_object = self.browse(cr, uid, ids, context=None)
+        bill_id=discount_object.bill_no.id
+        admission_id=discount_object.admission_id.id
+        total_discount=discount_object.total_discount
+        # import pdb
+        # pdb.set_trace()
+
+        # confirm button code
+        if bill_id != False:
+            # fetching data from bill_register
+            query = "select grand_total,paid,due from bill_register where id=%s"
+            cr.execute(query, ([bill_id]))
+            all_data = cr.dictfetchall()
+            # grand_total = 0
+            # paid_amount = 0
+            # due_amount = 0
+            for item in all_data:
+                grand_total = item.get('grand_total')
+                paid_amount = item.get('paid')
+                due_amount = item.get('due')
+            if due_amount <= total_discount:
+                raise osv.except_osv(_('Warning!'),
+                                     _('Not permissed to make discount more than due!'))
+            elif due_amount > total_discount:
+                grand_total = grand_total - total_discount
+                due_amount = due_amount - total_discount
+
+            cr.execute('update bill_register set other_discount=%s,grand_total=%s,due=%s where id=%s',
+                       (total_discount, grand_total, due_amount, bill_id))
+            cr.commit()
+
+        elif admission_id != False:
+            query = "select grand_total,paid,due from leih_admission where id=%s"
+            cr.execute(query, ([admission_id]))
+            all_data = cr.dictfetchall()
+            grand_total = 0
+            paid_amount = 0
+            due_amount = 0
+            for item in all_data:
+                grand_total = item.get('grand_total')
+                paid_amount = item.get('paid')
+                due_amount = item.get('due')
+            if due_amount <= total_discount:
+                total_discount = due_amount
+                grand_total = grand_total - total_discount
+                due_amount = due_amount - total_discount
+            elif due_amount > total_discount:
+                grand_total = grand_total - total_discount
+                due_amount = due_amount - total_discount
+            cr.execute('update leih_admission set other_discount=%s,grand_total=%s,due=%s where id=%s',
+                       (total_discount, grand_total, due_amount, admission_id))
+            cr.commit()
+
+        # end confirm button code
+
+
         if ids is not None:
             cr.execute("update discount set state='approve' where id=%s", (ids))
             cr.commit()
@@ -36,12 +93,36 @@ class discount(osv.osv):
         return True
 
 
+    @api.onchange('discount_line_id')
+    def onchange_discount_item(self):
+        total_amount=self.amount
+        listfixed=[]
+        listpercent=[]
+
+        for item in self.discount_line_id:
+            fixed_amount=item.fixed_amount
+            percent_amount=item.percent_amount
+            listfixed.append(fixed_amount)
+            listpercent.append(percent_amount)
+        total_percent = sum(listpercent)
+        total_fixed = sum(listfixed)
+        percent_discounted_amount = (total_amount * total_percent) / 100
+        total_discount=total_fixed+percent_discounted_amount
+        self.total_discount=total_discount
+
+
+
+
+
+        return "X"
+
+
     def onchange_bill(self,cr,uid,ids,bill_no,context=None):
         tests = {'values': {}}
         dep_object = self.pool.get('bill.register').browse(cr, uid,bill_no, context=None)
         patient_name=dep_object.patient_name.name
         mobile=dep_object.patient_name.mobile
-        amount=dep_object.grand_total
+        amount=dep_object.due
         abc = {'patient_name': patient_name,'mobile':mobile,'amount':amount}
         tests['value'] = abc
         return tests
@@ -60,104 +141,6 @@ class discount(osv.osv):
             context = {}
 
         stored = super(discount, self).create(cr, uid, vals, context)  # return ID int object
-        bill_id=vals.get('bill_no')
-        admission_id=vals.get('admission_id')
-        # import pdb
-        # pdb.set_trace()
-
-        if bill_id !=False:
-
-            bill_object=self.pool.get('bill.register').browse(cr,uid,bill_id,context=None)
-            stored_obj = self.browse(cr, uid, [stored], context=context)
-            discount_values=[]
-            discount_fixed_amount=[]
-            for item in stored_obj.discount_line_id:
-                discount_amount_percent=int(item.percent_amount)
-                discount_fixed=item.fixed_amount
-                discount_values.append(discount_amount_percent)
-                discount_fixed_amount.append(discount_fixed)
-            total_percent=sum(discount_values)
-            total_fixed=sum(discount_fixed_amount)
-            total_amount=stored_obj.amount
-            percent_discounted_amount=(total_amount*total_percent)/100
-            total_discount=percent_discounted_amount+total_fixed
-
-            #fetching data from bill_register
-            query = "select grand_total,paid,due from bill_register where id=%s"
-            cr.execute(query, ([bill_id]))
-            all_data = cr.dictfetchall()
-            grand_total=0
-            paid_amount=0
-            due_amount=0
-            for item in all_data:
-                grand_total=item.get('grand_total')
-                paid_amount=item.get('paid')
-                due_amount=item.get('due')
-            if due_amount<=total_discount:
-                total_discount=due_amount
-            elif due_amount>total_discount:
-                grand_total=grand_total-total_discount
-                due_amount=due_amount-total_discount
-
-            cr.execute('update discount set total_discount=%s where id=%s', (total_discount, stored))
-            cr.execute('update bill_register set other_discount=%s,grand_total=%s,due=%s where id=%s', (total_discount,grand_total,due_amount, bill_id))
-            cr.commit()
-
-        elif admission_id !=False:
-            # import pdb
-            # pdb.set_trace()
-            admission_object=self.pool.get('leih.admission').browse(cr,uid,admission_id,context=None)
-            stored_obj = self.browse(cr, uid, [stored], context=context)
-            discount_values=[]
-            discount_fixed_amount=[]
-            for item in stored_obj.discount_line_id:
-                discount_amount_percent=int(item.percent_amount)
-                discount_fixed=item.fixed_amount
-                discount_values.append(discount_amount_percent)
-                discount_fixed_amount.append(discount_fixed)
-            total_percent=sum(discount_values)
-            total_fixed=sum(discount_fixed_amount)
-            total_amount=stored_obj.amount
-            percent_discounted_amount=(total_amount*total_percent)/100
-            total_discount=percent_discounted_amount+total_fixed
-
-            query = "select grand_total,paid,due from leih_admission where id=%s"
-            cr.execute(query, ([admission_id]))
-            all_data = cr.dictfetchall()
-            grand_total=0
-            paid_amount=0
-            due_amount=0
-            for item in all_data:
-                grand_total=item.get('grand_total')
-                paid_amount=item.get('paid')
-                due_amount=item.get('due')
-            if due_amount<=total_discount:
-                total_discount=due_amount
-            elif due_amount>total_discount:
-                grand_total=grand_total-total_discount
-                due_amount=due_amount-total_discount
-
-            cr.execute('update discount set total_discount=%s where id=%s', (total_discount, stored))
-            cr.execute('update leih_admission set other_discount=%s,grand_total=%s,due=%s where id=%s', (total_discount,grand_total,due_amount,admission_id))
-            cr.commit()
-
-
-        # if stored is not None:
-        #     discount_line_obj = vals.get('discount_line_id')
-        #     discount_line_id=discount_line_obj[0][2]['type']
-        #     discount_lines=self.pool.get('discount.core.type').browse(cr,uid,discount_line_id,context=None)
-        #     discount_type=discount_lines.name
-        #     discount_amount=discount_lines.discount_amount
-        # import pdb
-        # pdb.set_trace()
-
-            #
-            # cr.execute('update bill_register set discount_type=%s,discounts=%s where id=%s', (discount_type,discount_amount, bill_id))
-            # cr.commit()
-
-        # import pdb
-        # pdb.set_trace()
-
 
         if stored is not None:
             name_text = 'Dis-10' + str(stored)

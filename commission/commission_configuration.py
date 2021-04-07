@@ -87,11 +87,12 @@ class commissionconfiguration(osv.osv):
                 comm_rate=0
         if self.department_ids:
             depet_id=self.department_ids.id
-            query="select id,name,department,rate from examination_entry where id=%s"
+            query="select id,name,department,rate from examination_entry where department=%s"
             self._cr.execute(query, ([depet_id]))
-
             all_data = self._cr.dictfetchall()
             configure_line=[]
+            # import pdb
+            # pdb.set_trace()
 
 
             if self.commission_configuration_line_ids:

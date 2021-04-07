@@ -84,6 +84,8 @@ class testentryparamaerte(osv.osv):
         'name': fields.char("Name",ondelete='cascade',required=True),
         'examinationentry_id': fields.many2one('examination.entry', "Test Entry"),
         'reference_value': fields.char("Reference Value"),
+        'bold':fields.boolean('Bold'),
+        'group_by':fields.boolean("Group By"),
         'others': fields.char("Others")
     }
 
@@ -91,8 +93,6 @@ class testentryparamaerte(osv.osv):
 class mergetestentryparamaerte(osv.osv):
     _name = 'examination.merge.line'
     _columns = {
-
-
         'merge_id': fields.many2one('examination.entry', "Test Entry"),
         'examinationentry_id': fields.many2one('examination.entry', "Merged Test Entry"),
         'name': fields.char("Name"),
