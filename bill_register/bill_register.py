@@ -66,7 +66,7 @@ class bill_register(osv.osv):
         'sex':fields.char("Sex",store=False),
         'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
         'delivery_date': fields.function(_delivery_dates,string="Delivery Date",type='date',store=True),
-        'bill_register_line_id': fields.one2many('bill.register.line', 'bill_register_id', 'Investigations'),
+        'bill_register_line_id': fields.one2many('bill.register.line', 'bill_register_id', 'Item Entry',required=True),
         'bill_register_payment_line_id': fields.one2many("bill.register.payment.line", "bill_register_payment_line_id","Bill Register Payment"),
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
         # 'relation': fields.many2one("leih.investigation"),
