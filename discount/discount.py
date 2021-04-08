@@ -49,7 +49,7 @@ class discount(osv.osv):
             if due_amount <= total_discount:
                 raise osv.except_osv(_('Warning!'),
                                      _('Not permissed to make discount more than due!'))
-            elif due_amount > total_discount:
+            elif due_amount >= total_discount:
                 grand_total = grand_total - total_discount
                 due_amount = due_amount - total_discount
 
