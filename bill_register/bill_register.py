@@ -99,8 +99,11 @@ class bill_register(osv.osv):
                                  _('Already this Bill is Confirmed.'))
         grand_total=stored_obj.grand_total
         paid_amount=stored_obj.paid
-        percent_amount=(paid_amount*100)/grand_total
-        if percent_amount>49:
+        if grand_total!=0:
+            percent_amount=(paid_amount*100)/grand_total
+        if grand_total==0:
+            percent_amount=0
+        if percent_amount>35 or grand_total==0:
             cr.execute("update bill_register set state='confirmed' where id=%s", (ids))
             cr.commit()
 
@@ -142,7 +145,7 @@ class bill_register(osv.osv):
                             'bill_register_id':int(stored),
                             'test_id':int(items.name.id),
                             'department_id':items.name.department.name,
-                            'state':state,
+                            'state':state
                         }
 
 
