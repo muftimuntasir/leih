@@ -88,7 +88,6 @@ class bill_register(osv.osv):
     }
 
 
-
     def bill_confirm(self, cr, uid, ids, context=None):
 
         stored_obj = self.browse(cr, uid, [ids[0]], context=context)
@@ -196,6 +195,8 @@ class bill_register(osv.osv):
                         cr.commit()
 
 
+            # import pdb
+            # pdb.set_trace()
             if stored_obj.paid !=False:
                 for bills_vals in stored_obj:
                     # import pdb
