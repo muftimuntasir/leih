@@ -149,7 +149,7 @@ class sample(osv.osv):
         'test_id':fields.many2one('examination.entry','Test Name'),
         'sticker_line_id':fields.one2many('diagnosis.sticker.line','sticker_id','Record Sample'),
         'state': fields.selection(
-            [('cancel', 'Cancelled'), ('sample', 'Sample'), ('lab', 'Lab'),('done', 'Done'),('delivered','Delivered')],
+            [('cancel', 'Cancelled'), ('sample', 'Sample'), ('lab', 'Lab'),('done', 'Done'),('delivered','Delivered'),('indoor','Indoor')],
             'Status', required=True, readonly=True, copy=False,
             ),
     }

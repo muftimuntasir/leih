@@ -56,6 +56,10 @@ class leih_admission(osv.osv):
         'grand_total': fields.float("Grand Total"),
         'paid': fields.float("Paid"),
         'due': fields.float("Due"),
+        'type': fields.selection([('cash', 'Cash'), ('bank', 'Bank')], 'Payment Type'),
+        'card_no': fields.char('Card No.'),
+        'bank_name': fields.char('Bank Name'),
+        'date': fields.datetime("Date", readonly=True, default=lambda self: fields.datetime.now()),
         'state': fields.selection(
             [('pending', 'Pending'),('activated', 'Admitted'), ('released', 'Released'), ('cancelled', 'Cancelled')],
             'Status',default='pending', readonly=True,
@@ -124,7 +128,6 @@ class leih_admission(osv.osv):
 
     def change_status(self, cr, uid, ids, context=None):
         values = {}
-
         stored_obj = self.browse(cr, uid, [ids[0]], context=context)
         ## Bill Status Will Change
 
@@ -135,6 +138,7 @@ class leih_admission(osv.osv):
         cr.commit()
 
         stored = int(ids[0])
+
 
         ### check and merged with Lab report
 
@@ -151,47 +155,58 @@ class leih_admission(osv.osv):
         for items in stored_obj.leih_admission_line_id:
             custom_name = ''
             state = 'sample'
+            ### Create LAB/SAMPLE From Here
             if items.name.sample_req == False or items.name.sample_req == None:
                 state = 'lab'
+            if items.name.indoor==True:
+                state='indoor'
 
-            custom_name = custom_name + ' ' + str(items.name.name)
+            if items.name.manual != True or items.name.lab_not_required != True:
 
-            if items.name.id not in already_merged:
+                custom_name = custom_name + ' ' + str(items.name.name)
 
-                child_list = []
-                value = {
-                    'admission_id': int(stored),
-                    'test_id': int(items.name.id),
-                    'department_id': items.name.department.name,
-                    'state': state,
-                }
+                if items.name.id not in already_merged:
 
-                for test_item in items.name.examination_entry_line:
-                    tmp_dict = {}
-                    tmp_dict['test_name'] = test_item.name
-                    tmp_dict['ref_value'] = test_item.reference_value
-                    child_list.append([0, False, tmp_dict])
+                    child_list = []
+                    value = {
+                        'admission_id': int(stored),
+                        'test_id': int(items.name.id),
+                        'department_id': items.name.department.name,
+                        'state': state
+                    }
 
-                if items.name.merge == True:
+                    for test_item in items.name.examination_entry_line:
+                        tmp_dict = {}
+                        tmp_dict['test_name'] = test_item.name
+                        tmp_dict['ref_value'] = test_item.reference_value
+                        tmp_dict['bold'] = test_item.bold
+                        tmp_dict['group_by'] = test_item.group_by
+                        child_list.append([0, False, tmp_dict])
 
-                    for entry in items.name.merge_ids:
-                        test_id = entry.examinationentry_id.id
+                    if items.name.merge == True:
 
-                        if test_id in get_all_tested_ids:
-                            custom_name = custom_name + str(entry.examinationentry_id.name)
-                            already_merged.append(test_id)
-                            for m_test_line in entry.examinationentry_id.examination_entry_line:
-                                tmp_dict = {}
-                                tmp_dict['test_name'] = m_test_line.name
-                                tmp_dict['ref_value'] = m_test_line.reference_value
-                                child_list.append([0, False, tmp_dict])
+                        for entry in items.name.merge_ids:
+                            test_id = entry.examinationentry_id.id
 
-                value['sticker_line_id'] = child_list
+                            if test_id in get_all_tested_ids:
+                                custom_name = custom_name + ', ' + str(entry.examinationentry_id.name)
+                                already_merged.append(test_id)
+                                for m_test_line in entry.examinationentry_id.examination_entry_line:
+                                    tmp_dict = {}
+                                    tmp_dict['test_name'] = m_test_line.name
+                                    tmp_dict['ref_value'] = m_test_line.reference_value
+                                    tmp_dict['bold'] = m_test_line.bold
+                                    tmp_dict['group_by'] = m_test_line.group_by
+                                    child_list.append([0, False, tmp_dict])
 
-                value['full_name'] = custom_name
+                    value['sticker_line_id'] = child_list
 
-                sample_obj = self.pool.get('diagnosis.sticker')
-                sample_id = sample_obj.create(cr, uid, value, context=context)
+                    value['full_name'] = custom_name
+
+                    sample_obj = self.pool.get('diagnosis.sticker')
+                    sample_id = sample_obj.create(cr, uid, value, context=context)
+
+                ### Ends Here LAB/SAMPLE From Here
 
                 if sample_id is not None:
                     sample_text = 'Lab-0' + str(sample_id)
@@ -202,21 +217,19 @@ class leih_admission(osv.osv):
 
 
             ad_vals = {
-                'date':'2021-01-01',
+                'date':stored_obj.date,
                 'admission_id':stored_obj.id,
                 'amount':stored_obj.paid,
-                'type':'cash',
+                'type':stored_obj.type,
             }
-            ad_obj = self.pool.get('admission.payment')
-            ad_payment_id = ad_obj.create(cr, uid, ad_vals, context=context)
+            mr_obj = self.pool.get('leih.money.receipt')
+            mr_id = mr_obj.create(cr, uid, ad_vals, context=context)
+            if mr_id is not None:
+                mr_name = 'MR#' + str(mr_id)
+                cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
+                cr.commit()
+        return self.pool['report'].get_action(cr, uid, ids, 'leih.report_admission', context=context)
 
-            assign_payment_line = self.pool.get('admission.payment').button_add_payment_action(cr, uid, [ad_payment_id], context=context)
-
-
-
-
-
-        return values
 
 
     def add_new_test(self, cr, uid, ids, context=None):

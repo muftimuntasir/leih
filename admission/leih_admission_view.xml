@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
             <form string="Investigation">
                                     <header>
-                        <button string="Confirm" type="object" name="change_status" groups="base.group_user"/>
+                        <button string="Confirm and Print" type="object" name="change_status" groups="base.group_user"/>
                         <button string="Add Test" type="object" name="add_new_test" groups="base.group_user"/>
                         <button string="Add Discount" type="object" name="add_discount" groups="base.group_user"/>
                         <button string="Final Settlement" type="object" name="btn_final_settlement" groups="base.group_user"/>
@@ -18,6 +18,7 @@
                 <sheet>
 
                     <group>
+                                 <field name="date"/>
 
 <!--                        <field name="patient_id"/>-->
 <!--                        <field name="name"/>-->
@@ -87,6 +88,9 @@
                                 <field name="after_discount"/>
                                 <field name="other_discount"/>
                                 <field name="grand_total"/>
+                                <field name="type"/>
+                                <field name="card_no"/>
+                                <field name="bank_name"/>
                                 <field name="paid"/>
                                 <field name="due"/>
                             </group>

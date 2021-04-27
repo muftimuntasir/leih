@@ -23,6 +23,7 @@
                         <field name="merge"/>
                         <field name="dependency"/>
                         <field name="lab_not_required"/>
+                        <field name="indoor"/>
                         <field name="sample_type"/>
 
 
