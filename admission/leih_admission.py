@@ -49,7 +49,7 @@ class leih_admission(osv.osv):
         'bill_register_admission_line_id': fields.one2many("bill.register.admission.line","admission_line_id","Bill Register"),
         'admission_payment_line_id': fields.one2many("admission.payment.line","admission_payment_line_id","Admission Payment"),
         'emergency':fields.boolean("Emergency Department"),
-        'total': fields.function(_totalpayable,string="Total",type='float',store=True),
+        'total': fields.float(string="Total"),
         'doctors_discounts': fields.float("Discount(%)"),
         'after_discount': fields.float("Discount Amount"),
         'other_discount': fields.float("Other Discount"),
@@ -251,6 +251,7 @@ class leih_admission(osv.osv):
             'target': 'new',
             'domain': '[]',
             'context': {
+                'leih_admission_id': ids[0]
 
                 # 'default_partner_id': self.pool.get('res.partner')._find_accounting_partner(inv.partner_id).id,
                 # 'default_amount': inv.type in ('out_refund', 'in_refund') and -inv.residual or inv.residual,
@@ -446,9 +447,9 @@ class test_information(osv.osv):
         # 'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency",
         #                               string="Currency", readonly=True, required=True),
         # 'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
-        'price': fields.integer("Price"),
-        'discount': fields.integer("Discount"),
-        'total_amount': fields.integer("Total Amount")
+        'price': fields.float("Price"),
+        'discount': fields.float("Discount"),
+        'total_amount': fields.float("Total Amount")
 
     }
 

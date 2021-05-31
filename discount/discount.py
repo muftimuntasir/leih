@@ -68,11 +68,11 @@ class discount(osv.osv):
                 grand_total = item.get('grand_total')
                 paid_amount = item.get('paid')
                 due_amount = item.get('due')
-            if due_amount <= total_discount:
-                total_discount = due_amount
-                grand_total = grand_total - total_discount
-                due_amount = due_amount - total_discount
-            elif due_amount > total_discount:
+
+            if due_amount < total_discount:
+                raise osv.except_osv(_('Warning!'),
+                                     _('Not permissed to make discount more than due!'))
+            elif due_amount >= total_discount:
                 grand_total = grand_total - total_discount
                 due_amount = due_amount - total_discount
             cr.execute('update leih_admission set other_discount=%s,grand_total=%s,due=%s where id=%s',
