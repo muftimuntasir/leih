@@ -72,7 +72,7 @@
             </field>
         </record>
 
-        <menuitem id="mr_menu" name="Money Receipt" parent="leih_billing_menu" action="money_receipt_new_action"/>
+        <menuitem id="mr_menu" name="Money Receipt" parent="leih_billing_menu" action="money_receipt_new_action" groups="leih.group_billing_menu_money_receipt"/>
 
     </data>
 </openerp>
