@@ -14,8 +14,8 @@ membership products (schemes).
     'depends': ['sale'],
     'data': [
   
-        #'security/leih_security.xml',
-        #'security/ir.model.access.csv',
+        'security/leih_security.xml',
+        'security/ir.model.access.csv',
        
         'diagnosis_room/diagnosis_room_view.xml',
         'Department/department_view.xml',
@@ -104,7 +104,12 @@ membership products (schemes).
         'commission/report/report_commission.xml',
         'commission/report/report_commission_menu.xml',
         'commission/commission_payment_view.xml',
-        
+        'appointment/appointment_booking_view.xml',
+        'appointment/appointment_booking_paid_view.xml',
+        'admission/payment_config/admission_payment_view.xml',
+        'appointment/appointment_booking_view.xml',
+        'appointment/appointment_payment/appointment_payment_view.xml',
+
 
 
     ],

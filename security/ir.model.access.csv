@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_hospital_ward,ward.managment,model_ward_managment,group_hospital_menu_ward,1,1,1,0
+
+access_hospital_pending_cash_coll,cash.collection,model_cash_collection,group_hospital_menu_pending_cash_coll,1,1,1,0
+access_hospital_pending_cash_coll_line,cash.collection.line,model_cash_collection_line,group_hospital_menu_pending_cash_coll,1,1,1,0
+
+access_hospital_confirm_cash_coll,cash.collection,model_cash_collection,group_hospital_menu_confirm_cash_coll,1,1,1,0
+access_hospital_confirm_cash_coll_line,cash.collection.line,model_cash_collection_line,group_hospital_menu_confirm_cash_coll,1,1,1,0
+
+access_hospital_cancel_cash_coll,cash.collection,model_cash_collection,group_hospital_menu_cancel_cash_coll,1,1,1,0
+access_hospital_cancel_cash_coll_line,cash.collection.line,model_cash_collection_line,group_hospital_menu_cancel_cash_coll,1,1,1,0

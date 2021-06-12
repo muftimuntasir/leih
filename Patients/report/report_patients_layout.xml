@@ -76,26 +76,19 @@
                             <table class="table table-condensed">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Mobile</th>
-                                        <th>Patient Name</th>
-                                        <th>Address</th>
-                                        <th>Age</th>
-                                        <th>Sex</th>
+                                        <th>Test Name</th>
+                                        <th>Bill ID</th>
+                                        <th>Department</th>
                                         <th>Delivery Date</th>
-                                        <th>Total</th>
-                                        <th>Discount(%)</th>
-                                        <th>Flat Discount</th>
-                                        <th>Grand Total</th>
-                                        <th>Paid</th>
-                                        <th>Due</th>
+
 
                                     </tr>
                                 </thead>
                                 <tbody class="invoice_tbody">
                                     <t t-set="i" t-value="1" />
-                                    <t t-foreach="o.bills" t-as="z">
-                                        <tr>
+                                    <t t-foreach="o.bills" t-as="m">
+                                        <t t-foreach="m.bill_register_line_id" t-as="z">
+                                            <tr>
 
                                             <td>
                                                 <span t-field="z.name"/>
@@ -103,55 +96,22 @@
                                             </td>
 
                                             <td>
-                                                <span t-field="z.mobile"/>
+                                                <span t-field="z.bill_register_id"/>
 
                                             </td>
                                             <td>
-                                                <span t-field="z.patient_name"/>
-
-                                            </td>
-                                            <td>
-                                                <span t-field="z.address"/>
-
-                                            </td>
-                                            <td>
-                                                <span t-field="z.age"/>
-
-                                            </td>
-                                            <td>
-                                                <span t-field="z.sex"/>
+                                                <span t-field="z.department"/>
 
                                             </td>
                                             <td>
                                                 <span t-field="z.delivery_date"/>
 
                                             </td>
-                                            <td>
-                                                <span t-field="z.total"/>
 
-                                            </td>
-                                            <td>
-                                                <span t-field="z.discounts"/>
-
-                                            </td>
-                                            <td>
-                                                <span t-field="z.flat_discount"/>
-
-                                            </td>
-                                            <td>
-                                                <span t-field="z.grand_total"/>
-
-                                            </td>
-                                            <td>
-                                                <span t-field="z.paid"/>
-
-                                            </td>
-                                            <td>
-                                                <span t-field="z.due"/>
-
-                                            </td>
 
                                         </tr>
+                                        </t>
+
 
                                     </t>
 

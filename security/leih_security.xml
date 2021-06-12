@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="0">
+
+    <!-- LEIH Access Title -->
+    <record model="ir.module.category" id="module_category_leih">
+        <field name="name">LEIH User Access Layer</field>
+        <field name="sequence">20</field>
+    </record>
+
+        <!-- Hospital Menu Access -->
+        <record model="ir.module.category" id="module_category_hospital">
+            <field name="name">LEIH- Hospital</field>
+            <field name="category_id" ref="module_category_leih"/>
+            <field name="sequence">1</field>
+        </record>
+
+            <!-- Hospital Menu Access -->
+            <record id="group_hospital_menu_ward" model="res.groups">
+                <field name="name">Menu1- Ward</field>
+                <field name="category_id" ref="module_category_hospital"/>
+                <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            </record>
+            <record id="group_hospital_menu_pending_cash_coll" model="res.groups">
+                <field name="name">Menu2- Pending Cash Collection</field>
+                <field name="category_id" ref="module_category_hospital"/>
+                <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            </record>
+            <record id="group_hospital_menu_confirm_cash_coll" model="res.groups">
+                <field name="name">Menu3- Confirmed Cash Collection</field>
+                <field name="category_id" ref="module_category_hospital"/>
+                <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            </record>
+            <record id="group_hospital_menu_cancel_cash_coll" model="res.groups">
+                <field name="name">Menu4- Cancelled Cash Collection</field>
+                <field name="category_id" ref="module_category_hospital"/>
+                <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            </record>
+
+            <!-- Hospital Button Access -->
+            <record id="group_hospital_button_confirm" model="res.groups">
+                <field name="name">Button1- Confirm Cash Collection</field>
+                <field name="category_id" ref="module_category_hospital"/>
+                <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            </record>
+            <record id="group_hospital_button_cancel" model="res.groups">
+                <field name="name">Button2- Cancel Cash Collection</field>
+                <field name="category_id" ref="module_category_hospital"/>
+                <field name="users" eval="[(4, ref('base.user_root'))]"/>
+            </record>
+
+
+
+
+</data>
+</openerp>

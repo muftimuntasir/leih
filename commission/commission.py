@@ -96,7 +96,7 @@ class commission(osv.osv):
 
         if self.ref_doctors:
             if self.cal_st_date == False or self.cal_end_date == False:
-                raise osv.except_osv(_('Select'), _('Please select Start and End Date od Calcualtion'))
+                raise osv.except_osv(_('Select'), _('Please select Start and End Date od Calculation'))
 
             st_date = self.cal_st_date
             end_date = self.cal_end_date

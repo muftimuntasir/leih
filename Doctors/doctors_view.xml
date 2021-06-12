@@ -30,9 +30,27 @@
                             </field>
                         </page>
                         <page string="Admission Info">
+                            <field name="admission_info">
+                             <field name="name"/>
+                            <field name="patient_name"/>
+                            <field name="mobile"/>
+
+                            </field>
+
+
+
 
                         </page>
                         <page string="Commission">
+                             <field name="commission">
+                                 <field name="name"/>
+
+                                <field name="commission_configuration_id"/>
+
+                                <field name="total_amount"/>
+                             </field>
+
+
                         </page>
                     </notebook>
 

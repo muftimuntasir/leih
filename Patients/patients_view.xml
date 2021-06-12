@@ -20,21 +20,15 @@
                         <field name="state"/>
                     </group>
                     <notebook attrs ="{'invisible':[('state','!=', 'created')]}">
-                        <page string="Tests">
-                            <field name="bills">
-                                <tree string="tests history">
-                                    <field name="mobile"/>
-                                    <field name="sex"/>
-                                </tree>
-                            </field>
-
-                        </page>
 
                         <page string="Bill">
                             <field name="bills">
                                 <tree string="tests history">
-                                    <field name="age"/>
-                                    <field name="sex"/>
+
+                                    <field name="name"/>
+                                    <field name="total"/>
+                                    <field name="paid"/>
+                                    <field name="due"/>
                                 </tree>
                             </field>
 

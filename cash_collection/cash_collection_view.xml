@@ -8,7 +8,8 @@
             <field name="arch" type="xml">
             <form string="Cash Collection">
                 <header>
-                    <button name="action_button_confirm" string="Confirm" type="object"/>
+                    <button name="action_button_confirm" string="Confirm" type="object" groups="leih.group_hospital_button_confirm"/>
+                    <button name="action_button_cancel" string="Cancel" type="object" groups="leih.group_hospital_button_cancel"/>
                 </header>
                 <sheet>
 

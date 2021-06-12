@@ -148,6 +148,15 @@ class cash_collection(osv.osv):
 
         return True
 
+
+
+    def action_button_cancel(self, cr, uid, ids, context=None):
+        return True
+
+
+
+
+
     def create(self, cr, uid, vals, context=None):
 
         if context is None:
