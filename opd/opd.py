@@ -43,7 +43,7 @@ class bill_register(osv.osv):
         'already_collected':fields.boolean("Money Collected"),
         'date':fields.datetime("Date", readonly=True,default=lambda self: fields.datetime.now()),
         'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
-        'opd_ticket_line_id': fields.one2many('opd.ticket.line', 'opd_ticket_id', 'Investigations'),
+        'opd_ticket_line_id': fields.one2many('opd.ticket.line', 'opd_ticket_id', 'Investigations',required=True),
         # 'total': fields.function(_totalpayable,string="Total",type='float',store=True),
         'total': fields.float(string="Total")
     }
