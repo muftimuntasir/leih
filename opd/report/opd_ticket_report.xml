@@ -6,36 +6,37 @@
                 <t t-call="report.external_layout">
                     <t t-foreach="docs" t-as="o">
 <!--                        <t t-if="o.patient_id">-->
-                        <div class="page">
+                        <div class="page" margin_top="1">
 
-
-
-
-                            <div class="row">
-                                <div class="col-xs-3">
-                                     <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' % res_company.logo" style="max-height: 45px;"/>
-                                </div>
-                                <div class="col-xs-9">
-                                    <h2>Lions Eye Institute and Hospital</h2>
-                                    <p>  Lions Tower, 3/C, Begum Rokeya Sarani</p>
-                                    <p>  Agargaon,Dhaka-1207,Bangladesh</p>
-                                </div>
-                            </div>
+<!--                            <div class="row">-->
+<!--                                <div class="col-xs-3">-->
+<!--                                     <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' % res_company.logo" style="max-height: 45px;"/>-->
+<!--                                </div>-->
+<!--                                <div class="col-xs-9">-->
+<!--                                    <h2>Lions Eye Institute and Hospital</h2>-->
+<!--                                    <p>  Lions Tower, 3/C, Begum Rokeya Sarani</p>-->
+<!--                                    <p>  Agargaon,Dhaka-1207,Bangladesh</p>-->
+<!--                                    <p>Phone: 02-48121272, 02-48118864</p>-->
+<!--                                    <p>E-mail: blf@blfbd.org, Web:www.blfbd.org</p>-->
+<!--                                </div>-->
+<!--                            </div>-->
                             <div class="row" style="background-color: lightgrey; border: 1px solid green; padding: 5px;">
-                                <div class="col-xs-3">
-                                    <span><b>Bill No.</b> #
-                                        <span t-field="o.name"/>
-                                    </span>
-                                </div>
-                                <div class="col-xs-2">
-                                    <span> <b>Patient_id</b> #
+                                 <div class="col-xs-2">
+<!--                                    <span> <b>Patient ID:</b> #-->
                                         <span t-field="o.patient_id"/>
-                                    </span>
+<!--                                    </span>-->
                                     </div>
+
+                                <div class="col-xs-3">
+<!--                                    <span><b>Bill No:</b> #-->
+                                        <span t-field="o.name"/>
+<!--                                    </span>-->
+                                </div>
+
                                 <div class="col-xs-4">
-                                    <span> <b>Patient Name</b> #
+<!--                                    <span> <b>Patient Name</b> #-->
                                         <span t-field="o.patient_name"/>
-                                    </span>
+<!--                                    </span>-->
                                     </div>
                                 <div class="col-xs-3">
                                     <span> <b>Date:</b>#

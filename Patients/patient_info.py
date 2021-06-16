@@ -101,9 +101,9 @@ class patient_info(osv.osv):
             'Status', default='notcreated', readonly=True),
         # 'is_patient':fields.function(_ispatient,string="Is Patient",type='boolean')
     }
-    # _sql_constraints = [
-    #     ('code_mobile_uniq', 'unique (mobile)', 'The mobile number already exist !')
-    # ]
+    _sql_constraints = [
+        ('code_mobile_uniq', 'Check(1=1)', 'The mobile number already exist !')
+    ]
 
     def create(self, cr, uid, vals, context=None):
         # mobile_number = None
