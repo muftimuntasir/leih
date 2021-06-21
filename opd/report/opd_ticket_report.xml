@@ -3,7 +3,7 @@
     <data>
         <template id="opd_ticket_report">
             <t t-call="report.html_container">
-                <t t-call="report.external_layout">
+<!--                <t t-call="report.external_layout">-->
                     <t t-foreach="docs" t-as="o">
 <!--                        <t t-if="o.patient_id">-->
                         <div class="page">
@@ -77,7 +77,7 @@
 
 
                     </t>
-                </t>
+<!--                </t>-->
             </t>
         </template>
     </data>
