@@ -1,4 +1,5 @@
 from openerp import api
+from openerp.exceptions import ValidationError
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from datetime import date, time, timedelta, datetime
@@ -86,6 +87,17 @@ class bill_register(osv.osv):
             [('pending', 'Pending'), ('confirmed', 'Confirmed'), ('cancelled', 'Cancelled')],
             'Status', default='pending', readonly=True)
     }
+
+    #if same item exist in line
+    @api.multi
+    @api.constrains('bill_register_line_id')
+    def _check_exist_item_in_line(self):
+        for item in self:
+            exist_item_list = []
+            for line in item.bill_register_line_id:
+                if line.name.id in exist_item_list:
+                    raise ValidationError(_('Item should be one per line.'))
+                exist_item_list.append(line.name.id)
 
 
     def bill_confirm(self, cr, uid, ids, context=None):
@@ -284,6 +296,14 @@ class bill_register(osv.osv):
 
         cr.execute("update diagnosis_sticker set state='cancel' where bill_register_id=%s", (ids))
         cr.commit()
+
+        #for updates on cash collection
+        cr.execute("update leih_money_receipt set state='cancel' where bill_id=%s", (ids))
+        cr.commit()
+
+
+
+
         return True
 
     def btn_pay_bill(self, cr, uid, ids, context=None):
@@ -359,8 +379,6 @@ class bill_register(osv.osv):
         return stored
 
     def write(self, cr, uid, ids, vals, context=None):
-
-
         return super(bill_register, self).write(cr, uid, ids, vals, context=context)
 
     @api.onchange('bill_register_line_id')

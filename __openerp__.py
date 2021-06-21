@@ -109,6 +109,8 @@ membership products (schemes).
         'admission/payment_config/admission_payment_view.xml',
         'appointment/appointment_booking_view.xml',
         'appointment/appointment_payment/appointment_payment_view.xml',
+        'appointment/appointment_report/appointment_report_menu.xml',
+        'appointment/appointment_report/report_appointment.xml',
 
 
 

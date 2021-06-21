@@ -18,6 +18,7 @@
 
                         <field name="patient_name"/>
                         <field name="age"/>
+                        <field name="sex"/>
                         <field name="phone"/>
                         <field name="address"/>
                         <field name="doctor_name"/>

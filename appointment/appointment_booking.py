@@ -13,6 +13,7 @@ class appointment_booking(osv.osv):
         'name': fields.char("Appointment"),
         'patient_name':fields.char('Patient Name',required=True),
         'age':fields.char('Age',required=True),
+        'sex':fields.char('Sex'),
         'phone': fields.char('Mobile No.'),
         'address': fields.char('Address'),
         'doctor_name': fields.many2one('doctors.profile','Doctor Name'),

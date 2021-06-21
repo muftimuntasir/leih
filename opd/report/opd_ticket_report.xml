@@ -6,195 +6,76 @@
                 <t t-call="report.external_layout">
                     <t t-foreach="docs" t-as="o">
 <!--                        <t t-if="o.patient_id">-->
-                        <div class="page" margin_top="1">
+                        <div class="page">
 
-<!--                            <div class="row">-->
-<!--                                <div class="col-xs-3">-->
-<!--                                     <img t-if="res_company.logo" t-att-src="'data:image/png;base64,%s' % res_company.logo" style="max-height: 45px;"/>-->
-<!--                                </div>-->
-<!--                                <div class="col-xs-9">-->
-<!--                                    <h2>Lions Eye Institute and Hospital</h2>-->
-<!--                                    <p>  Lions Tower, 3/C, Begum Rokeya Sarani</p>-->
-<!--                                    <p>  Agargaon,Dhaka-1207,Bangladesh</p>-->
-<!--                                    <p>Phone: 02-48121272, 02-48118864</p>-->
-<!--                                    <p>E-mail: blf@blfbd.org, Web:www.blfbd.org</p>-->
-<!--                                </div>-->
-<!--                            </div>-->
-                            <div class="row" style="background-color: lightgrey; border: 1px solid green; padding: 5px;">
-                                 <div class="col-xs-2">
-<!--                                    <span> <b>Patient ID:</b> #-->
+
+                            <div class="row form-group" style="padding: 5px;">
+                                 <div class="col-xs-3">
                                         <span t-field="o.patient_id"/>
-<!--                                    </span>-->
-                                    </div>
+                                 </div>
 
                                 <div class="col-xs-3">
-<!--                                    <span><b>Bill No:</b> #-->
                                         <span t-field="o.name"/>
-<!--                                    </span>-->
+                                </div>
+                                <div class="col-xs-2">
+
                                 </div>
 
-                                <div class="col-xs-4">
-<!--                                    <span> <b>Patient Name</b> #-->
-                                        <span t-field="o.patient_name"/>
-<!--                                    </span>-->
-                                    </div>
-                                <div class="col-xs-3">
-                                    <span> <b>Date:</b>#
-                                          <span t-esc="time.strftime('%Y-%m-%d %H:%M:%S')"/>
-                                    </span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span> <b>Age</b>#
-                                          <span t-esc="o.age"/>
-                                    </span>
-                                </div>
-                                <div class="col-xs-3">
-                                    <span> <b>Sex</b>#
-                                          <span t-esc="o.sex"/>
-                                    </span>
-                                </div>
-                                <t t-if="o.ref_doctors">
-                                <div class="col-xs-3">
-                                    <span> <b>Reff. Doctor</b>#
-                                          <span t-esc="o.ref_doctors.name"/>
-                                    </span>
-                                </div>
-                                </t>
 
-
-
+                                <div class="col-xs-4" style="mergin-left:20px" >
+                                        <span t-field="o.date"/>
+                                </div>
                             </div>
-
                             <div class="row">
-                                <div class="col-xs-3"></div>
-                                <div class="col-xs-3"></div>
-                                <div class="col-xs-3"></div>
-                                <div class="col-xs-3">
 
-
-                                </div>
-                                <hr/>
                             </div>
 
-                            <div class="oe_structure"/>
 
-<!--                            <div class="row">-->
-<!--                                <div class="col-xs-4">-->
-<!--                                    <br/>-->
-<!--                                    <br/>-->
-<!--                                    <br/>-->
-<!--                                    <br/>-->
+                                  <div class="row form-group" style="padding: 5px;">
 
-<!--                                    <span>Test Name #-->
-<!--                                        <span t-field="o.name"/>-->
-<!--                                    </span>-->
-<!--                                    <br/>-->
-<!--                                    <span>Group #-->
-<!--                                        <span t-field="o.group.name"/>-->
-<!--                                    </span>-->
-<!--                                    <br/>-->
-<!--                                    <span>Department #-->
-<!--                                        <span t-field="o.department"/>-->
-<!--                                    </span>-->
-<!--                                    <br/>-->
-<!--                                    <span>Rate #-->
-<!--                                        <span t-field="o.rate"/>-->
-<!--                                    </span>-->
-<!--                                    <br/>-->
-<!--                                    <span>Required Time #-->
-<!--                                        <span t-field="o.required_time"/>-->
-<!--                                    </span>-->
-<!--                                </div>-->
 
-<!--                                <div class="col-xs-4">-->
-<!--                                    <br/>-->
-<!--                                    <br/>-->
-<!--                                    <br/>-->
-<!--                                    <br/>-->
+                                    <div class="col-xs-4" style="mergin-top:30px">
+                                        <span t-esc="o.patient_name.name"/>
+                                    </div>
 
-<!--                                    <span>Sample Required #-->
-<!--                                        <span t-field="o.sample_req"/>-->
-<!--                                    </span>-->
-<!--                                    <br/>-->
-<!--                                    <span>Individual #-->
-<!--                                        <span t-field="o.individual"/>-->
-<!--                                    </span>-->
-<!--                                    <br/>-->
-<!--                                    <span>Manual #-->
-<!--                                        <span t-field="o.manual"/>-->
-<!--                                    </span>-->
-<!--                                    <br/>-->
-<!--                                    <span>Merge #-->
-<!--                                        <span t-field="o.merge"/>-->
-<!--                                    </span>-->
-<!--                                    <br/>-->
-<!--                                    <span>Dependency #-->
-<!--                                        <span t-field="o.dependency"/>-->
-<!--                                    </span>-->
-<!--                                    <br/>-->
-<!--                                </div>-->
+                                    <div class="col-xs-3">
 
-<!--                                <div class="col-xs-4">-->
-<!--                                    <br/>-->
-<!--                                    <br/>-->
-<!--                                    <br/>-->
-<!--                                    <br/>-->
+                                          <span t-esc="o.age"/>
 
-<!--                                    <span>Sample Type #-->
-<!--                                        <span t-field="o.sample_type.name"/>-->
-<!--                                    </span>-->
-<!--                                    <br/>-->
+                                </div>
+                                <div class="col-xs-3">
 
-<!--                                </div>-->
-<!--                            </div>-->
+                                          <span t-esc="o.sex"/>
+                                </div>
 
-                            <hr/>
-                            <br/>
-                            <br/>
+                                </div>
+                                <div class="row">
 
-<!--                            <table class="table table-condensed">-->
-<!--                                <thead>-->
-<!--                                    <tr>-->
-<!--                                        <th>No</th>-->
-<!--                                        <th>Name</th>-->
-<!--                                        <th>Reference Value</th>-->
-<!--                                        <th>Others</th>-->
+                                </div>
 
-<!--                                    </tr>-->
-<!--                                </thead>-->
-<!--                                <tbody class="invoice_tbody">-->
-<!--                                    <t t-set="i" t-value="1" />-->
-<!--                                    <t t-foreach="o.examination_entry_line" t-as="z">-->
-<!--                                        <tr>-->
-<!--                                            <td>-->
-<!--                                                <span t-esc="i"/>-->
-<!--                                                <t t-set="i" t-value="i+1"/>-->
-<!--                                            </td>-->
-<!--                                            <td>-->
-<!--                                                <span t-field="z.name"/>-->
+                                    <div class="row form-group" style="padding: 5px;">
+                                    <div class="col-xs-10">
+                                        <span t-esc="o.address"/>
+                                    </div>
+                                    <div class="col-xs-2">
+                                        <span t-esc="o.total"/>
+                                    </div>
+                                </div>
+                             <div class="row">
 
-<!--                                            </td>-->
+                                </div>
 
-<!--                                            <td>-->
-<!--                                                <span t-field="z.reference_value"/>-->
+                                <div class="row">
+                                    <div class="col-xs-10">
+                                        <span t-esc="o.opd_ticket_line_id.name.name"/>
+                                    </div>
+                                </div>
 
-<!--                                            </td>-->
 
-<!--                                            <td>-->
-<!--                                                <span t-field="z.others"/>-->
 
-<!--                                            </td>-->
+                            </div>
 
-<!--                                        </tr>-->
 
-<!--                                    </t>-->
-
-<!--                                </tbody>-->
-
-<!--                            </table>-->
-
-                        </div>
-<!--                        </t>-->
                     </t>
                 </t>
             </t>

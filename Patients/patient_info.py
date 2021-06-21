@@ -143,6 +143,17 @@ class patient_info(osv.osv):
 
         return stored_id
 
+    def write(self, cr, uid, ids, vals, context=None):
+        change_patient= self.browse(cr, uid, ids, context)
+        if "age" in vals:
+            newage=vals['age']
+        # query="select name from opd_ticket where patient_id=%"
+        # cr.execute(query, (ids))
+        # import pdb
+        # pdb.set_trace()
+
+        return super(patient_info, self).write(cr, uid, ids, vals, context=context)
+
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
         args = args or []

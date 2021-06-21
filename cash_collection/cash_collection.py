@@ -2,7 +2,7 @@
 from openerp import api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from datetime import date, time
+from datetime import date, time, timedelta, datetime
 
 class cash_collection(osv.osv):
     _name = "cash.collection"
@@ -16,7 +16,7 @@ class cash_collection(osv.osv):
 
         # mr_obj = self.pool.get("leih.money.receipt").search(self.cr, self.uid, [('date','>=',self.date)])
         if self.type=='bill':
-            vals_parameter = [('bill_id', '!=', False),('already_collected','!=',True)]
+            vals_parameter = [('bill_id', '!=', False),('already_collected','!=',True),('state','!=','cancel')]
             if self.date:
                 vals_parameter.append(('date','=',self.date))
             mr_obj=self.env['leih.money.receipt'].search(vals_parameter)
@@ -47,6 +47,8 @@ class cash_collection(osv.osv):
             if self.date:
                 vals_parameter.append(('date', '=', self.date))
             mr_obj=self.env['opd.ticket'].search(vals_parameter)
+            # import pdb
+            # pdb.set_trace()
 
             for record in mr_obj:
                 abc = {}
@@ -178,7 +180,8 @@ class cash_collection(osv.osv):
     _columns = {
 
         'name': fields.char("Cash Collection No"),
-        'date': fields.date("Date"),
+        # 'date': fields.date("Date"),
+        'date': fields.datetime("Date", default=lambda self: fields.datetime.now()),
         'type': fields.selection([('bill','Bill'),('opd','OPD'),('admission','Admission')], 'Type'),
         'total': fields.float("Total"),
         'journal_id':fields.many2one('account.move', 'Journal '),
