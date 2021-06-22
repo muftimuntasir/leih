@@ -3,7 +3,7 @@
     <data>
         <template id="report_admission">
             <t t-call="report.html_container">
-                <t t-call="report.external_layout">
+<!--                <t t-call="report.external_layout">-->
                     <t t-foreach="docs" t-as="o">
                         <div class="page">
                             <div class="row">
@@ -278,7 +278,7 @@
 
                     </t>
                 </t>
-            </t>
+<!--            </t>-->
         </template>
     </data>
 </openerp>

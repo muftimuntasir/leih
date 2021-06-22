@@ -28,6 +28,7 @@
                                 <tree string="Select Referance Value" editable="top">
 
                                     <field name="patient_name"/>
+                                    <field name="appointment_booking_id"/>
                                     <field name="patient_status"/>
                                     <field name="date"/>
                                     <field name="amount"/>

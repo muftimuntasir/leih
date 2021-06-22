@@ -22,7 +22,8 @@ class appointment_booking(osv.osv):
         'status': fields.selection([('pending', 'Pending'), ('reached', 'Reached'), ('paid', 'Paid')], string='Status',
                                    default='pending'),
         'patient_status': fields.selection([('new', 'New Patient'), ('review', 'Review')],string="Patient Status"),
-        'amount': fields.float('amount')
+        'amount': fields.float('amount'),
+        'payment_done': fields.boolean("Payment", default=False)
     }
 
     def reached_appointment(self, cr, uid, ids, context=None):
