@@ -10,11 +10,11 @@
 
 
                             <div class="row form-group" style="padding: 5px;">
-                                 <div class="col-xs-3">
+                                 <div class="col-xs-4">
                                         <span t-field="o.patient_id"/>
                                  </div>
 
-                                <div class="col-xs-3">
+                                <div class="col-xs-2">
                                         <span t-field="o.name"/>
                                 </div>
                                 <div class="col-xs-2">
@@ -22,7 +22,7 @@
                                 </div>
 
 
-                                <div class="col-xs-4" style="mergin-left:20px" >
+                                <div class="col-xs-4 text-right">
                                         <span t-field="o.date"/>
                                 </div>
                             </div>
@@ -34,16 +34,16 @@
                                   <div class="row form-group" style="padding: 5px;">
 
 
-                                    <div class="col-xs-4" style="mergin-top:30px">
+                                    <div class="col-xs-8" style="mergin-top:30px">
                                         <span t-esc="o.patient_name.name"/>
                                     </div>
 
-                                    <div class="col-xs-3">
+                                    <div class="col-xs-2">
 
                                           <span t-esc="o.age"/>
 
                                 </div>
-                                <div class="col-xs-3">
+                                <div class="col-xs-2 text-right">
 
                                           <span t-esc="o.sex"/>
                                 </div>

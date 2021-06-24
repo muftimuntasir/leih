@@ -33,15 +33,15 @@
 
                             <div class="row">
                                 <div class="col-xs-4">
-                                    <strong>Name: </strong> <span t-field="o.patient_name"/>
+                                    <b>Name: </b> <span t-field="o.patient_name"/>
 <!--                                    <p t-field="o.patient_name"/>-->
                                 </div>
                                 <div class="col-xs-4">
-                                    <strong>Patient ID:</strong>
+                                    <b>Patient ID:</b>
                                     <span t-field="o.name"/>
                                 </div>
                                 <div class="col-xs-4">
-                                    <strong>Age:</strong>
+                                    <b>Age:</b>
                                     <span t-field="o.age"/>
                                 </div>
                                 <div class="col-xs-4">
