@@ -19,7 +19,7 @@
                             <div class="row">
                             <div style="col-md-6 align:left">
                                 <h2>
-                                    <b>Admission ID</b><span t-field="o.name"/>
+                                    <b>Admission ID: </b><span t-field="o.name"/>
                                 </h2>
                             </div>
 
