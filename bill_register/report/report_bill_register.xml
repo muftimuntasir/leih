@@ -5,51 +5,58 @@
             <t t-call="report.html_container">
 <!--                <t t-call="report.external_layout">-->
                     <t t-foreach="docs" t-as="o">
-                        <div class="page" style="border:1px solid blue">
+                        <div class="page">
                             <div class="row">
                                 <div class="col-xs-3"></div>
                                 <div class="col-xs-3"></div>
-                                <div class="col-xs-3"></div>
-                                <div class="col-xs-3">
-                                    Date: <span t-esc="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+                                <div class="col-xs-1"></div>
+                                <div class="col-xs-5">
+                                    Date: <span t-esc="o.date"/>
                                 </div>
                             </div>
 
                             <div class="oe_structure"/>
 
                             <div style="align:center">
-                                <h2>
-                                    <span>Bill No # <span t-field="o.name"/></span>
-                                </h2>
+                                <h5>
+                                    Bill No: <span t-field="o.name"/>
+                                </h5>
                             </div>
 
                             <div class="row">
                             <div class="col-md-6 pull-right">
-                                <h1>
+                                <h3>
                                     <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px"/>
-                                </h1>
+                                </h3>
                             </div>
                                 </div>
 
                             <div class="row">
-                                <div class="col-xs-4">
-                                    <strong>Name:</strong>
-                                    <p t-field="o.patient_name"/>
+                                <div class="col-xs-5">
+                                    <b>Name:</b> <span t-field="o.patient_name.name"/>
+
                                 </div>
-                                <div class="col-xs-4">
-                                    <strong>Age:</strong>
-                                    <p t-field="o.patient_name.age"/>
+                                <div class="col-xs-2">
+                                    <b>Age:</b> <span t-field="o.patient_name.age"/>
                                 </div>
-                                <div class="col-xs-4">
-                                    <strong>Sex:</strong>
-                                    <p t-field="o.patient_name.sex"/>
+                                <div class="col-xs-2 text-left">
+                                    <b>Sex:</b> <span t-field="o.patient_name.sex"/>
+
                                 </div>
+                                     <div class="col-xs-3">
+                                    <b>Address:</b><span t-field="o.patient_name.address"/>
+
+                                </div>
+                                 </div>
+                                <div class="row">
+
                                 <div class="col-xs-4">
-                                    <strong>Reffered By:</strong>
-                                    <p t-field="o.ref_doctors"/>
+                                    <b>Reffered By:</b><span t-field="o.ref_doctors"/>
+
+                                </div>
                                 </div>
 
-                            </div>
+
                             <hr/>
                             <br/><br/>
 
@@ -57,7 +64,7 @@
                                 <thead>
                                     <tr>
                                         <th>S.N.</th>
-                                        <th>Test Name</th>
+                                        <th>Item Name</th>
                                         <th>Amount</th>
                                         <th>Delivery Date</th>
 

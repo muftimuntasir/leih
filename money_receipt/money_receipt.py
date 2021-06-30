@@ -11,6 +11,7 @@ class money_receipt(osv.osv):
         'date':fields.date("Date"),
         'bill_id':fields.many2one("bill.register","BIll ID"),
         'admission_id':fields.many2one("leih.admission","Admission ID"),
+        'optics_sale_id':fields.many2one("optics.sale","Optics Sale ID"),
         'amount':fields.float("amount"),
         'already_collected':fields.boolean("Collected", default=False),
         'type':fields.selection([('bank','Bank'),('cash','Cash')],string="Type", default='cash'),

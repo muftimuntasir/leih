@@ -31,7 +31,7 @@
 
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
-        <menuitem name="Expense Cancel" id="expense_cancel_menu_mainform" parent="leih_expense_menu" action="expense_cancel_action"/>
+        <menuitem name="Expense Cancel" id="expense_cancel_menu_mainform" parent="leih_expense_menu" action="expense_cancel_action" groups="leih.group_expense_menu_cancel"/>
 
 
     </data>

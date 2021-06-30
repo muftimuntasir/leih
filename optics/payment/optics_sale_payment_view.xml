@@ -2,19 +2,19 @@
 <openerp>
     <data>
         <!--proforma_invoice form-->
-        <record model="ir.ui.view" id="admission_payment_form_view" >
-			<field name="name">Admission Payment Information</field>
-			<field name="model">admission.payment</field>
+        <record model="ir.ui.view" id="optics_sale_payment_form_view" >
+			<field name="name">optics sale Information</field>
+			<field name="model">optics.sale.payment</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="PI">
                     <sheet>
 
-                        <group string="Basic Information">
+                        <group string="Bill Information">
                             <group>
                                 <field name="name"/>
                                 <field name="date"/>
-                                <field name="admission_id"/>
+                                <field name="optics_sale_id"/>
                                 <field name="amount"/>
                                 <field name="type"/>
                                 <field name="card_no"/>
@@ -36,9 +36,9 @@
 
 
         <!--proforma_invoice starting action-->
-        <record model="ir.actions.act_window" id="admission_payment_new_action" >
-			<field name="name">Admission Invoice</field>
-			<field name="res_model">admission.payment</field>
+        <record model="ir.actions.act_window" id="optics_sale_payment_new_action" >
+			<field name="name">Bill Invoice</field>
+			<field name="res_model">optics.sale.payment</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 			<field name="context" eval="{'search_default_my_courses': 1}"/>
@@ -51,14 +51,14 @@
 
 
         <!--Proforma Invoice record list tree-->
-        <record model="ir.ui.view" id="admission_payment_tree_view" >
-            <field name="name">admission.payment</field>
-            <field name="model">admission.payment</field>
+        <record model="ir.ui.view" id="optics_sale_payment_tree_view" >
+            <field name="name">optics sale</field>
+            <field name="model">optics.sale.payment</field>
             <field name="arch" type="xml">
-                <tree string="Admission List" default_order='id desc'>
+                <tree string="Bill List" default_order='id desc'>
 
                                 <field name="name"/>
-                                <field name="admission_id"/>
+                                <field name="optics_sale_id"/>
                                 <field name="amount"/>
                                 <field name="type"/>
                                 <field name="card_no"/>
@@ -69,7 +69,7 @@
             </field>
         </record>
 
-        <menuitem id="admission_payment_menu" name="Admission Payment" parent="leih_admission_menu" action="admission_payment_new_action" groups="leih.group_admission_menu_admission_payment"/>
+        <menuitem id="bill_payment_menu" name="Bill Payment" parent="leih_admission_menu" action="optics_sale_payment_new_action" groups="leih.group_admission_menu_bill_payment"/>
 
     </data>
 </openerp>

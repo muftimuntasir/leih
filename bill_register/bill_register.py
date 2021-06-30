@@ -449,13 +449,16 @@ class test_information(osv.osv):
         'bill_register_id': fields.many2one('bill.register', "Information"),
         'department':fields.char("Department"),
         'delivery_date':fields.date("Delivery Date"),
+        'date': fields.datetime("Date", readonly=True, default=lambda self: fields.datetime.now()),
         # 'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency",
         #                               string="Currency", readonly=True, required=True),
         # 'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
         'price': fields.integer("Price"),
         'discount': fields.integer("Discount"),
         'total_amount': fields.integer("Total Amount"),
+        'assign_doctors': fields.many2one('doctors.profile', 'Doctor'),
         'commission_paid': fields.boolean("Commission Paid"),
+
 
     }
 

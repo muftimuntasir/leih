@@ -47,7 +47,7 @@
         <menuitem name="Discount" id="leih_discount_menu" parent="leih_menu" sequence="3"/>
 
 
-        <menuitem name="Pending Discount" id="pending_discount_menu_mainform" parent="leih_discount_menu" action="pending_discount_action"/>
+        <menuitem name="Pending Discount" id="pending_discount_menu_mainform" parent="leih_discount_menu" action="pending_discount_action" groups="leih.group_discount_menu_pending"/>
 
 
     </data>

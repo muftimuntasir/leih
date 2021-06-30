@@ -7,32 +7,30 @@
             <field name="arch" type="xml">
             <form string="Investigation">
                 <header>
-<button name="print_sticker" string="Print Sticker" type="object" />
+                    <button name="print_sticker" string="Print Sticker" type="object" />
                     <button name="print_lab_report" string="Complete and Print Report" type="object" />
-                     <button name="set_to_lab" string="Set to Lab" type="object" />
-                     <button name="set_to_sample" string="Set to Sample" type="object" />
-                     <button string="Haematology" type="object" name="haematology_report" groups="base.group_user"/>
-                        <button string="Serology" type="object" name="serology_report" groups="base.group_user"/>
-                        <button string="Microbiology" type="object" name="microbiology_report" groups="base.group_user"/>
-                        <button string="Biochemistry" type="object" name="biochemistry_report" groups="base.group_user"/>
-                        <button string="Urine" type="object" name="urine_report" groups="base.group_user"/>
-                        <button string="Stool" type="object" name="stool_report" groups="base.group_user"/>
-                        <button string="Complete Reporting" type="object" name="done_radiology" groups="base.group_user"/>
-                        <button string="Make Delivered" type="object" name="delivered" groups="base.group_user"/>
+                    <button name="set_to_lab" string="Set to Lab" type="object" />
+                    <button name="set_to_sample" string="Set to Sample" type="object" />
+                    <button string="Haematology" type="object" name="haematology_report" groups="base.group_user"/>
+                    <button string="Serology" type="object" name="serology_report" groups="base.group_user"/>
+                    <button string="Microbiology" type="object" name="microbiology_report" groups="base.group_user"/>
+                    <button string="Biochemistry" type="object" name="biochemistry_report" groups="base.group_user"/>
+                    <button string="Urine" type="object" name="urine_report" groups="base.group_user"/>
+                    <button string="Stool" type="object" name="stool_report" groups="base.group_user"/>
+                    <button string="Complete Reporting" type="object" name="done_radiology" groups="base.group_user"/>
+                    <button string="Make Delivered" type="object" name="delivered" groups="base.group_user"/>
+                </header>
 
-</header>
                 <sheet>
 
                     <group>
-
                         <field name="name"/>
                         <field name="full_name"/>
                         <field name="test_id"/>
                         <field name="bill_register_id"/>
                         <field name="admission_id"/>
                         <field name="department_id"/>
-                         <field name="doctor_id"/>
-
+                        <field name="doctor_id"/>
                     </group>
                     <notebook>
                         <page string="Referance Value">
@@ -103,7 +101,7 @@
 
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
-        <menuitem name="Common Admin" id="common_admin_menu" parent="leih_reportreceiption_menu" action="common_admins"/>
+        <menuitem name="Common Admin" id="common_admin_menu" parent="leih_reportreceiption_menu" action="common_admins" groups="leih.group_report_reception_menu_common_admin"/>
 
 
     </data>

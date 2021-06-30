@@ -7,18 +7,20 @@
             <field name="model">leih.admission</field>
             <field name="arch" type="xml">
             <form string="Investigation">
-                                    <header>
-                        <button string="Confirm and Print" type="object" name="change_status" groups="base.group_user"/>
-                        <button string="Add Test" type="object" name="add_new_test" groups="base.group_user"/>
-                        <button string="Add Discount" type="object" name="add_discount" groups="base.group_user"/>
-                        <button string="Final Settlement" type="object" name="btn_final_settlement" groups="base.group_user"/>
-                        <button string="Covert to Admission" type="object" name="btn_convert_to_admission" groups="base.group_user" attrs="{'invisible': [('emergency', '=', False)]}"/>
-                        <button string="Payment" type="object" name="btn_pay" groups="base.group_user"/>
-                    </header>
+                <header>
+                    <button string="Confirm and Print" type="object" name="change_status" groups="base.group_user"/>
+                    <button string="Add Test" type="object" name="add_new_test" groups="base.group_user"/>
+                    <button string="Add Discount" type="object" name="add_discount" groups="base.group_user"/>
+                    <button string="Final Settlement" type="object" name="btn_final_settlement" groups="base.group_user"/>
+                    <button string="Covert to Admission" type="object" name="btn_convert_to_admission" groups="base.group_user" attrs="{'invisible': [('emergency', '=', False)]}"/>
+                    <button string="Payment" type="object" name="btn_pay" groups="base.group_user"/>
+                    <button string="Cancel" type="object" name="admission_cancel" groups="leih.group_admission_button_cancel"/>
+                </header>
                 <sheet>
 
                     <group>
-                                 <field name="date"/>
+
+                        <field name="date"/>
 
 <!--                        <field name="patient_id"/>-->
 <!--                        <field name="name"/>-->
@@ -145,7 +147,7 @@
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
         <menuitem name="Admission" id="leih_admission_menu" parent="leih_menu" sequence="2"/>
-        <menuitem name="Pending Admission" id="admission_menu_mainform" parent="leih_admission_menu" action="admission_action"/>
+        <menuitem name="Pending Admission" id="admission_menu_mainform" parent="leih_admission_menu" action="admission_action" groups="leih.group_admission_menu_pending"/>
 
 
     </data>

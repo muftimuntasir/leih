@@ -48,7 +48,7 @@
 
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
-        <menuitem name="Activated Emergency" id="emergency_activated_menu_mainform" parent="leih_emergency_menu" action="emergency_activated_action"/>
+        <menuitem name="Activated Emergency" id="emergency_activated_menu_mainform" parent="leih_emergency_menu" action="emergency_activated_action" groups="leih.group_emergency_menu_activated"/>
 
 
     </data>

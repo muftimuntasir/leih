@@ -58,7 +58,7 @@
 
 
         <menuitem name="Blood Bank" id="leih_blood_menu" parent="leih_menu" sequence="6"/>
-        <menuitem name="Blood Donar" id="blood_donar_menu_mainform" parent="leih_blood_menu" action="blood_donar_action"/>
+        <menuitem name="Blood Donar" id="blood_donar_menu_mainform" parent="leih_blood_menu" action="blood_donar_action" groups="leih.group_blood_bank_menu_donor"/>
 
     </data>
 </openerp>

@@ -49,7 +49,7 @@
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
          <menuitem name="Emergency" id="leih_emergency_menu" parent="leih_menu" sequence="3"/>
-        <menuitem name="Pending Emergency" id="emergency_menu_mainform" parent="leih_emergency_menu" action="emergency_patient_action"/>
+        <menuitem name="Pending Emergency" id="emergency_menu_mainform" parent="leih_emergency_menu" action="emergency_patient_action" groups="leih.group_emergency_menu_pending"/>
 
 
     </data>

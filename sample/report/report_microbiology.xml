@@ -81,6 +81,7 @@
                                 <tbody class="sample_report_tbody">
                                     <t t-set="i" t-value="1" />
                                     <t t-foreach="o.sticker_line_id" t-as="z">
+                                        <t t-if="z.result">
                                         <tr>
                                             <td>
                                                 <span t-esc="i"/>
@@ -108,12 +109,28 @@
 
 
                                         </tr>
+                                        </t>
 
                                     </t>
 
                                 </tbody>
 
                             </table>
+                            <div class="page-footer" style="position:absolute;top:1000px; page-break-inside: avoid;">
+<!--                                <div class="container-fluid text-center text-xs-left">-->
+                                <div class="row">
+
+                                    <div class="col-xs-6">
+                                        <p>Prepared By</p>
+                                        <span t-esc="user.name"></span>
+                                    </div>
+                                    <div class="col-xs-6">
+                                        <span t-field="o.doctor_id"/>
+                                    </div>
+                                </div>
+<!--                                </div>-->
+
+                            </div>
 
 
                         </div>

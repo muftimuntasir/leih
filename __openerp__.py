@@ -111,6 +111,11 @@ membership products (schemes).
         'appointment/appointment_payment/appointment_payment_view.xml',
         'appointment/appointment_report/appointment_report_menu.xml',
         'appointment/appointment_report/report_appointment.xml',
+        'appointment/appointment_report/report_appointment.xml',
+        'bill_register/investigation_payment/investigation_payment_view.xml',
+        'optics/optics_sale_view.xml',
+        'optics/payment/optics_sale_payment_view.xml',
+        'optics/product_lens_view.xml',
 
 
 

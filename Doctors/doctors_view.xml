@@ -93,7 +93,7 @@
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
         <menuitem name="Profile" id="leih_profile_menu" parent="leih_menu" sequence="5"/>
-        <menuitem name="Doctors" id="doctors_menu_mainform" parent="leih_profile_menu" action="doctors_action"/>
+        <menuitem name="Doctors" id="doctors_menu_mainform" parent="leih_profile_menu" action="doctors_action" groups="leih.group_profile_menu_doctors"/>
 
 
     </data>

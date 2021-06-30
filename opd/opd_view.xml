@@ -94,7 +94,7 @@
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
         <menuitem name="OPD" id="leih_opd_menu" parent="leih_menu" sequence="2"/>
-        <menuitem name="OPD Ticket" id="opd_menu_mainform" parent="leih_opd_menu" action="opd_action"/>
+        <menuitem name="OPD Ticket" id="opd_menu_mainform" parent="leih_opd_menu" action="opd_action" groups="leih.group_opd_menu_opd_ticket"/>
 
 
     </data>

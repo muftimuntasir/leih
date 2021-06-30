@@ -47,7 +47,7 @@
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
         <menuitem name="Report Receiption" id="leih_reportreceiption_menu" parent="leih_menu" sequence="4"/>
-        <menuitem name="Report" id="report_print" parent="leih_reportreceiption_menu" action="report_action"/>
+        <menuitem name="Report" id="report_print" parent="leih_reportreceiption_menu" action="report_action" groups="leih.group_report_reception_menu_report"/>
 
 
     </data>

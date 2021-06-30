@@ -231,6 +231,26 @@ class leih_admission(osv.osv):
         return self.pool['report'].get_action(cr, uid, ids, 'leih.report_admission', context=context)
 
 
+    def admission_cancel(self, cr, uid, ids, context=None):
+        ## Bill Status Will Change
+
+        cr.execute("update leih_admission set state='cancelled' where id=%s", (ids))
+        cr.commit()
+        ## Lab WIll be Deleted
+
+        # cr.execute("update diagnosis_sticker set state='cancel' where bill_register_id=%s", (ids))
+        # cr.commit()
+
+        #for updates on cash collection
+        cr.execute("update leih_money_receipt set state='cancel' where admission_id=%s", (ids))
+        cr.commit()
+
+
+
+
+        return True
+
+
 
     def add_new_test(self, cr, uid, ids, context=None):
         if not ids: return []

@@ -58,7 +58,7 @@
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
         <menuitem name="Laundry and Linen" id="leih_laundry_menu" parent="leih_menu"/>
-        <menuitem name="Linen Entry" id="linen_menu_mainform" parent="leih_laundry_menu" action="linen_action"/>
+        <menuitem name="Linen Entry" id="linen_menu_mainform" parent="leih_laundry_menu" action="linen_action" groups="leih.group_laundry_linen_menu_entry"/>
 
 
     </data>

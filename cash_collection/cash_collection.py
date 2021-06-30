@@ -29,7 +29,7 @@ class cash_collection(osv.osv):
                 total = total +record.amount
                 child_list.append([0, False, abc])
         if self.type=='admission':
-            vals_parameter = [('admission_id', '!=', False), ('already_collected', '!=', True)]
+            vals_parameter = [('admission_id', '!=', False), ('already_collected', '!=', True),('state','!=','cancel')]
             if self.date:
                 vals_parameter.append(('date', '=', self.date))
             mr_obj=self.env['leih.money.receipt'].search(vals_parameter)
@@ -40,6 +40,20 @@ class cash_collection(osv.osv):
                 abc['mr_no']=record.id
                 abc['amount']=record.amount
                 total = total + record.amount
+                child_list.append([0, False, abc])
+
+        if self.type=='optics':
+            vals_parameter = [('optics_sale_id', '!=', False),('already_collected','!=',True),('state','!=','cancel')]
+            if self.date:
+                vals_parameter.append(('date','=',self.date))
+            mr_obj=self.env['leih.money.receipt'].search(vals_parameter)
+
+            for record in mr_obj:
+                abc = {}
+                abc['bill_admission_opd_id']=record.optics_sale_id.name
+                abc['mr_no']=record.id
+                abc['amount']=record.amount
+                total = total +record.amount
                 child_list.append([0, False, abc])
 
         if self.type=='opd':
@@ -182,7 +196,7 @@ class cash_collection(osv.osv):
         'name': fields.char("Cash Collection No"),
         # 'date': fields.date("Date"),
         'date': fields.datetime("Date", default=lambda self: fields.datetime.now()),
-        'type': fields.selection([('bill','Bill'),('opd','OPD'),('admission','Admission')], 'Type'),
+        'type': fields.selection([('bill','Bill'),('opd','OPD'),('admission','Admission'),('optics','Optics')], 'Type'),
         'total': fields.float("Total"),
         'journal_id':fields.many2one('account.move', 'Journal '),
         'cash_collection_lines': fields.one2many("cash.collection.line","cash_collection_line_id",'cash collection', required=True),

@@ -46,7 +46,7 @@
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
 
-        <menuitem name="Cancelled Discount" id="cancelled_discount_menu_mainform" parent="leih_discount_menu" action="cancelled_discount_action"/>
+        <menuitem name="Cancelled Discount" id="cancelled_discount_menu_mainform" parent="leih_discount_menu" action="cancelled_discount_action" groups="leih.group_discount_menu_cancelled"/>
 
 
     </data>

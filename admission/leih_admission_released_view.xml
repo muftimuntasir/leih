@@ -46,7 +46,7 @@
 
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
-        <menuitem name="Released Admission" id="admission_released_menu_mainform" parent="leih_admission_menu" action="admission_released_action"/>
+        <menuitem name="Released Admission" id="admission_released_menu_mainform" parent="leih_admission_menu" action="admission_released_action" groups="leih.group_admission_menu_released"/>
 
 
     </data>
