@@ -113,8 +113,8 @@ class optics_sale(osv.osv):
             #     except:
             #         pass
 
-            # return self.pool['report'].get_action(cr, uid, ids, 'leih.report_optics_sale', context=context)
-            return "XX"
+            return self.pool['report'].get_action(cr, uid, ids, 'leih.report_optics_sale', context=context)
+
 
 
     def onchange_patient(self, cr, uid, ids, name, context=None):

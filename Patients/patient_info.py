@@ -136,7 +136,7 @@ class patient_info(osv.osv):
 
         stored_id=super(patient_info, self).create(cr, uid, vals, context=context)
         if stored_id is not None:
-            name_text = 'P-1000' + str(stored_id)
+            name_text = 'P-10' + str(stored_id)
             cr.execute('update patient_info set patient_id=%s where id=%s', (name_text, stored_id))
             cr.execute('update patient_info set state=%s where id=%s', ('created', stored_id))
             cr.commit()

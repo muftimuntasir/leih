@@ -82,6 +82,16 @@
             </field>
         </record>
 
+        <report
+                id="action_cc_collection_u_report"
+                model="cash.collection"
+                string="stool"
+                report_type="qweb-pdf"
+                name="leih.report_cc_collection"
+                file="leih.report_cc_collection"
+                menu="False"
+
+        />
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
 <!--        <menuitem name="Cash Collection" id="cash_collection_menu_mainform" parent="leih_group_menu" action="cash_collection_action"/>-->

@@ -100,7 +100,7 @@
                                 </tbody>
 
                             </table>
-                                                         <div align="right">
+                                                         <div align="right" style="mergin-right:10px;">
                                     <strong>Sub Total:</strong>
                                     <span t-field="o.total"/>
                                 </div>

@@ -16,6 +16,7 @@ membership products (schemes).
   
         'security/leih_security.xml',
         'security/ir.model.access.csv',
+        'wizard/cc_collection_view.xml',
        
         'diagnosis_room/diagnosis_room_view.xml',
         'Department/department_view.xml',
@@ -95,6 +96,7 @@ membership products (schemes).
         'cash_collection/cash_collection_pending_view.xml',
         'cash_collection/cash_collection_confirmed_view.xml',
         'cash_collection/cash_collection_cancelled_view.xml',
+        'cash_collection/report/report_cc_collection.xml',
         'discount/discount_category_view.xml',
         'discount/discount_configuration_view.xml',
         'discount/corporate_discount_view.xml',
@@ -116,6 +118,11 @@ membership products (schemes).
         'optics/optics_sale_view.xml',
         'optics/payment/optics_sale_payment_view.xml',
         'optics/product_lens_view.xml',
+        'optics/report/optics_report_menu.xml',
+        'optics/report/report_optics_sale.xml',
+
+
+
 
 
 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="report_cc_collection">
+            <t t-call="report.html_container">
+               <t t-call="report.internal_layout">
+                    <div class="page">
+                        <div class="row">
+                            <div class="col-md-6 pull-center">
+                                <span t-esc="get_user_context(data['form']['date_start'],data['form']['date_end'])"/>
+                            </div>
+                        </div>
+
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Billing Amount</th>
+                            <th>Admission Amount</th>
+                            <th>OPD Amount</th>
+                            <th>Optics Amount</th>
+                            <th>Total Amount</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                         <tr t-foreach="get_user_names(data['form']['date_start'],data['form']['date_end'])" t-as="move_a">
+                                <td><span t-esc="move_a['user_name']"/></td>
+                                <td><span t-esc="move_a['bill_collection']"/></td>
+                                <td><span t-esc="move_a['admission_collection']"/></td>
+                                <td><span t-esc="move_a['opd_collection']"/></td>
+                                <td><span t-esc="move_a['optics_collection']"/></td>
+                                <td><span t-esc="move_a['total_collection']"/></td>
+
+                            </tr>
+                    </tbody>
+
+                </table>
+
+                    </div>
+
+                </t>
+            </t>
+        </template>
+    </data>
+</openerp>
+
+

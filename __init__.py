@@ -21,3 +21,4 @@ import cash_collection
 import commission
 import appointment
 import optics
+import wizard
