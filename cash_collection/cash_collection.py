@@ -101,13 +101,13 @@ class cash_collection(osv.osv):
 
                 line_ids.append((0, 0, {
                     'name':  cc_obj.name,
-                    'account_id': 237,
+                    'account_id': cc_obj.debit_act_id.id,
                     'debit': cc_obj.total,
                 }))
 
                 line_ids.append((0, 0, {
                     'name':cc_obj.name,
-                    'account_id': 2742,
+                    'account_id': cc_obj.credit_act_id.id,
                     'credit': cc_obj.total,
                 }))
 
@@ -199,6 +199,8 @@ class cash_collection(osv.osv):
         'type': fields.selection([('bill','Bill'),('opd','OPD'),('admission','Admission'),('optics','Optics')], 'Type'),
         'total': fields.float("Total"),
         'journal_id':fields.many2one('account.move', 'Journal '),
+        'debit_act_id':fields.many2one('account.account', 'Debit Account ', required=True),
+        'credit_act_id':fields.many2one('account.account', 'Credit Account ', required=True),
         'cash_collection_lines': fields.one2many("cash.collection.line","cash_collection_line_id",'cash collection', required=True),
          'state': fields.selection([
            ('pending', 'Pending'),

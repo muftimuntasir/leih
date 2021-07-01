@@ -32,6 +32,9 @@
                         <field name="name"/>
                         <field name="date"/>
                         <field name="type"/>
+                        <field name="journal_id"/>
+                        <field name="debit_act_id"/>
+                        <field name="credit_act_id"/>
                         <field name="total"/>
                         <field name="state"/>
 
