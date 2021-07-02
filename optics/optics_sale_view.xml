@@ -49,25 +49,25 @@
 
                         <field name="hard_cover"/>
                         <field name="cell_pad"/>
+                        <field name="frame_id"/>
+                        <field name="price"/>
                         <field name="delivery_date"/>
 
                     </group>
                     <notebook>
-                        <page string="Referance Value">
-                            <field name="optics_sale_line_id" mode="tree">
+                        <page string="Lens">
+                            <field name="optics_lens_sale_line_id" mode="tree">
                                 <tree string="Select Referance Value" editable="top">
 
-                                    <field name="name" on_change="onchange_test(name, context)"/>
-                                    <field name="department"/>
+                                    <field name="product_id"/>
                                     <field name="price"/>
-                                    <field name="qty"/>
+                                    <field name="qty" />
                                     <field name="total_amount"/>
-                                    <field name="assign_doctors"/>
 
                                 </tree>
                             </field>
-
                         </page>
+
                         <page string="Payment Info">
                             <field name="optics_sale_payment_line_id" mode="tree">
                                 <tree string="Select Referance Value" editable="top">
@@ -83,21 +83,6 @@
                             </field>
                           </page>
 
-                    </notebook>
-
-                    <notebook>
-                        <page string="Lens">
-                            <field name="optics_lens_sale_line_id" mode="tree">
-                                <tree string="Select Referance Value" editable="top">
-
-                                    <field name="name" on_change="onchange_lens(name, context)"/>
-                                    <field name="price"/>
-                                    <field name="qty"/>
-                                    <field name="total_amount"/>
-
-                                </tree>
-                            </field>
-                        </page>
                     </notebook>
 
                             <group>

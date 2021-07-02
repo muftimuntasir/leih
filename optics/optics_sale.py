@@ -9,10 +9,7 @@ class optics_sale(osv.osv):
     _name = "optics.sale"
     _order = 'id desc'
 
-    # pdf=PDF()
 
-    # pdf.lines()
-    # pdf.titles()
 
     def _totalpayable(self, cr, uid, ids, field_name, arg, context=None):
         Percentance_calculation = {}
@@ -56,7 +53,9 @@ class optics_sale(osv.osv):
         'delivery_date': fields.date(string="Delivery Date"),
         'hard_cover':fields.boolean("Cover",default=True),
         'cell_pad':fields.boolean("Cell Pad",default=True),
-        'optics_sale_line_id': fields.one2many('optics.sale.line', 'optics_sale_id', 'Frame Entry', required=True),
+        'frame_id':fields.many2one('product.product','Frame'),
+        'delivery_id':fields.many2one('stock.picking','Delivery Challan'),
+        'price':fields.float('Price'),
         'optics_lens_sale_line_id': fields.one2many('optics.lens.sale.line', 'optics_sale_id', 'Lens Entry', required=True),
         'optics_sale_payment_line_id': fields.one2many("optics.sale.payment.line", "optics_sale_payment_line_id",
                                                          "Bill Register Payment"),
@@ -81,6 +80,68 @@ class optics_sale(osv.osv):
 
     # if same item exist in line
 
+    def create_picking(self, cr, uid, ids, context=None):
+        """Create a picking for each order and validate it."""
+        picking_obj = self.pool.get('stock.picking')
+        partner_obj = self.pool.get('res.partner')
+        move_obj = self.pool.get('stock.move')
+
+        for order in self.browse(cr, uid, ids, context=context):
+            if all(t == 'service' for t in order.lines.mapped('product_id.type')):
+                continue
+
+            picking_type = order.picking_type_id
+            picking_id = False
+            if picking_type:
+                picking_id = picking_obj.create(cr, uid, {
+                    'origin': order.name,
+                    'partner_id': False,
+                    'date_done': order.date_order,
+                    'picking_type_id': picking_type.id,
+                    'company_id': order.company_id.id,
+                    'move_type': 'direct',
+                    'note': order.note or "",
+                    'invoice_state': 'none',
+                }, context=context)
+                self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
+            location_id = order.location_id.id
+            if order.partner_id:
+                destination_id = order.partner_id.property_stock_customer.id
+            elif picking_type:
+                if not picking_type.default_location_dest_id:
+                    raise osv.except_osv(_('Error!'),
+                                         _('Missing source or destination location for picking type %s. Please configure those fields and try again.' % (
+                                         picking_type.name,)))
+                destination_id = picking_type.default_location_dest_id.id
+            else:
+                destination_id = partner_obj.default_get(cr, uid, ['property_stock_customer'], context=context)[
+                    'property_stock_customer']
+
+            move_list = []
+            
+
+            move_list.append(move_obj.create(cr, uid, {
+                'name': order.name,
+                'product_uom': order.frame_id.uom_id.id,
+                'product_uos': order.frame_id.uom_id.id,
+                'picking_id': picking_id,
+                'picking_type_id': picking_type.id,
+                'product_id': order.frame_id.id,
+                'product_uos_qty': abs(1),
+                'product_uom_qty': abs(1),
+                'state': 'draft',
+                'location_id': location_id if order.qty >= 0 else destination_id,
+                'location_dest_id': destination_id if order.qty >= 0 else location_id,
+            }, context=context))
+
+
+            if picking_id:
+                picking_obj.action_confirm(cr, uid, [picking_id], context=context)
+                picking_obj.force_assign(cr, uid, [picking_id], context=context)
+                picking_obj.action_done(cr, uid, [picking_id], context=context)
+
+        return True
+
     def bill_confirm(self, cr, uid, ids, context=None):
 
         stored_obj = self.browse(cr, uid, [ids[0]], context=context)
@@ -88,11 +149,13 @@ class optics_sale(osv.osv):
 
 
         stored = int(ids[0])
+        if stored_obj.state == 'confirmed':
+            raise osv.except_osv(_('Warning!'),
+                                 _('Already it is  Confirmed. Yuo can not change.'))
 
         if stored_obj.paid != False:
             for bills_vals in stored_obj:
-                # import pdb
-                # pdb.set_trace()
+
                 mr_value = {
                     'date': stored_obj.date,
                     'optics_sale_id': int(stored),
@@ -105,15 +168,82 @@ class optics_sale(osv.osv):
                 mr_name = 'MR#' + str(mr_id)
                 cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
                 cr.commit()
-            # if mr_id is not None:
-            #     try:
-            #         mr_name = 'MR#' + str(mr_id)
-            #         cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
-            #         cr.commit()
-            #     except:
-            #         pass
 
-            return self.pool['report'].get_action(cr, uid, ids, 'leih.report_optics_sale', context=context)
+
+            #### Create a challan
+
+            picking_obj = self.pool.get('stock.picking')
+            partner_obj = self.pool.get('res.partner')
+            move_obj = self.pool.get('stock.move')
+
+            for order in self.browse(cr, uid, ids, context=context):
+
+
+                picking_id = picking_obj.create(cr, uid, {
+                    'origin': order.name,
+                    'partner_id': False,
+                    'date_done': stored_obj.date,
+                    'picking_type_id': 2, ## Hard Coded
+                    # 'company_id': order.company_id.id,
+                    'move_type': 'direct',
+                    'note': "",
+                    'invoice_state': 'none',
+                }, context=context)
+                self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
+                location_id = 12 # Source Location from where stock will reduce
+
+                destination_id = 9 ## Customer location
+
+
+                move_list = []
+
+                move_list.append(move_obj.create(cr, uid, {
+                    'name': order.name,
+                    'product_uom': order.frame_id.uom_id.id,
+                    'product_uos': order.frame_id.uom_id.id,
+                    'picking_id': picking_id,
+                    'picking_type_id': 2,
+                    'product_id': order.frame_id.id,
+                    'product_uos_qty': abs(1),
+                    'product_uom_qty': abs(1),
+                    'state': 'draft',
+                    'location_id': location_id,
+                    'location_dest_id': destination_id,
+                }, context=context))
+
+
+                for opt_line in order.optics_lens_sale_line_id:
+                    move_list.append(move_obj.create(cr, uid, {
+                        'name': order.name,
+                        'product_uom': opt_line.product_id.uom_id.id,
+                        'product_uos': opt_line.product_id.uom_id.id,
+                        'picking_id': picking_id,
+                        'picking_type_id': 2,
+                        'product_id': opt_line.product_id.id,
+                        'product_uos_qty': abs(opt_line.qty),
+                        'product_uom_qty': abs(opt_line.qty),
+                        'state': 'draft',
+                        'location_id': location_id,
+                        'location_dest_id': destination_id,
+                    }, context=context))
+
+
+                if picking_id:
+                    picking_obj.action_confirm(cr, uid, [picking_id], context=context)
+                    picking_obj.force_assign(cr, uid, [picking_id], context=context)
+                    picking_obj.action_done(cr, uid, [picking_id], context=context)
+                    cr.execute("update optics_sale set delivery_id=%s where id=%s", (picking_id,ids[0]))
+                    cr.commit()
+
+            ### Ends Here
+
+            cr.execute("update optics_sale set state='confirmed' where id=%s", (ids))
+            cr.commit()
+        else:
+            raise osv.except_osv(_('Warning!'),
+                                 _('Minimum Payment is Required'))
+
+        return self.pool['report'].get_action(cr, uid, ids, 'leih.report_optics_sale', context=context)
 
 
 
@@ -179,19 +309,6 @@ class optics_sale(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         return super(optics_sale, self).write(cr, uid, ids, vals, context=context)
 
-    @api.onchange('optics_sale_line_id')
-    def onchange_test_bill(self):
-        sumalltest = 0
-        for item in self.optics_sale_line_id:
-            sumalltest = sumalltest + item.total_amount
-
-        self.total = sumalltest
-        after_dis = (sumalltest * (self.doctors_discounts / 100))
-        self.after_discount = after_dis
-        self.grand_total = sumalltest - self.other_discount - after_dis
-        self.due = sumalltest - after_dis - self.other_discount - self.paid
-
-        return "X"
 
     @api.onchange('optics_lens_sale_line_id')
     def onchange_lens_bill(self):
@@ -215,14 +332,14 @@ class optics_sale(osv.osv):
         self.due = self.grand_total - self.paid
         return 'x'
 
-    @api.onchange('doctors_discounts')
-    def onchange_doc_discount(self):
-        aft_discount = (self.total * (self.doctors_discounts / 100))
-        self.after_discount = aft_discount
-        self.grand_total = self.total - aft_discount - self.other_discount
-        self.due = self.total - aft_discount - self.other_discount - self.paid
-
-        return "X"
+    # @api.onchange('doctors_discounts')
+    # def onchange_doc_discount(self):
+    #     aft_discount = (self.total * (self.doctors_discounts / 100))
+    #     self.after_discount = aft_discount
+    #     self.grand_total = self.total - aft_discount - self.other_discount
+    #     self.due = self.total - aft_discount - self.other_discount - self.paid
+    #
+    #     return "X"
 
     @api.onchange('other_discount')
     def onchange_other_discount(self):
@@ -231,50 +348,50 @@ class optics_sale(osv.osv):
         return 'True'
 
 
-class optics_information(osv.osv):
-    _name = 'optics.sale.line'
+# class optics_information(osv.osv):
+#     _name = 'optics.sale.line'
+#
+#     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
+#         cur_obj = self.pool.get('optics.sale')
+#         res = {}
+#         for record in self.browse(cr, uid, ids, context=context):
+#             rate = record.price
+#             discount = record.discount
+#             interst_amount = int(discount) * int(rate) / 100
+#             total_amount = int(rate) - interst_amount
+#             res[record.id] = total_amount
+#             # import pdb
+#             # pdb.set_trace()
+#         return res
+#
+#     _columns = {
+#
+#         'name': fields.many2one("product.product", "Item Name", ondelete='cascade'),
+#         'optics_sale_id': fields.many2one('optics.sale', "Information"),
+#         'department': fields.char("Department"),
+#         'delivery_date': fields.date("Delivery Date"),
+#         'date': fields.datetime("Date", readonly=True, default=lambda self: fields.datetime.now()),
+#         # 'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency",
+#         #                               string="Currency", readonly=True, required=True),
+#         # 'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
+#         'price': fields.integer("Price"),
+#         'qty': fields.integer("Quantity"),
+#         'total_amount': fields.integer("Total Amount"),
+#         'assign_doctors': fields.many2one('doctors.profile', 'Doctor'),
+#         'commission_paid': fields.boolean("Commission Paid"),
+#
+#     }
 
-    def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
-        cur_obj = self.pool.get('optics.sale')
-        res = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            rate = record.price
-            discount = record.discount
-            interst_amount = int(discount) * int(rate) / 100
-            total_amount = int(rate) - interst_amount
-            res[record.id] = total_amount
-            # import pdb
-            # pdb.set_trace()
-        return res
-
-    _columns = {
-
-        'name': fields.many2one("product.product", "Item Name", ondelete='cascade'),
-        'optics_sale_id': fields.many2one('optics.sale', "Information"),
-        'department': fields.char("Department"),
-        'delivery_date': fields.date("Delivery Date"),
-        'date': fields.datetime("Date", readonly=True, default=lambda self: fields.datetime.now()),
-        # 'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency",
-        #                               string="Currency", readonly=True, required=True),
-        # 'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
-        'price': fields.integer("Price"),
-        'qty': fields.integer("Quantity"),
-        'total_amount': fields.integer("Total Amount"),
-        'assign_doctors': fields.many2one('doctors.profile', 'Doctor'),
-        'commission_paid': fields.boolean("Commission Paid"),
-
-    }
-
-    def onchange_test(self, cr, uid, ids, name, context=None):
-        tests = {'values': {}}
-        dep_object = self.pool.get('product.product').browse(cr, uid, name, context=None)
-
-        abc = {'price': dep_object.list_price, 'total_amount': dep_object.list_price,
-               'optics_sale_id.paid': dep_object.list_price}
-        tests['value'] = abc
-        # import pdb
-        # pdb.set_trace()
-        return tests
+    # def onchange_test(self, cr, uid, ids, name, context=None):
+    #     tests = {'values': {}}
+    #     dep_object = self.pool.get('product.product').browse(cr, uid, name, context=None)
+    #
+    #     abc = {'price': dep_object.list_price, 'total_amount': dep_object.list_price,
+    #            'optics_sale_id.paid': dep_object.list_price}
+    #     tests['value'] = abc
+    #     # import pdb
+    #     # pdb.set_trace()
+    #     return tests
 
     # def onchange_discount(self, cr, uid, ids, name, discount, context=None):
     #     tests = {'values': {}}
@@ -285,14 +402,14 @@ class optics_information(osv.osv):
     #     # pdb.set_trace()
     #     return tests
 
-    def create(self, cr, uid, vals, context=None):
-        # deliry_min_time
-        stored = super(optics_information, self).create(cr, uid, vals, context)
-
-
-        # today = datetime.datetime.strftime(datetime.datetime.today(), '%d/%m/%Y-%Hh/%Mm')
-
-        return 0
+    # def create(self, cr, uid, vals, context=None):
+    #     # deliry_min_time
+    #     stored = super(optics_information, self).create(cr, uid, vals, context)
+    #
+    #
+    #     # today = datetime.datetime.strftime(datetime.datetime.today(), '%d/%m/%Y-%Hh/%Mm')
+    #
+    #     return 0
 
     # def write(self, cr, uid, vals, context=None):
     #     import pdb
@@ -308,7 +425,8 @@ class optics_lens_information(osv.osv):
     _columns = {
 
         'name': fields.many2one("product.lens", "Lens Name", ondelete='cascade'),
-        'optics_sale_id': fields.many2one('optics.sale', "Information"),
+        'product_id': fields.many2one('product.product', "Lens Name"),
+        'optics_sale_id': fields.many2one('optics.sale', "Information", required=True),
         'price': fields.integer("Unit Price"),
         'qty': fields.integer("Quantity"),
         'total_amount': fields.integer("Total Amount"),
@@ -318,10 +436,33 @@ class optics_lens_information(osv.osv):
 
     def onchange_lens(self, cr, uid, ids, name, context=None):
         tests = {'values': {}}
+        # dep_object = self.pool.get('product.product').browse(cr, uid, name, context=None)
+        # abc = {'price': dep_object.sell_price,'qty':1, 'total_amount': dep_object.sell_price,
+        #        'optics_sale_id.paid': dep_object.sell_price}
+        # tests['value'] = abc
+        #
+        # import pdb
+        # pdb.set_trace()
+        return tests
+
+    def onchange_price(self, cr, uid, ids, name,price, context=None):
+        tests = {'values': {}}
         dep_object = self.pool.get('product.lens').browse(cr, uid, name, context=None)
-        abc = {'price': dep_object.sell_price, 'total_amount': dep_object.sell_price,
-               'optics_sale_id.paid': dep_object.sell_price}
+        abc = {'price': price, 'total_amount': price}
         tests['value'] = abc
+        #
+        # import pdb
+        # pdb.set_trace()
+        return tests
+
+    def onchange_qty(self, cr, uid, ids, name,qty,price, context=None):
+        tests = {'values': {}}
+        # import pdb
+        # pdb.set_trace()
+        total_line=price*qty
+        abc = {'qty': qty,'total_amount':total_line}
+        tests['value'] = abc
+        #
         # import pdb
         # pdb.set_trace()
         return tests
