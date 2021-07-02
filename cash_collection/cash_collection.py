@@ -112,7 +112,7 @@ class cash_collection(osv.osv):
                 }))
 
                 j_vals = {'name': '/',
-                          'journal_id': 7,
+                          'journal_id': 2,  ## Sales Journal
                           'date': fields.date.today(),
                           'period_id': period_id,
                           'ref': cc_obj.name,
@@ -121,6 +121,7 @@ class cash_collection(osv.osv):
                           }
 
                 jv_entry = self.pool.get('account.move')
+
                 saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
                 if saved_jv_id > 0:
                     journal_id = saved_jv_id
