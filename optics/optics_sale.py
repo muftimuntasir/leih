@@ -183,14 +183,14 @@ class optics_sale(osv.osv):
                     'origin': order.name,
                     'partner_id': False,
                     'date_done': stored_obj.date,
-                    'picking_type_id': 2, ## Hard Coded
+                    'picking_type_id': 13, ## Hard Coded
                     # 'company_id': order.company_id.id,
                     'move_type': 'direct',
                     'note': "",
                     'invoice_state': 'none',
                 }, context=context)
                 self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
-                location_id = 12 # Source Location from where stock will reduce
+                location_id = 25 # Source Location from where stock will reduce
 
                 destination_id = 9 ## Customer location
 
@@ -202,7 +202,7 @@ class optics_sale(osv.osv):
                     'product_uom': order.frame_id.uom_id.id,
                     'product_uos': order.frame_id.uom_id.id,
                     'picking_id': picking_id,
-                    'picking_type_id': 2,
+                    'picking_type_id': 13,
                     'product_id': order.frame_id.id,
                     'product_uos_qty': abs(1),
                     'product_uom_qty': abs(1),
@@ -218,7 +218,7 @@ class optics_sale(osv.osv):
                         'product_uom': opt_line.product_id.uom_id.id,
                         'product_uos': opt_line.product_id.uom_id.id,
                         'picking_id': picking_id,
-                        'picking_type_id': 2,
+                        'picking_type_id': 13,
                         'product_id': opt_line.product_id.id,
                         'product_uos_qty': abs(opt_line.qty),
                         'product_uom_qty': abs(opt_line.qty),
