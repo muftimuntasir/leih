@@ -69,6 +69,7 @@ class bill_register_payment(osv.osv):
         value['bill_id']=vals['bill_id']
         value['amount']=vals['amount']
         value['type']=vals['type']
+        value['p_type'] = 'due_payment'
         # value['user_id']=vals['user_id']
 
         mr_object=self.pool.get("leih.money.receipt")

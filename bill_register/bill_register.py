@@ -218,6 +218,9 @@ class bill_register(osv.osv):
                         'bill_id':int(stored),
                         'amount':stored_obj.paid,
                         'type':stored_obj.type,
+                        'p_type': 'advance',
+                        'bill_total_amount': stored_obj.total,
+                        'due_amount': stored_obj.due,
                     }
                 mr_obj = self.pool.get('leih.money.receipt')
                 mr_id = mr_obj.create(cr, uid, mr_value, context=context)

@@ -221,6 +221,9 @@ class leih_admission(osv.osv):
                 'admission_id':stored_obj.id,
                 'amount':stored_obj.paid,
                 'type':stored_obj.type,
+                'p_type': 'advance',
+                'bill_total_amount': stored_obj.total,
+                'due_amount': stored_obj.due,
             }
             mr_obj = self.pool.get('leih.money.receipt')
             mr_id = mr_obj.create(cr, uid, ad_vals, context=context)
