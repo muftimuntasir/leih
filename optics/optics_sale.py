@@ -80,67 +80,6 @@ class optics_sale(osv.osv):
 
     # if same item exist in line
 
-    def create_picking(self, cr, uid, ids, context=None):
-        """Create a picking for each order and validate it."""
-        picking_obj = self.pool.get('stock.picking')
-        partner_obj = self.pool.get('res.partner')
-        move_obj = self.pool.get('stock.move')
-
-        for order in self.browse(cr, uid, ids, context=context):
-            if all(t == 'service' for t in order.lines.mapped('product_id.type')):
-                continue
-
-            picking_type = order.picking_type_id
-            picking_id = False
-            if picking_type:
-                picking_id = picking_obj.create(cr, uid, {
-                    'origin': order.name,
-                    'partner_id': False,
-                    'date_done': order.date_order,
-                    'picking_type_id': picking_type.id,
-                    'company_id': order.company_id.id,
-                    'move_type': 'direct',
-                    'note': order.note or "",
-                    'invoice_state': 'none',
-                }, context=context)
-                self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
-            location_id = order.location_id.id
-            if order.partner_id:
-                destination_id = order.partner_id.property_stock_customer.id
-            elif picking_type:
-                if not picking_type.default_location_dest_id:
-                    raise osv.except_osv(_('Error!'),
-                                         _('Missing source or destination location for picking type %s. Please configure those fields and try again.' % (
-                                         picking_type.name,)))
-                destination_id = picking_type.default_location_dest_id.id
-            else:
-                destination_id = partner_obj.default_get(cr, uid, ['property_stock_customer'], context=context)[
-                    'property_stock_customer']
-
-            move_list = []
-            
-
-            move_list.append(move_obj.create(cr, uid, {
-                'name': order.name,
-                'product_uom': order.frame_id.uom_id.id,
-                'product_uos': order.frame_id.uom_id.id,
-                'picking_id': picking_id,
-                'picking_type_id': picking_type.id,
-                'product_id': order.frame_id.id,
-                'product_uos_qty': abs(1),
-                'product_uom_qty': abs(1),
-                'state': 'draft',
-                'location_id': location_id if order.qty >= 0 else destination_id,
-                'location_dest_id': destination_id if order.qty >= 0 else location_id,
-            }, context=context))
-
-
-            if picking_id:
-                picking_obj.action_confirm(cr, uid, [picking_id], context=context)
-                picking_obj.force_assign(cr, uid, [picking_id], context=context)
-                picking_obj.action_done(cr, uid, [picking_id], context=context)
-
-        return True
 
     def bill_confirm(self, cr, uid, ids, context=None):
 
@@ -197,29 +136,66 @@ class optics_sale(osv.osv):
 
                 move_list = []
 
-                move_list.append(move_obj.create(cr, uid, {
-                    'name': order.name,
-                    'product_uom': order.frame_id.uom_id.id,
-                    'product_uos': order.frame_id.uom_id.id,
-                    'picking_id': picking_id,
-                    'picking_type_id': 13,
-                    'product_id': order.frame_id.id,
-                    'product_uos_qty': abs(1),
-                    'product_uom_qty': abs(1),
-                    'state': 'draft',
-                    'location_id': location_id,
-                    'location_dest_id': destination_id,
-                }, context=context))
+
+                ## This is  for Fram3
+                if order.frame_id:
+                    move_list.append(move_obj.create(cr, uid, {
+                        'name': order.name,
+                        'product_uom': order.frame_id.uom_id.id,
+                        'product_uos': order.frame_id.uom_id.id,
+                        'picking_id': picking_id,
+                        'picking_type_id': 13,
+                        'product_id': order.frame_id.id,
+                        'product_uos_qty': abs(1),
+                        'product_uom_qty': abs(1),
+                        'state': 'draft',
+                        'location_id': location_id,
+                        'location_dest_id': destination_id,
+                    }, context=context))
+
+
+
+                if order.hard_cover is True:
+                    move_list.append(move_obj.create(cr, uid, {
+                        'name': order.name,
+                        'product_uom': 1,
+                        'product_uos': 1 ,
+                        'picking_id': picking_id,
+                        'picking_type_id': 13,
+                        'product_id': 187, ## 187
+                        'product_uos_qty': abs(1),
+                        'product_uom_qty': abs(1),
+                        'state': 'draft',
+                        'location_id': location_id,
+                        'location_dest_id': destination_id,
+                    }, context=context))
+
+
+                if order.cell_pad is True:
+                    move_list.append(move_obj.create(cr, uid, {
+                        'name': order.name,
+                        'product_uom': 1,
+                        'product_uos': 1,
+                        'picking_id': picking_id,
+                        'picking_type_id': 13,
+                        'product_id': 188, ## 188
+                        'product_uos_qty': abs(1),
+                        'product_uom_qty': abs(1),
+                        'state': 'draft',
+                        'location_id': location_id,
+                        'location_dest_id': destination_id,
+                    }, context=context))
+
 
 
                 for opt_line in order.optics_lens_sale_line_id:
                     move_list.append(move_obj.create(cr, uid, {
                         'name': order.name,
-                        'product_uom': opt_line.product_id.uom_id.id,
-                        'product_uos': opt_line.product_id.uom_id.id,
+                        'product_uom': 1,
+                        'product_uos': 1,
                         'picking_id': picking_id,
                         'picking_type_id': 13,
-                        'product_id': opt_line.product_id.id,
+                        'product_id': 190, ## 190 This is  for lense product variant id
                         'product_uos_qty': abs(opt_line.qty),
                         'product_uom_qty': abs(opt_line.qty),
                         'state': 'draft',
