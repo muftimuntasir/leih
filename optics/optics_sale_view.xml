@@ -60,8 +60,8 @@
                                 <tree string="Select Referance Value" editable="top">
 
                                     <field name="name"/>
-                                    <field name="price"/>
-                                    <field name="qty" />
+                                    <field name="price" on_change="onchange_price(qty,price, context)"/>
+                                    <field name="qty" on_change="onchange_qty(qty,price, context)"/>
                                     <field name="total_amount"/>
 
                                 </tree>
@@ -87,15 +87,6 @@
 
                             <group>
                                 <field name="total"/>
-<!--                                <button name="button_dummy" string="(update)" type="object" class="oe_edit_only oe_link"/>-->
-
-                                <field name="doctors_discounts"/>
-                                <field name="after_discount"/>
-                                <field name="other_discount"/>
-                                <field name="grand_total"/>
-                                <field name="type"/>
-                                <field name="card_no"/>
-                                <field name="bank_name"/>
                                 <field name="paid"/>
                                 <field name="due"/>
                             </group>

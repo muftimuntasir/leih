@@ -9,8 +9,6 @@ class optics_sale(osv.osv):
     _name = "optics.sale"
     _order = 'id desc'
 
-
-
     def _totalpayable(self, cr, uid, ids, field_name, arg, context=None):
         Percentance_calculation = {}
         sum = 0
@@ -248,8 +246,7 @@ class optics_sale(osv.osv):
         inv = self.browse(cr, uid, ids[0], context=context)
 
         # total=inv.total
-        # import pdb
-        # pdb.set_trace()
+        
         return {
             'name': _("Pay Invoice"),
             'view_mode': 'form',
@@ -288,15 +285,14 @@ class optics_sale(osv.osv):
 
     @api.onchange('optics_lens_sale_line_id')
     def onchange_lens_bill(self):
-        sumalltest = self.total
+        sumalltest = 0
+
         for item in self.optics_lens_sale_line_id:
             sumalltest = sumalltest + item.total_amount
 
-        self.total = sumalltest
-        after_dis = (sumalltest * (self.doctors_discounts / 100))
-        self.after_discount = after_dis
-        self.grand_total = sumalltest - self.other_discount - after_dis
-        self.due = sumalltest - after_dis - self.other_discount - self.paid
+        self.total = sumalltest + self.price
+
+        self.due = sumalltest - self.paid + self.price
 
         return "X"
 
@@ -305,7 +301,18 @@ class optics_sale(osv.osv):
 
     @api.onchange('paid')
     def onchange_paid(self):
-        self.due = self.grand_total - self.paid
+        self.due = self.total - self.paid
+        return 'x'
+
+    @api.onchange('price')
+    def onchange_price(self):
+        sumalltest=0
+
+        for item in self.optics_lens_sale_line_id:
+            sumalltest = sumalltest + item.total_amount
+
+        self.total = self.price + sumalltest
+        self.due =self.price + sumalltest - self.paid
         return 'x'
 
     # @api.onchange('doctors_discounts')
@@ -417,30 +424,24 @@ class optics_lens_information(osv.osv):
         #        'optics_sale_id.paid': dep_object.sell_price}
         # tests['value'] = abc
         #
-        # import pdb
-        # pdb.set_trace()
+        
         return tests
 
-    def onchange_price(self, cr, uid, ids, name,price, context=None):
+    def onchange_price(self, cr, uid, ids, qty,price, context=None):
         tests = {'values': {}}
-        dep_object = self.pool.get('product.lens').browse(cr, uid, name, context=None)
-        abc = {'price': price, 'total_amount': price}
+        total_line = price * qty
+        abc = {'qty': qty, 'total_amount': total_line}
         tests['value'] = abc
-        #
-        # import pdb
-        # pdb.set_trace()
         return tests
 
-    def onchange_qty(self, cr, uid, ids, name,qty,price, context=None):
+    def onchange_qty(self, cr, uid, ids, qty,price, context=None):
         tests = {'values': {}}
-        # import pdb
-        # pdb.set_trace()
+        
         total_line=price*qty
         abc = {'qty': qty,'total_amount':total_line}
         tests['value'] = abc
         #
-        # import pdb
-        # pdb.set_trace()
+        
         return tests
 
     # def onchange_discount(self, cr, uid, ids, name, discount, context=None):
