@@ -276,7 +276,7 @@ class optics_sale(osv.osv):
         stored = super(optics_sale, self).create(cr, uid, vals, context)  # return ID int object
 
         if stored is not None:
-            name_text = 'Opt-0' + str(stored)
+            name_text = 'OPT- 0' + str(stored)
             cr.execute('update optics_sale set name=%s where id=%s', (name_text, stored))
             cr.commit()
 
