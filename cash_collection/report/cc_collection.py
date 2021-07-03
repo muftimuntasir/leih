@@ -82,7 +82,8 @@ class collcetion_details(report_sxw.rml_parse):
         ## Users Name Get
 
         user_q = "select res_partner.name,res_users.id from res_users, res_partner where res_users.partner_id=res_partner.id and res_users.id in %s"
-        self.cr.execute(user_q % (tuple(participant_ids),))
+
+        self.cr.execute(user_q , (tuple(participant_ids),))
         user_info = {}
 
         for items in self.cr.fetchall():
