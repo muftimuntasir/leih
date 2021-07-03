@@ -98,6 +98,7 @@ class optics_sale(osv.osv):
                     'optics_sale_id': int(stored),
                     'amount': stored_obj.paid,
                     'type': stored_obj.type,
+                    'p_type': 'advance',
                 }
             mr_obj = self.pool.get('leih.money.receipt')
             mr_id = mr_obj.create(cr, uid, mr_value, context=context)
