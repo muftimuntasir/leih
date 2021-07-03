@@ -17,7 +17,7 @@ class money_receipt(osv.osv):
         'due_amount':fields.float("Due Amount"),
         'p_type':fields.selection([
             ('advance', 'Advance'),
-            ('due_payment', 'Due Payment')]),
+            ('due_payment', 'Due Payment')], 'Payment Method'),
         'already_collected':fields.boolean("Collected", default=False),
         'type':fields.selection([('bank','Bank'),('cash','Cash')],string="Type", default='cash'),
         'user_id':fields.many2one('res.users','Current User', default=lambda self: self.env.user.id),
