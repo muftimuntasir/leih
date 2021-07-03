@@ -95,6 +95,17 @@
 
         />
 
+        <report
+                id="action_detail_component_u_report"
+                model="cash.collection"
+                string="stool"
+                report_type="qweb-pdf"
+                name="leih.report_detail_component"
+                file="leih.report_detail_component"
+                menu="False"
+
+        />
+
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
 <!--        <menuitem name="Cash Collection" id="cash_collection_menu_mainform" parent="leih_group_menu" action="cash_collection_action"/>-->
     </data>

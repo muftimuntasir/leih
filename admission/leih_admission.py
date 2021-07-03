@@ -34,7 +34,7 @@ class leih_admission(osv.osv):
 
         # 'patient_id': fields.char("Patient ID"),
         'name':fields.char("Name"),
-        'mobile': fields.char(string="Mobile",readonly=True,store=False),
+        'mobile': fields.char(string="Mobile",store=False),
         'patient_id': fields.char(related='patient_name.patient_id',string="Patient Id"),
         'patient_name': fields.many2one('patient.info', "Patient Name"),
         'address': fields.char("Address",store=False),

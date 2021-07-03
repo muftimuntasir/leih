@@ -5,80 +5,87 @@
             <t t-call="report.html_container">
 <!--                <t t-call="report.external_layout">-->
                     <t t-foreach="docs" t-as="o">
-                        <div class="page">
+                        <div class="page" style="font-size: 15px;">
                             <div class="row">
                                 <div class="col-xs-3"></div>
                                 <div class="col-xs-3"></div>
-                                <div class="col-xs-3"></div>
-                                <div class="col-xs-3">
-                                    Date: <span t-esc="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+                                <div class="col-xs-1"></div>
+                                <div class="col-xs-5">
+                                    Date: <span t-field="o.date"/>
                                 </div>
                             </div>
 
                             <div class="oe_structure"/>
                             <div class="row">
-                            <div style="col-md-6 align:left">
-                                <h2>
-                                    <b>Admission ID: </b><span t-field="o.name"/>
-                                </h2>
-                            </div>
-
-
-                            <div class="col-md-6 pull-right">
-                                <h1>
-                                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px"/>
-                                </h1>
-                            </div>
+                                <div style="col-md-6 align:left">
+                                    <h2>
+                                        <b>Admission ID: </b><span t-field="o.name"/>
+                                    </h2>
                                 </div>
+
+
+                                <div class="col-md-6 pull-right">
+                                    <h3>
+                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px"/>
+                                    </h3>
+                                </div>
+                            </div>
 
                             <div class="row">
-                                <div class="col-xs-4">
-                                    <b>Name: </b> <span t-field="o.patient_name"/>
+                                <div class="col-xs-5">
+                                    <b>Patient ID:</b>
+                                    <span t-field="o.patient_name.patient_id"/>
+                                </div>
+                                <div class="col-xs-5">
+                                    <b>Name: </b> <span t-field="o.patient_name.name"/>
 <!--                                    <p t-field="o.patient_name"/>-->
                                 </div>
-                                <div class="col-xs-4">
-                                    <b>Patient ID:</b>
-                                    <span t-field="o.name"/>
-                                </div>
-                                <div class="col-xs-4">
+                                <div class="col-xs-2">
                                     <b>Age:</b>
                                     <span t-field="o.age"/>
                                 </div>
-                                <div class="col-xs-4">
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-5">
                                     <strong>Address:</strong>
                                     <span t-field="o.address"/>
                                 </div>
+                                    <div class="col-xs-3">
+                                    <strong>Sex:</strong>
+                                    <span t-field="o.sex"/>
+                                </div>
+                                <div class="col-xs-4">
+                                    <strong>Mobile:</strong>
+                                    <span t-field="o.mobile"/>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-xs-4">
                                     <strong>Reffered By:</strong>
                                     <span t-field="o.ref_doctors"/>
                                 </div>
+                            </div>
 
                                  <t t-set="i" t-value="1" />
                                     <t t-foreach="o.guarantor_line_id" t-as="z">
-                                                                            <div class="col-xs-4">
-                                    <strong>Guarantor Name:</strong>
-                                    <span t-field="z.name"/>
-                                </div>
-
                                         <div class="col-xs-4">
-                                    <strong>Contact:</strong>
-                                    <span t-field="z.contact"/>
-                                </div>
+                                            <strong>Guarantor Name:</strong>
+                                            <span t-field="z.name"/>
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <strong>Contact:</strong>
+                                            <span t-field="z.contact"/>
+                                        </div>
                                     </t>
-
-
-                            </div>
                             <hr/>
-                            <br/><br/>
 
                             <table class="table table-condensed">
                                 <thead>
                                     <tr>
-                                        <th>Service Name</th>
+                                        <th>Operation Name</th>
                                         <th>Price</th>
 <!--                                        <th>Package Name</th>-->
                                         <th>Total Amount</th>
-
                                     </tr>
                                 </thead>
                                 <tbody class="bill_register_tbody">
@@ -107,9 +114,6 @@
 
                                             </td>
 
-
-
-
                                         </tr>
 
                                     </t>
@@ -119,8 +123,12 @@
                             </table>
 
                              <div align="right">
-                                    <strong>Total Amount:</strong>
+                                    <strong>Sub Total:</strong>
                                     <span t-field="o.total"/>
+                                </div>
+                            <div align="right">
+                                    <strong>Others  Discount:</strong>
+                                    <span t-field="o.other_discount"/>
                                 </div>
                                  <div align="right">
                                     <strong>Grand Total:</strong>
@@ -137,6 +145,9 @@
 
 
                         </div>
+
+
+
 
 <!--                        <div class="page">-->
 <!--                            <div class="row">-->

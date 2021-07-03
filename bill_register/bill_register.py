@@ -59,13 +59,13 @@ class bill_register(osv.osv):
 
         # 'patient_id': fields.char("Patient ID"),
         'name':fields.char("Name"),
-        'mobile': fields.char(string="Mobile",readonly=True,store=False),
+        'mobile': fields.char(string="Mobile",store=False),
         'patient_id': fields.char(related='patient_name.patient_id',string="Patient Id",readonly=True),
         'patient_name': fields.many2one('patient.info', "Patient Name"),
         'address': fields.char("Address",store=False),
         'age': fields.char("Age",store=False),
         'sex':fields.char("Sex",store=False),
-        'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
+        'ref_doctors': fields.many2one('doctors.profile','Reffered by', required="True"),
         'delivery_date': fields.function(_delivery_dates,string="Delivery Date",type='date',store=True),
         'bill_register_line_id': fields.one2many('bill.register.line', 'bill_register_id', 'Item Entry',required=True),
         'bill_register_payment_line_id': fields.one2many("bill.register.payment.line", "bill_register_payment_line_id","Bill Register Payment"),
@@ -89,15 +89,15 @@ class bill_register(osv.osv):
     }
 
     #if same item exist in line
-    @api.multi
-    @api.constrains('bill_register_line_id')
-    def _check_exist_item_in_line(self):
-        for item in self:
-            exist_item_list = []
-            for line in item.bill_register_line_id:
-                if line.name.id in exist_item_list:
-                    raise ValidationError(_('Item should be one per line.'))
-                exist_item_list.append(line.name.id)
+    # @api.multi
+    # @api.constrains('bill_register_line_id')
+    # def _check_exist_item_in_line(self):
+    #     for item in self:
+    #         exist_item_list = []
+    #         for line in item.bill_register_line_id:
+    #             if line.name.id in exist_item_list:
+    #                 raise ValidationError(_('Item should be one per line.'))
+    #             exist_item_list.append(line.name.id)
 
 
     def bill_confirm(self, cr, uid, ids, context=None):
