@@ -41,7 +41,8 @@
                                     <field name="name" on_change="onchange_test(name, context)"/>
                                     <field name="department"/>
                                     <field name="price"/>
-                                    <field name="discount" on_change="onchange_discount(name,discount,context)"/>
+                                    <field name="discount" on_change="onchange_discount(price,discount,context)"/>
+                                    <field name="discount_amount"/>
                                     <field name="total_amount"/>
                                     <field name="assign_doctors"/>
 
@@ -67,11 +68,11 @@
                     </notebook>
 
                             <group>
+                                <field name="doctors_discounts"/>
                                 <field name="total"/>
 <!--                                <button name="button_dummy" string="(update)" type="object" class="oe_edit_only oe_link"/>-->
 
-                                <field name="doctors_discounts"/>
-                                <field name="after_discount"/>
+
                                 <field name="other_discount"/>
                                 <field name="grand_total"/>
                                 <field name="type"/>

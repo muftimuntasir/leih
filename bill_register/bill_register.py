@@ -73,7 +73,7 @@ class bill_register(osv.osv):
         # 'relation': fields.many2one("leih.investigation"),
         # 'total': fields.float(_totalpayable,string="Total",type='float',store=True),
         'total': fields.float(string="Total"),
-        'doctors_discounts': fields.float("Discount(%)"),
+        'doctors_discounts': fields.float("Doctor Discount(%)"),
         'after_discount': fields.float("Discount Amount"),
         'other_discount': fields.float("Other Discount"),
         'grand_total': fields.float("Grand Total"),
@@ -389,9 +389,10 @@ class bill_register(osv.osv):
 
         self.total=sumalltest
         after_dis = (sumalltest* (self.doctors_discounts/100))
-        self.after_discount = after_dis
-        self.grand_total=sumalltest -  self.other_discount - after_dis
-        self.due=sumalltest - after_dis -  self.other_discount- self.paid
+        self.after_discount = 0
+
+        self.grand_total=sumalltest -  self.other_discount
+        self.due=sumalltest - self.other_discount- self.paid
 
         return "X"
 
@@ -404,17 +405,24 @@ class bill_register(osv.osv):
 
     @api.onchange('doctors_discounts')
     def onchange_doc_discount(self):
-        aft_discount=(self.total*(self.doctors_discounts/100))
-        self.after_discount=aft_discount
-        self.grand_total = self.total - aft_discount - self.other_discount
-        self.due=self.total - aft_discount - self.other_discount- self.paid
+
+        result = {}
+        discount = self.doctors_discounts
+
+        for item in self.bill_register_line_id:
+            dis_amount = round(item.price - (item.price * discount / 100))
+            item.discount =discount
+            item.discount_amount =round((item.price * discount / 100))
+            item.total_amount =dis_amount
+
+
 
         return "X"
 
     @api.onchange('other_discount')
     def onchange_other_discount(self):
-        self.grand_total = self.total - self.after_discount - self.other_discount
-        self.due=self.total - self.after_discount - self.other_discount- self.paid
+        self.grand_total = self.total - self.other_discount
+        self.due=self.total - self.other_discount- self.paid
         return 'True'
 
 
@@ -454,7 +462,8 @@ class test_information(osv.osv):
         #                               string="Currency", readonly=True, required=True),
         # 'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
         'price': fields.integer("Price"),
-        'discount': fields.integer("Discount"),
+        'discount': fields.integer("Discount (%)"),
+        'discount_amount': fields.integer("Discount Amount"),
         'total_amount': fields.integer("Total Amount"),
         'assign_doctors': fields.many2one('doctors.profile', 'Doctor'),
         'commission_paid': fields.boolean("Commission Paid"),
@@ -471,13 +480,14 @@ class test_information(osv.osv):
         # pdb.set_trace()
         return tests
 
-    def onchange_discount(self,cr,uid,ids,name,discount,context=None):
+    def onchange_discount(self,cr,uid,ids,price,discount,context=None):
         tests = {'values': {}}
-        dep_object = self.pool.get('examination.entry').browse(cr, uid, name, context=None)
-        abc = {'total_amount':round(dep_object.rate-(dep_object.rate* discount/100))}
+
+        dis_amount = round(price-(price* discount/100))
+
+        abc = {'total_amount':dis_amount, 'discount_amount':dis_amount}
         tests['value'] = abc
-        # import pdb
-        # pdb.set_trace()
+
         return tests
     def create(self, cr, uid, vals, context=None):
         # deliry_min_time
