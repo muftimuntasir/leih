@@ -59,7 +59,7 @@
                             <field name="optics_lens_sale_line_id" mode="tree">
                                 <tree string="Select Referance Value" editable="top">
 
-                                    <field name="product_id"/>
+                                    <field name="name"/>
                                     <field name="price"/>
                                     <field name="qty" />
                                     <field name="total_amount"/>

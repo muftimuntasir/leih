@@ -56,7 +56,7 @@ class optics_sale(osv.osv):
         'frame_id':fields.many2one('product.product','Frame'),
         'delivery_id':fields.many2one('stock.picking','Delivery Challan'),
         'price':fields.float('Price'),
-        'optics_lens_sale_line_id': fields.one2many('optics.lens.sale.line', 'optics_sale_id', 'Lens Entry', required=True),
+        'optics_lens_sale_line_id': fields.one2many('optics.lens.sale.line', 'optics_sale_id', 'Lens Entry'),
         'optics_sale_payment_line_id': fields.one2many("optics.sale.payment.line", "optics_sale_payment_line_id",
                                                          "Bill Register Payment"),
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
@@ -426,7 +426,7 @@ class optics_lens_information(osv.osv):
 
         'name': fields.many2one("product.lens", "Lens Name", ondelete='cascade'),
         'product_id': fields.many2one('product.product', "Lens Name"),
-        'optics_sale_id': fields.many2one('optics.sale', "Information", required=True),
+        'optics_sale_id': fields.many2one('optics.sale', "Information"),
         'price': fields.integer("Unit Price"),
         'qty': fields.integer("Quantity"),
         'total_amount': fields.integer("Total Amount"),

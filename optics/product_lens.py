@@ -7,7 +7,7 @@ class product_lens(osv.osv):
 
     _columns = {
         'lens_code':fields.char("Code"),
-        'lens_name':fields.char("Name"),
+        'name':fields.char("Name"),
         'purchase_price':fields.float("Purchase price"),
         'sell_price':fields.float("Sale Price"),
         'lens_type':fields.selection([('glass','Glass'),('plastic','Plastic')],default='plastic'),
