@@ -13,18 +13,21 @@ class detail_collcetion_details(report_sxw.rml_parse):
         end_date= end_date
         result = []
 
-        opd_component_q = "select sum(opd_ticket_line.total_amount) as t_amnt,count(opd_ticket_line.total_amount) as t_count, opd_ticket_line.name,opd_ticket_line.department " \
+        opd_component_q = "select sum(opd_ticket_line.total_amount) as t_amnt,count(opd_ticket_line.total_amount) as t_count, " \
+                          "(select opd_ticket_entry.name from opd_ticket_entry where opd_ticket_entry.id=opd_ticket_line.name) as name ,opd_ticket_line.department " \
                           "from opd_ticket_line,opd_ticket where opd_ticket_line.opd_ticket_id=opd_ticket.id and (opd_ticket.create_date <= '%s')" \
                           " and (opd_ticket.create_date >= '%s') " \
                           "group by opd_ticket_line.name, opd_ticket_line.department order by opd_ticket_line.department asc"
 
 
-        bill_q = "select sum(bill_register_line.total_amount),count(bill_register_line.total_amount) as tl, bill_register_line.name,bill_register_line.department " \
+        bill_q = "select sum(bill_register_line.total_amount),count(bill_register_line.total_amount) as tl," \
+                 " (select examination_entry.name from examination_entry where examination_entry.id=bill_register_line.name) as name,bill_register_line.department " \
                  "from bill_register_line,bill_register where bill_register_line.bill_register_id=bill_register.id and " \
                  "(bill_register.create_date <= '%s') and (bill_register.create_date >= '%s') " \
                  "group by bill_register_line.name, bill_register_line.department order by bill_register_line.department"
 
-        admission_query = "select sum(leih_admission_line.total_amount) as tm,count(leih_admission_line.total_amount) as tv, leih_admission_line.name " \
+        admission_query = "select sum(leih_admission_line.total_amount) as tm,count(leih_admission_line.total_amount) as tv, " \
+                          "(select examination_entry.name from examination_entry where examination_entry.id=leih_admission_line.name) as name " \
                           "from leih_admission_line,leih_admission where leih_admission_line.leih_admission_id=leih_admission.id " \
                           "and (leih_admission.create_date <='%s') and (leih_admission.create_date >='%s') " \
                           "group by leih_admission_line.name"
@@ -38,7 +41,7 @@ class detail_collcetion_details(report_sxw.rml_parse):
                 'test_name':items[2],
                 'test_count':items[1],
                 'test_amnt':items[0],
-                'test_dept':items[3],
+                'test_dept':'OPD',
             })
 
 

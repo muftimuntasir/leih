@@ -124,25 +124,48 @@
                                 </div>
                                 <div class="col-xs-3">
                                     <div class="row">
-                                        <div class="col-xs-12 text-right">frame</div>
-
+                                        <div class="text-right">
+                                            <span t-esc="o.price"/></div>
                                     </div>
                                            <div class="row text-right">
-                                        <p>Lens</p>
+                                     <t t-foreach="o.optics_lens_sale_line_id" t-as="z">
+                                                <span t-field="z.total_amount"/>
+
+                                    </t>
                                     </div>
 
                                     <div class="row text-right">
-                                        <p>Total</p>
+                                       <span t-esc="o.total"/>
                                     </div>
                                     <div class="row text-right">
-                                        <p>Adv</p>
+                                        <span t-esc="o.paid"/>
                                     </div>
                                     <div class="row text-right">
-                                        <p>Due</p>
+                                        <span t-esc="o.due"/>
                                     </div>
 
                                 </div>
                             </div>
+                                <div class="row">
+
+                                </div>
+
+                                <div class="row form-group" style="margin-top:20px;">
+                                 <div class="col-xs-6">
+                                        Frame: <span t-field="o.frame_id"/>
+                                 </div>
+
+                                <div class="col-xs-6">
+                                    <t t-foreach="o.optics_lens_sale_line_id" t-as="z">
+                                                <span t-field="z.name"/>
+
+                                    </t>
+                                </div>
+<!--                                <div class="col-xs-2">-->
+
+<!--                                </div>-->
+                            </div>
+
                             </section>
 
 <!--                                <div class="row">-->

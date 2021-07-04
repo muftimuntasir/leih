@@ -16,14 +16,14 @@
                         <tr>
                             <th>Department</th>
                             <th>Name</th>
-                            <th>Billing Amount</th>
-                            <th>Admission Amount</th>
+                            <th>Count</th>
+                            <th>Amount</th>
 
                         </tr>
                     </thead>
                     <tbody>
                          <tr t-foreach="get_user_names(data['form']['date_start'],data['form']['date_end'])" t-as="move_a">
-                                <td><span t-esc="move_a['test_name']"/></td>
+                                <td><span t-esc="move_a['test_dept']"/></td>
                                 <td><span t-esc="move_a['test_name']"/></td>
                                 <td><span t-esc="move_a['test_count']"/></td>
                                 <td><span t-esc="move_a['test_amnt']"/></td>
