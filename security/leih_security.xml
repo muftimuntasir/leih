@@ -112,6 +112,14 @@
                     <field name="users" eval="[(4, ref('base.user_root'))]"/>
                 </record>
 
+<!--optics billing menu-->
+                        <record id="group_billing_menu_optics_sale" model="res.groups">
+                    <field name="name">Menu1- Optics Sale</field>
+                    <field name="category_id" ref="module_category_billing"/>
+                    <field name="users" eval="[(4, ref('base.user_root'))]"/>
+                </record>
+
+
 
 
             <!-- OPD Menu Access -->

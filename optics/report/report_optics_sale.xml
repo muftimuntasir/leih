@@ -72,7 +72,7 @@
                                     <div class="row">
 
                                     </div>
-                                    <div class="row" style="margin-top:20px;">
+                                    <div class="row" style="margin-top:30px;">
                                         <div class="col-xs-2">
                                             <span t-esc="o.right_eye_sph"/>
                                         </div>
@@ -127,17 +127,18 @@
                                         <div class="text-right">
                                             <span t-esc="o.price"/></div>
                                     </div>
-                                           <div class="row text-right">
+                                    <div class="row"></div>
+                                           <div class="row text-right" style="margin-top:15px;">
                                      <t t-foreach="o.optics_lens_sale_line_id" t-as="z">
                                                 <span t-field="z.total_amount"/>
 
                                     </t>
                                     </div>
 
-                                    <div class="row text-right">
+                                    <div class="row text-right" style="margin-top:15px;">
                                        <span t-esc="o.total"/>
                                     </div>
-                                    <div class="row text-right">
+                                    <div class="row text-right" style="margin-top:15px;">
                                         <span t-esc="o.paid"/>
                                     </div>
                                     <div class="row text-right">
@@ -150,7 +151,7 @@
 
                                 </div>
 
-                                <div class="row form-group" style="margin-top:20px;">
+                                <div class="row" style="margin-top:20px;">
                                  <div class="col-xs-6">
                                         Frame: <span t-field="o.frame_id"/>
                                  </div>
@@ -161,9 +162,7 @@
 
                                     </t>
                                 </div>
-<!--                                <div class="col-xs-2">-->
 
-<!--                                </div>-->
                             </div>
 
                             </section>

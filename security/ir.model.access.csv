@@ -15,6 +15,13 @@ access_billing_menu_bill_register,bill.register,model_bill_register,group_billin
 access_billing_menu_bill_register_line,bill.register.line,model_bill_register_line,group_billing_menu_bill_register,1,1,1,1
 access_billing_menu_bill_register_payment_line,bill.register.payment.line,model_bill_register_payment_line,group_billing_menu_bill_register,1,1,1,1
 
+
+access_billing_menu_optics_sale,optics.sale,model_optics_sale,group_billing_menu_optics_sale,1,1,1,0
+access_billing_menu_optics_lens_sale_line_id,optics.lens.sale.line,model_optics_lens_sale_line,group_billing_menu_optics_sale,1,1,1,1
+access_billing_menu_optics_sale_payment_line_id,optics.sale.payment.line,model_optics_sale_payment_line,group_billing_menu_bill_register,1,1,1,1
+access_billing_menu_product_lens,product.lens,model_product_lens,group_billing_menu_optics_sale,1,1,1,0
+
+
 access_billing_menu_money_receipt,leih.money.receipt,model_leih_money_receipt,group_billing_menu_money_receipt,1,1,1,0
 
 access_billing_menu_discount_category,discount.category,model_discount_category,group_billing_menu_discount_category,1,1,1,0
