@@ -34,14 +34,14 @@
                         <field name="right_eye_sph"/>
                         <field name="right_eye_cyl"/>
                         <field name="right_eye_axis"/>
-                        <field name="right_eye_axis_n"/>
-                        <field name="right_eye_axis_n"/>
+                        <field name="right_eye_sph_n"/>
+                        <field name="right_eye_cyl_n"/>
                         <field name="right_eye_axis_n"/>
                         <field name="left_eye_sph"/>
                         <field name="left_eye_cyl"/>
                         <field name="left_eye_axis"/>
-                        <field name="left_eye_axis_n"/>
-                        <field name="left_eye_axis_n"/>
+                        <field name="left_eye_sph_n"/>
+                        <field name="left_eye_cyl_n"/>
                         <field name="left_eye_axis_n"/>
                         </group>
                     <group>
