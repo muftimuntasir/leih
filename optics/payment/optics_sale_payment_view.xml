@@ -10,7 +10,7 @@
                 <form string="PI">
                     <sheet>
 
-                        <group string="Bill Information">
+                        <group string="Optics Bill Information">
                             <group>
                                 <field name="name"/>
                                 <field name="date"/>
@@ -69,7 +69,7 @@
             </field>
         </record>
 
-        <menuitem id="bill_payment_menu" name="Bill Payment" parent="leih_admission_menu" action="optics_sale_payment_new_action" groups="leih.group_admission_menu_bill_payment"/>
+        <menuitem id="optics_payment_menu" name="Optics Payment" parent="leih_admission_menu" action="optics_sale_payment_new_action" groups="leih.group_billing_menu_optics_sale"/>
 
     </data>
 </openerp>

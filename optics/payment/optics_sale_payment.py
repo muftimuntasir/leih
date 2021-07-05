@@ -8,7 +8,7 @@ from datetime import datetime
 
 class optics_sale_payment(osv.osv):
     _name = 'optics.sale.payment'
-    _description = "bill register Payment"
+    _description = "optics sale Payment"
 
 
     def button_add_payment_action(self,cr,uid,ids,context=None):
