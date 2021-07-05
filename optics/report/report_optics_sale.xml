@@ -6,7 +6,7 @@
 <!--                <t t-call="report.external_layout">-->
                     <t t-foreach="docs" t-as="o">
                         <div class="page" style="font-size: 16px !important;">
-                            <div class="row form-group" style="margin-top:20px;">
+                            <div class="row form-group" style="margin-top:30px;">
                                  <div class="col-xs-4">
                                         <span t-field="o.patient_id"/>
                                  </div>
