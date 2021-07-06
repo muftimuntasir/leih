@@ -270,6 +270,21 @@ class optics_sale(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
 
+
+        has_qty=False
+        try:
+            f_prod_id = vals.get('frame_id')
+            p_obj = self.pool['product.product'].browse(cr, uid, [f_prod_id], context=context)
+
+            if p_obj.qty_available > 0:
+                has_qty=True
+        except:
+            pass
+
+        if has_qty == False:
+            raise osv.except_osv(_('Warning!'),
+                                 _('Stock is not available'))
+
         if context is None:
             context = {}
 
