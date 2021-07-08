@@ -52,6 +52,9 @@ class bill_register(osv.osv):
             #     sum=item+sum
         for record in self.browse(cr,uid,ids,context=context):
             delivery_date[record.id]=date.today()+timedelta(days=max_day)
+
+        # import pdb
+        # pdb.set_trace()
         return delivery_date
 
 
@@ -72,6 +75,7 @@ class bill_register(osv.osv):
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
         # 'relation': fields.many2one("leih.investigation"),
         # 'total': fields.float(_totalpayable,string="Total",type='float',store=True),
+        'total_without_discount': fields.float(string="Total without discount"),
         'total': fields.float(string="Total"),
         'doctors_discounts': fields.float("Doctor Discount(%)"),
         'after_discount': fields.float("Discount Amount"),
@@ -387,8 +391,10 @@ class bill_register(osv.osv):
     @api.onchange('bill_register_line_id')
     def onchange_test_bill(self):
         sumalltest=0
+        total_without_discount=0
         for item in self.bill_register_line_id:
             sumalltest=sumalltest+item.total_amount
+            total_without_discount=total_without_discount+item.price
 
         self.total=sumalltest
         after_dis = (sumalltest* (self.doctors_discounts/100))
@@ -396,6 +402,10 @@ class bill_register(osv.osv):
 
         self.grand_total=sumalltest -  self.other_discount
         self.due=sumalltest - self.other_discount- self.paid
+        self.total_without_discount=total_without_discount
+        # import pdb
+        # pdb.set_trace()
+        #
 
         return "X"
 
@@ -476,8 +486,14 @@ class test_information(osv.osv):
 
     def onchange_test(self,cr,uid,ids,name,context=None):
         tests = {'values': {}}
+        #code for delivery date
+
         dep_object = self.pool.get('examination.entry').browse(cr, uid, name, context=None)
-        abc = {'department':dep_object.department.name,'price': dep_object.rate,'total_amount':dep_object.rate,'bill_register_id.paid':dep_object.rate}
+        delivery_required_days=dep_object.required_time
+        delivery_date=date.today() + timedelta(days=delivery_required_days)
+        # import pdb
+        # pdb.set_trace()
+        abc = {'department':dep_object.department.name,'price': dep_object.rate,'total_amount':dep_object.rate,'bill_register_id.paid':dep_object.rate,'delivery_date':delivery_date}
         tests['value'] = abc
         # import pdb
         # pdb.set_trace()

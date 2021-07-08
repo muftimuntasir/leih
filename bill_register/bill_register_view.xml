@@ -23,12 +23,12 @@
 
 <!--                        <field name="patient_id"/>-->
 <!--                        <field name="name"/>-->
-                        <field name="mobile"/>
                         <field name="patient_id"/>
                         <field name="patient_name" on_change="onchange_patient(patient_name, context)"/>
-                        <field name="address"/>
                         <field name="age"/>
                         <field name="sex"/>
+                        <field name="address"/>
+                        <field name="mobile"/>
                         <field name="ref_doctors"/>
                         <field name="delivery_date"/>
 
@@ -68,6 +68,7 @@
                     </notebook>
 
                             <group>
+                                <field name="total_without_discount"/>
                                 <field name="doctors_discounts"/>
                                 <field name="total"/>
 <!--                                <button name="button_dummy" string="(update)" type="object" class="oe_edit_only oe_link"/>-->
@@ -75,9 +76,9 @@
 
                                 <field name="other_discount"/>
                                 <field name="grand_total"/>
-                                <field name="type"/>
-                                <field name="card_no"/>
-                                <field name="bank_name"/>
+<!--                                <field name="type"/>-->
+<!--                                <field name="card_no"/>-->
+<!--                                <field name="bank_name"/>-->
                                 <field name="paid"/>
                                 <field name="due"/>
                             </group>
@@ -137,7 +138,7 @@
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
         <menuitem name="Billing" id="leih_billing_menu" parent="leih_menu" sequence="2"/>
-        <menuitem name="Bill Register" id="investigation_menu_mainform" parent="leih_billing_menu" action="investigation_action" groups="leih.group_billing_menu_bill_register"/>
+        <menuitem name="Investigation" id="investigation_menu_mainform" parent="leih_billing_menu" action="investigation_action" groups="leih.group_billing_menu_bill_register"/>
 
         <template id="assets_backends" name="bill_team assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">

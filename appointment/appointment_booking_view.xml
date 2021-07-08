@@ -16,6 +16,7 @@
 
                     <group>
 
+                        <field name="name"/>
                         <field name="patient_name"/>
                         <field name="age"/>
                         <field name="sex"/>
@@ -54,7 +55,9 @@
             <field name="arch" type="xml">
             <tree string="Alu List">
 
-                        <field name="patient_name"/>
+                 <field name="date"/>
+                 <field name="name"/>
+                <field name="patient_name"/>
                         <field name="age"/>
                         <field name="phone"/>
                         <field name="address"/>

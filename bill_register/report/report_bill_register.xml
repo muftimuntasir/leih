@@ -94,7 +94,7 @@
                                             </td>
 
                                             <td>
-                                                <span t-field="z.total_amount"/>
+                                                <span t-field="z.price"/>
 
                                             </td>
                                             <td>
@@ -112,11 +112,11 @@
                             </table>
                             <div align="right" style="mergin-right:10px;">
                                     <strong>Sub Total:</strong>
-                                    <span t-field="o.total"/>
+                                    <span t-field="o.total_without_discount"/>
                                 </div>
                                 <div align="right">
-                                    <strong>Referral  Discount:</strong>
-                                    <span t-field="o.after_discount"/>
+                                    <strong>Referral  Discount(%):</strong>
+                                    <span t-field="o.doctors_discounts"/>
                                 </div>
                                 <div align="right">
                                     <strong>Others  Discount:</strong>
