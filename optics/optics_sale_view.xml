@@ -49,7 +49,7 @@
 
                         <field name="hard_cover"/>
                         <field name="cell_pad"/>
-                        <field name="frame_id"/>
+                        <field name="frame_id" domain="[('categ_id', '=', 3)]"/>
                         <field name="qty_available"/>
                         <field name="price"/>
                         <field name="delivery_date"/>

@@ -22,6 +22,7 @@ class optics_sale(osv.osv):
                     Percentance_calculation[record.id] = sum
         return Percentance_calculation
 
+
     _columns = {
         # 'patient_id': fields.char("Patient ID"),
         'name': fields.char("Name"),
@@ -71,6 +72,8 @@ class optics_sale(osv.osv):
             [('pending', 'Pending'), ('confirmed', 'Confirmed'), ('cancelled', 'Cancelled')],
             'Status', default='pending', readonly=True)
     }
+
+
 
     # if same item exist in line
     def bill_confirm(self, cr, uid, ids, context=None):

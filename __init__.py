@@ -22,3 +22,4 @@ import commission
 import appointment
 import optics
 import wizard
+import inventory
