@@ -136,6 +136,9 @@
                                     <span t-field="o.due"/>
                                 </div>
 
+                            <strong>In Words(Grand Total):</strong>
+                            <span t-esc="o.amount_to_text(o.grand_total, 'BDT')"/>
+
 
 
 

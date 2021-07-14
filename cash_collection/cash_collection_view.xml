@@ -106,6 +106,17 @@
 
         />
 
+         <report
+                id="action_optics_daily_u_collection"
+                model="cash.collection"
+                string="Optics Collection"
+                report_type="qweb-pdf"
+                name="leih.report_optics_collection"
+                file="leih.report_optics_collection"
+                menu="False"
+
+        />
+
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
 <!--        <menuitem name="Cash Collection" id="cash_collection_menu_mainform" parent="leih_group_menu" action="cash_collection_action"/>-->
     </data>

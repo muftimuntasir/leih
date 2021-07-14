@@ -2,6 +2,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import api
 from datetime import date, time
+from openerp.tools.amount_to_text_en import amount_to_text
 PACKAGE_FIELDS=('name','price')
 
 class leih_admission(osv.osv):
@@ -66,6 +67,18 @@ class leih_admission(osv.osv):
         ),
         'emergency_covert_time':fields.datetime("Admission Convert time"),
     }
+
+    @api.multi
+    def amount_to_text(self, amount, currency='Bdt'):
+        text = amount_to_text(amount, currency)
+        new_text = text.replace("euro", "Taka")
+        # initializing sub string
+        sub_str = "Taka"
+        final_text = new_text[:new_text.index(sub_str) + len(sub_str)]
+
+
+        # final_text = new_text.replace("Cent", "Paisa")
+        return final_text
 
     def onchange_total(self,cr,uid,ids,name,context=None):
         tests = {'values': {}}

@@ -18,6 +18,7 @@ membership products (schemes).
         'security/ir.model.access.csv',
         'wizard/cc_collection_view.xml',
         'wizard/detail_component_view.xml',
+        'wizard/optics_daily_collection_view.xml',
 
         'diagnosis_room/diagnosis_room_view.xml',
         'Department/department_view.xml',
@@ -99,6 +100,7 @@ membership products (schemes).
         'cash_collection/cash_collection_cancelled_view.xml',
         'cash_collection/report/report_cc_collection.xml',
         'cash_collection/report/report_detail_component.xml',
+        'cash_collection/report/report_optics_collection.xml',
         'discount/discount_category_view.xml',
         'discount/discount_configuration_view.xml',
         'discount/corporate_discount_view.xml',

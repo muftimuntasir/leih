@@ -3,6 +3,7 @@ from openerp.exceptions import ValidationError
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from datetime import date, time, timedelta, datetime
+from openerp.tools.amount_to_text_en import amount_to_text
 
 
 
@@ -91,6 +92,18 @@ class bill_register(osv.osv):
             [('pending', 'Pending'), ('confirmed', 'Confirmed'), ('cancelled', 'Cancelled')],
             'Status', default='pending', readonly=True)
     }
+
+    @api.multi
+    def amount_to_text(self, amount, currency='Bdt'):
+        text = amount_to_text(amount, currency)
+        new_text = text.replace("euro", "Taka")
+        # initializing sub string
+        sub_str = "Taka"
+        final_text = new_text[:new_text.index(sub_str) + len(sub_str)]
+
+
+        # final_text = new_text.replace("Cent", "Paisa")
+        return final_text
 
     #if same item exist in line
     # @api.multi
