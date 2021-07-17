@@ -125,6 +125,7 @@ membership products (schemes).
         'optics/report/optics_report_menu.xml',
         'optics/report/report_optics_sale.xml',
         'inventory/inventory_requisition_view.xml',
+        'inventory/inventory_product_entry_view.xml',
 
 
 

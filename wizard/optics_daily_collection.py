@@ -8,8 +8,8 @@ class optics_daily_collection(osv.osv_memory):
     _description = 'Daily Optics Collection Report '
 
     _columns = {
-        'date_start': fields.date('Date',required=True),
-        'date_end': fields.date('Date End'),
+        'date_start': fields.datetime('Date',required=True),
+        'date_end': fields.datetime('Date End',required=True),
     }
 
 
