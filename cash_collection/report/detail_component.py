@@ -22,15 +22,15 @@ class detail_collcetion_details(report_sxw.rml_parse):
 
         bill_q = "select sum(bill_register_line.total_amount),count(bill_register_line.total_amount) as tl," \
                  " (select examination_entry.name from examination_entry where examination_entry.id=bill_register_line.name) as name,bill_register_line.department " \
-                 "from bill_register_line,bill_register where bill_register_line.bill_register_id=bill_register.id and " \
+                 "from bill_register_line,bill_register where bill_register_line.bill_register_id=bill_register.id and bill_register.state='confirmed' and " \
                  "(bill_register.create_date <= '%s') and (bill_register.create_date >= '%s') " \
                  "group by bill_register_line.name, bill_register_line.department order by bill_register_line.department"
 
         admission_query = "select sum(leih_admission_line.total_amount) as tm,count(leih_admission_line.total_amount) as tv, " \
-                          "(select examination_entry.name from examination_entry where examination_entry.id=leih_admission_line.name) as name " \
+                          "(select examination_entry.name from examination_entry where examination_entry.id=leih_admission_line.name) as name,leih_admission_line.department " \
                           "from leih_admission_line,leih_admission where leih_admission_line.leih_admission_id=leih_admission.id " \
                           "and (leih_admission.create_date <='%s') and (leih_admission.create_date >='%s') " \
-                          "group by leih_admission_line.name"
+                          "group by leih_admission_line.name, leih_admission_line.department"
 
         ## It sis For BIll Data Collction
         self.cr.execute(opd_component_q % (end_date,st_dat))
@@ -68,7 +68,7 @@ class detail_collcetion_details(report_sxw.rml_parse):
                 'test_name': items[2],
                 'test_count': items[1],
                 'test_amnt': items[0],
-                'test_dept': "",
+                'test_dept': items[3],
             })
         ## Addmission Collction Ends Here
 

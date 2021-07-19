@@ -24,12 +24,12 @@
 
 <!--                        <field name="patient_id"/>-->
 <!--                        <field name="name"/>-->
-                        <field name="mobile"/>
                         <field name="patient_id"/>
                         <field name="patient_name" on_change="onchange_patient(patient_name, context)"/>
                         <field name="address"/>
                         <field name="age"/>
                         <field name="sex"/>
+                        <field name="mobile"/>
                         <field name="ref_doctors"/>
                         <field name="package_name" on_change="onchange_package(package_name,context)"/>
                         <field name="emergency"/>
@@ -43,6 +43,7 @@
 
                                     <field name="name" on_change="onchange_test(name, context)"/>
                                     <field name="price"/>
+                                    <field name="department"/>
                                     <field name="discount" on_change="onchange_discount(name,discount,context)"/>
                                     <field name="total_amount"/>
 

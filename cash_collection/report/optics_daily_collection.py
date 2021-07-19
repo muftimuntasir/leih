@@ -13,7 +13,10 @@ class optics_collcetion_details(report_sxw.rml_parse):
         end_date= end_date
         result = []
 
-        query_for_optics="select optics_sale.name, optics_sale.total,leih_money_receipt.amount,leih_money_receipt.p_type from optics_sale,leih_money_receipt where leih_money_receipt.optics_sale_id=optics_sale.id and (leih_money_receipt.create_date <= '%s') and (leih_money_receipt.create_date >= '%s') group by optics_sale.name,optics_sale.total, leih_money_receipt.amount,leih_money_receipt.p_type"
+        query_for_optics="select optics_sale.name, optics_sale.total,leih_money_receipt.amount,leih_money_receipt.p_type" \
+                "from optics_sale,leih_money_receipt where leih_money_receipt.optics_sale_id=optics_sale.id and (leih_money_receipt.create_date <= '%s')" \
+                         " and (leih_money_receipt.create_date >= '%s') group by optics_sale.name,optics_sale.total," \
+                "leih_money_receipt.amount,leih_money_receipt.p_type order by optics_sale.name asc"
         self.cr.execute(query_for_optics % (end_date,st_dat))
         participant_ids = []
         opd_info = []
