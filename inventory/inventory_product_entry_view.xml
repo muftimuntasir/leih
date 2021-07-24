@@ -19,7 +19,8 @@
                     <group>
                         <field name="date"/>
                         <field name="reference_no"/>
-                        <field name="order_no"/>
+                        <field name="invoice_no"/>
+                        <field name="partner_id"/>
                         <field name="department"/>
                         <field name="warehouse_id"/>
 
@@ -31,6 +32,8 @@
 
                                     <field name="product_name"/>
                                     <field name="quantity"/>
+                                    <field name="unit_price"/>
+                                    <field name="total_price"/>
 
                                 </tree>
                             </field>

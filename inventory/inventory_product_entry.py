@@ -11,8 +11,9 @@ class inventory_product_entry(osv.osv):
     _columns = {
 
         'name': fields.char("Inventory Product entry"),
+        'invoice_no':fields.char("Invoice No"),
         'reference_no':fields.char("Reference No"),
-        'order_no':fields.char("Reference No"),
+        'partner_id':fields.many2one('res.partner','Partner Name'),
         'department':fields.many2one("diagnosis.department","Department"),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse Location'),
         'inventory_product_entry_line_ids':fields.one2many('inventory.product.entry.line','inventory_product_entry_id',string="Inventory Requision Items"),
@@ -56,6 +57,8 @@ class inventory_product_entry_line(osv.osv):
         'name':fields.char("Inventory Requisition Line Id"),
         'inventory_product_entry_id':fields.many2one("inventory.product.entry","Inventory Entry ID"),
         'product_name':fields.many2one('product.product','Product Name'),
-        'quantity':fields.integer("Quantity")
+        'quantity':fields.integer("Quantity"),
+        'unit_price':fields.float("Unit Price"),
+        'total_price':fields.float("Total Price")
     }
 

@@ -23,3 +23,4 @@ import appointment
 import optics
 import wizard
 import inventory
+import advance_cash
