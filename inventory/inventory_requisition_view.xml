@@ -20,6 +20,9 @@
                         <field name="date"/>
                         <field name="reference_no"/>
                         <field name="department"/>
+                        <field name="warehouse_id"/>
+                        <field name="partner_id"/>
+
 
                     </group>
                     <notebook>
@@ -78,6 +81,8 @@
                 <field name="date"/>
                 <field name="reference_no"/>
                 <field name="department"/>
+                <field name="challan_id"/>
+                <field name="warehouse_id"/>
             </tree>
             </field>
         </record>

@@ -6,8 +6,6 @@ class inventory_product_entry(osv.osv):
     _name = "inventory.product.entry"
 
 
-
-
     _columns = {
 
         'name': fields.char("Entry No"),
