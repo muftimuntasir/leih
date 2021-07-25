@@ -24,8 +24,19 @@
                     <tbody>
                         <t t-set="total_opd" t-value="0"/>
                         <t t-set="total_physiotherapy" t-value="0"/>
+                        <t t-set="total_dental" t-value="0"/>
                         <t t-set="total_pathology" t-value="0"/>
-                        <t t-set="total_radiology" t-value="0"/>
+                        <t t-set="total_xray" t-value="0"/>
+                        <t t-set="total_mri_ct" t-value="0"/>
+                        <t t-set="total_echo" t-value="0"/>
+                        <t t-set="total_sonology" t-value="0"/>
+                        <t t-set="total_minor" t-value="0"/>
+                        <t t-set="total_phaco" t-value="0"/>
+                        <t t-set="total_sics" t-value="0"/>
+                        <t t-set="total_retina" t-value="0"/>
+                        <t t-set="total_other_surgery" t-value="0"/>
+                        <t t-set="total_other_indoor" t-value="0"/>
+                        <t t-set="total_vr" t-value="0"/>
                          <tr t-foreach="get_user_names(data['form']['date_start'],data['form']['date_end'])" t-as="move_a">
                              <t t-if="move_a['test_dept'] == 'OPD'">
                                  <t t-set="total_opd" t-value="total_opd+move_a['test_amnt']"/>
@@ -33,13 +44,52 @@
                                <t t-if="move_a['test_dept'] == 'Physiotherapy'">
                                  <t t-set="total_physiotherapy" t-value="total_physiotherapy+move_a['test_amnt']"/>
                              </t>
-                             <t t-if="move_a['test_dept'] == 'Pathology'">
+                             <t t-if="move_a['test_dept'] == 'Dental'">
+                                 <t t-set="total_dental" t-value="total_dental+move_a['test_amnt']"/>
+                             </t>
+                             <t t-if="move_a['test_dept'] == 'Pathology' or move_a['test_dept'] == 'Bio-Chemistry' or move_a['test_dept'] == 'Haematology' or move_a['test_dept'] == 'Micro-Biology' or move_a['test_dept'] == 'Serology' or move_a['test_dept'] == 'Stool' or move_a['test_dept'] == 'Urine'">
                                  <t t-set="total_pathology" t-value="total_pathology+move_a['test_amnt']"/>
                              </t>
 
-                             <t t-if="move_a['test_dept'] == 'Radiology'">
-                                 <t t-set="total_pathology" t-value="total_radiology+move_a['test_amnt']"/>
+                             <t t-if="move_a['test_dept'] == 'Radiology' or move_a['test_dept'] == 'X-Ray' ">
+                                 <t t-set="total_xray" t-value="total_xray+move_a['test_amnt']"/>
                              </t>
+
+                             <t t-if="move_a['test_dept'] == 'MRI' or move_a['test_dept'] == 'CT Scan' ">
+                                 <t t-set="total_mri_ct" t-value="total_mri_ct+move_a['test_amnt']"/>
+                             </t>
+
+                             <t t-if="move_a['test_dept'] == 'Sonology'">
+                                 <t t-set="total_sonology" t-value="total_sonology+move_a['test_amnt']"/>
+                             </t>
+
+                             <t t-if="move_a['test_dept'] == 'Minor-OT'">
+                                 <t t-set="total_minor" t-value="total_minor+move_a['test_amnt']"/>
+                             </t>
+                             <t t-if="move_a['test_dept'] == 'Phaco Surgery'">
+                                 <t t-set="total_phaco" t-value="total_phaco+move_a['test_amnt']"/>
+                             </t>
+                             <t t-if="move_a['test_dept'] == 'SICS Surgery'">
+                                 <t t-set="total_sics" t-value="total_sics+move_a['test_amnt']"/>
+                             </t>
+
+                             <t t-if="move_a['test_dept'] == 'Retinal Surgery' or move_a['test_dept'] == 'Retinal Injection'">
+                                 <t t-set="total_retina" t-value="total_retina+move_a['test_amnt']"/>
+                             </t>
+
+                             <t t-if="move_a['test_dept'] == 'Others Surgery' or move_a['test_dept'] == 'Glucoma Surgery' or move_a['test_dept'] == 'Oculoplasy Surgery'">
+                                 <t t-set="total_other_surgery" t-value="total_other_surgery+move_a['test_amnt']"/>
+                             </t>
+
+                             <t t-if="move_a['test_dept'] == 'Indoor'">
+                                 <t t-set="total_other_surgery" t-value="total_other_surgery+move_a['test_amnt']"/>
+                             </t>
+                             <t t-if="move_a['test_dept'] == 'VR' or move_a['test_dept'] == 'VR ( Retina)'">
+                                 <t t-set="total_vr" t-value="total_vr+move_a['test_amnt']"/>
+                             </t>
+
+
+
                                 <td><span t-esc="move_a['test_dept']"/></td>
                                 <td><span t-esc="move_a['test_name']"/></td>
                                 <td><span t-esc="move_a['test_count']"/></td>
@@ -48,14 +98,23 @@
 
 
                             </tr>
-                        <tr>
-                            <th><span t-esc="total_opd"/></th>
-                            <th><span t-esc="total_physiotherapy"/></th>
-                            <th>pathology-<span t-esc="total_pathology"/></th>
-                        </tr>
                     </tbody>
 
                 </table>
+                        <h6>Total OPD: <span t-esc="total_opd"/>/-</h6>
+                        <h6>Total Physiotherapy: <span t-esc="total_physiotherapy"/>/-</h6>
+                        <h6>Total Dental: <span t-esc="total_dental"/>/-</h6>
+                        <h6>Total VR: <span t-esc="total_vr"/>/-</h6>
+                        <h6>Total Pathology: <span t-esc="total_pathology"/>/-</h6>
+                        <h6>Total X-ray: <span t-esc="total_xray"/>/-</h6>
+                        <h6>Total MRI-CT: <span t-esc="total_mri_ct"/>/-</h6>
+                        <h6>Total Minor OT: <span t-esc="total_minor"/>/-</h6>
+                        <h6>Total Phaco: <span t-esc="total_phaco"/>/-</h6>
+                        <h6>Total SICS: <span t-esc="total_sics"/>/-</h6>
+                        <h6>Total Retina: <span t-esc="total_retina"/>/-</h6>
+                        <h6>Total Other surgery: <span t-esc="total_other_surgery"/>/-</h6>
+                        <h6>Total Other Indoor: <span t-esc="total_other_indoor"/>/-</h6>
+
 
                     </div>
 
