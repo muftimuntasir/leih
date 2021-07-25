@@ -22,14 +22,37 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <t t-set="total_opd" t-value="0"/>
+                        <t t-set="total_physiotherapy" t-value="0"/>
+                        <t t-set="total_pathology" t-value="0"/>
+                        <t t-set="total_radiology" t-value="0"/>
                          <tr t-foreach="get_user_names(data['form']['date_start'],data['form']['date_end'])" t-as="move_a">
+                             <t t-if="move_a['test_dept'] == 'OPD'">
+                                 <t t-set="total_opd" t-value="total_opd+move_a['test_amnt']"/>
+                             </t>
+                               <t t-if="move_a['test_dept'] == 'Physiotherapy'">
+                                 <t t-set="total_physiotherapy" t-value="total_physiotherapy+move_a['test_amnt']"/>
+                             </t>
+                             <t t-if="move_a['test_dept'] == 'Pathology'">
+                                 <t t-set="total_pathology" t-value="total_pathology+move_a['test_amnt']"/>
+                             </t>
+
+                             <t t-if="move_a['test_dept'] == 'Radiology'">
+                                 <t t-set="total_pathology" t-value="total_radiology+move_a['test_amnt']"/>
+                             </t>
                                 <td><span t-esc="move_a['test_dept']"/></td>
                                 <td><span t-esc="move_a['test_name']"/></td>
                                 <td><span t-esc="move_a['test_count']"/></td>
                                 <td><span t-esc="move_a['test_amnt']"/></td>
 
 
+
                             </tr>
+                        <tr>
+                            <th><span t-esc="total_opd"/></th>
+                            <th><span t-esc="total_physiotherapy"/></th>
+                            <th>pathology-<span t-esc="total_pathology"/></th>
+                        </tr>
                     </tbody>
 
                 </table>
