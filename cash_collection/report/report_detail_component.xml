@@ -82,7 +82,7 @@
                              </t>
 
                              <t t-if="move_a['test_dept'] == 'Indoor'">
-                                 <t t-set="total_other_surgery" t-value="total_other_surgery+move_a['test_amnt']"/>
+                                 <t t-set="total_other_indoor" t-value="total_other_indoor+move_a['test_amnt']"/>
                              </t>
                              <t t-if="move_a['test_dept'] == 'VR' or move_a['test_dept'] == 'VR ( Retina)'">
                                  <t t-set="total_vr" t-value="total_vr+move_a['test_amnt']"/>
