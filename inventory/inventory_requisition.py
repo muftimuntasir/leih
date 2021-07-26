@@ -42,6 +42,7 @@ class inventory_requisition(osv.osv):
             dest_id = None
             picking_type_id = None
 
+
             for items in stock_picking_type_data:
                 sorce_id = items.default_location_src_id.id
                 dest_id = items.default_location_dest_id.id
@@ -50,7 +51,8 @@ class inventory_requisition(osv.osv):
                 'partner_id': ir_obj.partner_id.id,
                 'date': fields.datetime.now(),
                 'origin': ir_obj.name,
-                'move_type': 'one',
+                'date_done' : fields.date.today(),
+                'move_type': 'direct',
                 'invoice_state': 'none',
 
                 'picking_type_id': picking_type_id,
@@ -77,22 +79,15 @@ class inventory_requisition(osv.osv):
 
             grn_vals['move_lines'] = move_line
 
-            grn_id = self.pool.get('stock.picking').create(cr, uid, grn_vals, context=context)
+            stock_picking_id = self.pool.get('stock.picking').create(cr, uid, grn_vals, context=context)
 
-            stock_picking_id = grn_id
-            stock_confirm = self.pool.get('stock.picking').action_confirm(cr, uid, [grn_id], context=context)
 
-            stock_picking = self.pool.get('stock.picking').do_enter_transfer_details(cr, uid, [stock_picking_id],
-                                                                                     context=context)
 
-            trans_obj = self.pool.get('stock.transfer_details')
-            trans_search = trans_obj.search(cr, uid, [('picking_id', '=', stock_picking_id)], context=context)
-
-            trans_search = [trans_search[len(trans_search) - 1]] if len(trans_search) > 1 else trans_search
-
-            trans_browse = self.pool.get('stock.transfer_details').browse(cr, uid, trans_search, context=context)
-
-            trans_browse.do_detailed_transfer()
+            picking_obj = self.pool.get('stock.picking')
+            if stock_picking_id:
+                picking_obj.action_confirm(cr, uid, [stock_picking_id], context=context)
+                picking_obj.force_assign(cr, uid, [stock_picking_id], context=context)
+                picking_obj.action_done(cr, uid, [stock_picking_id], context=context)
 
 
         return True

@@ -69,10 +69,11 @@ class inventory_product_entry(osv.osv):
             line_ids.append([0, False, {
                 'name': cc_obj.name,
                 'partner_id': cc_obj.partner_id.id,
-                'account_id': 6, ## Advance Cash
+                'account_id': 120, ## Advance Cash
                 'debit': 0,
                 'credit': cc_obj.total,
             }])
+
 
             j_vals = {'name': '/',
                       'journal_id': 6,  ## Advance Cash Journal
@@ -82,6 +83,8 @@ class inventory_product_entry(osv.osv):
                       'line_id': line_ids
 
                       }
+
+
             jv_entry = self.pool.get('account.move')
 
             saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
