@@ -1,6 +1,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from datetime import date, time
+from openerp import api
 
 class inventory_product_entry(osv.osv):
     _name = "inventory.product.entry"
@@ -8,16 +9,16 @@ class inventory_product_entry(osv.osv):
 
     _columns = {
 
-        'name': fields.char("Entry No"),
+        'name': fields.char("Entry No", readonly=True),
         'invoice_no':fields.char("Invoice No"),
         'reference_no':fields.char("Reference No"),
         'total':fields.float("Total Amount"),
-        'partner_id':fields.many2one('res.partner','Partner Name'),
+        'partner_id':fields.many2one('res.partner','Partner Name',required=True),
         'grn_id':fields.many2one('stock.picking','GRN NO'),
         'grn_journal_id':fields.many2one('account.move','GRN Journal'),
         'advance_journal_id':fields.many2one('account.move','Advance Journal'),
         'department':fields.many2one("diagnosis.department","Department"),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse Location'),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse Location',required=True),
         'inventory_product_entry_line_ids':fields.one2many('inventory.product.entry.line','inventory_product_entry_id',string="Inventory Requision Items"),
         'date':fields.date('Date'),
         'state': fields.selection(
@@ -25,6 +26,18 @@ class inventory_product_entry(osv.osv):
             'Status', default='pending', readonly=True)
 
     }
+    #calculating total
+    @api.onchange('inventory_product_entry_line_ids')
+    def onchange_product_line(self):
+        sumallproduct = 0
+        for item in self.inventory_product_entry_line_ids:
+            sumallproduct = sumallproduct + item.total_price
+
+
+        self.total = sumallproduct
+        #
+
+        return "X"
 
     def confirm_finance(self, cr, uid, ids, context=None):
         cc_ids = ids
@@ -275,4 +288,31 @@ class inventory_product_entry_line(osv.osv):
         'unit_price':fields.float("Unit Price"),
         'total_price':fields.float("Total Price")
     }
+
+    def onchange_product(self,cr,uid,ids,product_name,context=None):
+        tests = {'values': {}}
+        #code for delivery date
+
+        dep_object = self.pool.get('product.product').browse(cr, uid, product_name, context=context)
+
+        unit_price=dep_object.standard_price
+
+        abc = {'unit_price':unit_price,'total_price': unit_price}
+        tests['value'] = abc
+        return tests
+
+    def onchange_quantity(self,cr,uid,ids,quantity,unit_price,context=None):
+        tests = {'values': {}}
+        # import pdb
+        # pdb.set_trace()
+        #code for delivery date
+        total_amount=unit_price*quantity
+
+        abc = {'total_price': total_amount}
+        tests['value'] = abc
+        return tests
+
+
+
+
 

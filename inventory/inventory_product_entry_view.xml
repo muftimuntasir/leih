@@ -18,6 +18,7 @@
                 <sheet>
 
                     <group>
+                        <field name="name"/>
                         <field name="date"/>
                         <field name="reference_no"/>
                         <field name="invoice_no"/>
@@ -32,10 +33,10 @@
                             <field name="inventory_product_entry_line_ids" mode="tree">
                                 <tree string="Select Product" editable="top">
 
-                                    <field name="product_name"/>
+                                    <field name="product_name" on_change="onchange_product(product_name, context)"/>
                                     <field name="account_id"/>
-                                    <field name="quantity"/>
                                     <field name="unit_price"/>
+                                    <field name="quantity" on_change="onchange_quantity(quantity,unit_price, context)"/>
                                     <field name="total_price"/>
 
                                 </tree>
