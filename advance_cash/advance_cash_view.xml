@@ -18,7 +18,7 @@
 
                     <group>
                         <field name="date"/>
-                         <field name="partner_id"/>
+                         <field name="partner_id" domain="[('customer','=',True)]"/>
                         <field name="purpose"/>
                         <field name="amount"/>
                         <field name="credit_accounts"/>
