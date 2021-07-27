@@ -13,7 +13,7 @@ class inventory_product_entry(osv.osv):
         'invoice_no':fields.char("Invoice No"),
         'reference_no':fields.char("Reference No"),
         'total':fields.float("Total Amount"),
-        'partner_id':fields.many2one('res.partner','Partner Name',required=True),
+        'partner_id':fields.many2one('res.partner','Employee Name',required=True),
         'grn_id':fields.many2one('stock.picking','GRN NO'),
         'grn_journal_id':fields.many2one('account.move','GRN Journal'),
         'advance_journal_id':fields.many2one('account.move','Advance Journal'),
@@ -253,7 +253,7 @@ class inventory_product_entry(osv.osv):
 
 
         if stored is not None:
-            name_text = 'IR-0' + str(stored)
+            name_text = 'IPE-0' + str(stored)
             cr.execute('update inventory_product_entry set name=%s where id=%s', (name_text, stored))
             cr.commit()
 
@@ -298,9 +298,11 @@ class inventory_product_entry_line(osv.osv):
 
         dep_object = self.pool.get('product.product').browse(cr, uid, product_name, context=context)
 
+        categ_id=dep_object.categ_id.id
+        cat_object = self.pool.get('product.category').browse(cr, uid, categ_id, context=context)
         unit_price=dep_object.standard_price
 
-        abc = {'unit_price':unit_price,'total_price': unit_price}
+        abc = {'account_id':cat_object.property_account_expense_categ,'unit_price':unit_price,'quantity':1,'total_price': unit_price}
         tests['value'] = abc
         return tests
 
