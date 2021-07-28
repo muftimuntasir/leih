@@ -17,7 +17,7 @@ class inventory_product_entry(osv.osv):
         'grn_id':fields.many2one('stock.picking','GRN NO'),
         'grn_journal_id':fields.many2one('account.move','GRN Journal'),
         'advance_journal_id':fields.many2one('account.move','Advance Journal'),
-        'department':fields.many2one("diagnosis.department","Department"),
+        'department':fields.many2one("hr.department","Department"),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse Location',required=True),
         'inventory_product_entry_line_ids':fields.one2many('inventory.product.entry.line','inventory_product_entry_id',string="Inventory Requision Items",required=True),
         'date':fields.date('Date'),
@@ -38,6 +38,8 @@ class inventory_product_entry(osv.osv):
         #
 
         return "X"
+
+
 
     def confirm_finance(self, cr, uid, ids, context=None):
         cc_ids = ids
@@ -316,6 +318,18 @@ class inventory_product_entry_line(osv.osv):
         abc = {'total_price': total_amount}
         tests['value'] = abc
         return tests
+    def onchange_unitprice(self,cr,uid,ids,unit_price,quantity,context=None):
+        tests = {'values': {}}
+        # import pdb
+        # pdb.set_trace()
+        #code for delivery date
+        total_amount=unit_price*quantity
+
+        abc = {'total_price': total_amount}
+        tests['value'] = abc
+        return tests
+
+
 
 
 
