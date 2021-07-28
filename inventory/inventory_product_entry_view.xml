@@ -12,7 +12,7 @@
 <!--                        <button string="Add Test" type="object" name="add_new_test" groups="base.group_user"/>-->
 
                         <button string="Product Receive" type="object" name="confirm_transfer" groups="base.group_user"/>
-                        <button string="Verify for Adjustment" type="object" name="confirm_finance" groups="base.group_user"/>
+                        <button string="Verify for Adjustment" type="object" name="confirm_finance" groups="base.group_user" attrs="{'invisible':[('state','=','pending')]}"/>
                         <button string="Cancel" type="object" name="inventory_requsition_cancel" groups="base.group_user"/>
                     </header>
                 <sheet>
@@ -26,6 +26,7 @@
                         <field name="department"/>
                         <field name="warehouse_id"/>
                         <field name="total"/>
+                        <field name="state"/>
 
                     </group>
                     <notebook>
@@ -74,6 +75,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
+             <field name="domain">[('state','=','pending')]</field>
             <field name="context">{}</field>
         </record>
 
@@ -91,14 +93,16 @@
                 <field name="grn_id"/>
                 <field name="grn_journal_id"/>
                 <field name="advance_journal_id"/>
+                <field name="state"/>
             </tree>
             </field>
         </record>
 
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
+         <menuitem name="Inventory Product Entry" id="ipe_menu" parent="leih_menu"/>
 
-        <menuitem name="Inventory Product Entry" id="inventory_entry_menu_mainform" parent="leih_billing_menu" action="inventory_product_entry_action" sequence="23"/>
+        <menuitem name="Pending Inventory Product Entry" id="inventory_entry_menu_mainform" parent="ipe_menu" action="inventory_product_entry_action" sequence="23" groups="leih.group_billing_menu_ipe"/>
 
     </data>
 </openerp>

@@ -5,18 +5,15 @@ from datetime import date, time
 class inventory_requisition(osv.osv):
     _name = "inventory.requisition"
 
-
-
-
     _columns = {
 
         'name': fields.char("Inventory Requisition"),
         'reference_no':fields.char("Reference No"),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse Location'),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse Location',required=True),
         'partner_id': fields.many2one('res.partner', 'Receiver'),
         'challan_id': fields.many2one('stock.picking', 'Challan NO'),
-        'department':fields.many2one("diagnosis.department","Department"),
-        'inventory_requisition_line_ids':fields.one2many('inventory.requisition.line','inventory_requsition_id',string="Inventory Requision Items"),
+        'department':fields.many2one("hr.department","Department",required=True),
+        'inventory_requisition_line_ids':fields.one2many('inventory.requisition.line','inventory_requsition_id',string="Inventory Requision Items",required=True),
         'date':fields.date('Date'),
         'state': fields.selection(
             [('pending', 'Pending'), ('confirmed', 'Confirmed'), ('cancelled', 'Cancelled')],

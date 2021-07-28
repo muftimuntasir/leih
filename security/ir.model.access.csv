@@ -31,6 +31,19 @@ access_billing_menu_discount_configuration_line,discount.configuration.line,mode
 
 access_billing_menu_corporate_discount,corporate.discount,model_corporate_discount,group_billing_menu_corporate_discount,1,1,1,0
 
+
+
+access_billing_menu_billing_menu_ipe,inventory.product.entry,model_inventory_product_entry,group_billing_menu_ipe,1,1,1,0
+access_billing_menu_billing_menu_ipe_line_id,inventory.product.entry.line,model_inventory_product_entry_line,group_billing_menu_ipe,1,1,1,1
+
+access_billing_menu_billing_menu_confirmed_ipe,inventory.product.entry,model_inventory_product_entry,group_billing_menu_confirmed_ipe,1,1,1,0
+access_billing_menu_billing_menu_verified_ipe,inventory.product.entry,model_inventory_product_entry,group_billing_menu_verified_ipe,1,1,1,0
+
+access_billing_menu_billing_menu_ir,inventory.requisition,model_inventory_requisition,group_billing_menu_ir,1,1,1,0
+access_billing_menu_billing_menu_ir_line_id,inventory.requisition.line,model_inventory_requisition_line,group_billing_menu_ir,1,1,1,1
+
+
+
 access_opd_menu_opd_ticket,opd.ticket,model_opd_ticket,group_opd_menu_opd_ticket,1,1,1,0
 access_opd_menu_opd_ticket_line,opd.ticket.line,model_opd_ticket_line,group_opd_menu_opd_ticket,1,1,1,1
 

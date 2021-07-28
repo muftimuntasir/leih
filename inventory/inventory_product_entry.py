@@ -19,7 +19,7 @@ class inventory_product_entry(osv.osv):
         'advance_journal_id':fields.many2one('account.move','Advance Journal'),
         'department':fields.many2one("diagnosis.department","Department"),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse Location',required=True),
-        'inventory_product_entry_line_ids':fields.one2many('inventory.product.entry.line','inventory_product_entry_id',string="Inventory Requision Items"),
+        'inventory_product_entry_line_ids':fields.one2many('inventory.product.entry.line','inventory_product_entry_id',string="Inventory Requision Items",required=True),
         'date':fields.date('Date'),
         'state': fields.selection(
             [('pending', 'Pending'), ('confirmed', 'Receive Product'),('verify', 'Verified'), ('cancelled', 'Cancelled')],
