@@ -20,6 +20,7 @@ class inventory_requisition(osv.osv):
             'Status', default='pending', readonly=True)
 
     }
+    _order = 'id desc'
 
     def confirm_transfer(self, cr, uid, ids, context=None):
 
@@ -59,8 +60,12 @@ class inventory_requisition(osv.osv):
 
             move_line = []
             line_ids = []
-
+            found_less_qty = False
             for items in ir_obj.inventory_requisition_line_ids:
+
+                if items.quantity > items.product_name.qty_available:
+                    found_less_qty = True
+                    break
                 move_line.append([0, False, {
                     'product_id': items.product_name.id,
                     'product_uom': 1,
@@ -73,6 +78,9 @@ class inventory_requisition(osv.osv):
                 }])
 
 
+            if found_less_qty == True:
+                raise osv.except_osv(_('Warning!'),
+                                     _('Stock is not available'))
 
             grn_vals['move_lines'] = move_line
 
@@ -86,6 +94,11 @@ class inventory_requisition(osv.osv):
                 picking_obj.force_assign(cr, uid, [stock_picking_id], context=context)
                 picking_obj.action_done(cr, uid, [stock_picking_id], context=context)
 
+            confirm_cash_collection_query = "UPDATE inventory_requisition SET state='confirmed'," \
+                                            "challan_id = {0} WHERE id={1}".format(
+                stock_picking_id, id)
+            cr.execute(confirm_cash_collection_query)
+            cr.commit()
 
         return True
 

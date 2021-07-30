@@ -26,6 +26,7 @@ class inventory_product_entry(osv.osv):
             'Status', default='pending', readonly=True)
 
     }
+    _order = 'id desc'
     #calculating total
     @api.onchange('inventory_product_entry_line_ids')
     def onchange_product_line(self):

@@ -83,6 +83,7 @@
                 <field name="department"/>
                 <field name="challan_id"/>
                 <field name="warehouse_id"/>
+                <field name="state"/>
             </tree>
             </field>
         </record>
