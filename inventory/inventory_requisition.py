@@ -128,6 +128,22 @@ class inventory_requisition_line(osv.osv):
         'name':fields.char("Inventory Requisition Line Id"),
         'inventory_requsition_id':fields.many2one("inventory.requisition","Inventory Requision ID"),
         'product_name':fields.many2one('product.product','Product Name'),
-        'quantity':fields.integer("Quantity")
+        'available_qty':fields.float("available Qty",readonly=True),
+        'quantity':fields.float("Quantity")
     }
+
+    def onchange_product(self,cr,uid,ids,product_name,context=None):
+        tests = {'values': {}}
+        #code for delivery date
+
+        dep_object = self.pool.get('product.product').browse(cr, uid, product_name, context=context)
+
+        quantity_available=dep_object.qty_available
+        # import pdb
+        # pdb.set_trace()
+
+
+        abc = {'available_qty':quantity_available}
+        tests['value'] = abc
+        return tests
 

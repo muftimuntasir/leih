@@ -290,7 +290,7 @@ class inventory_product_entry_line(osv.osv):
                                      required=True, domain=[('type', 'not in', ['view', 'closed'])],
                                      default=_default_account,
                                      help="The income or expense account related to the selected product."),
-        'quantity':fields.integer("Quantity"),
+        'quantity':fields.float("Quantity"),
         'unit_price':fields.float("Unit Price"),
         'total_price':fields.float("Total Price")
     }
