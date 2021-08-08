@@ -36,7 +36,7 @@
                     <notebook>
                         <page string="Referance Value">
                             <field name="bill_register_line_id" mode="tree">
-                                <tree string="Select Referance Value" editable="top">
+                                <tree string="Select Referance Value" editable="bottom">
 
                                     <field name="name" on_change="onchange_test(name, context)"/>
                                     <field name="department"/>
