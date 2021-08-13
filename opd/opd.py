@@ -81,7 +81,7 @@ class bill_register(osv.osv):
 
         if stored is not None:
 
-            name_text = 'OPD-1000' + str(stored)
+            name_text = 'OPD-0' + str(stored)
             cr.execute('update opd_ticket set name=%s where id=%s', (name_text, stored))
             cr.commit()
         return stored

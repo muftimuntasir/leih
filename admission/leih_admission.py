@@ -405,12 +405,12 @@ class leih_admission(osv.osv):
 
 
             if stored is not None:
-                name_text = 'A-1000' + str(stored)
+                name_text = 'A-0' + str(stored)
                 cr.execute('update leih_admission set name=%s where id=%s', (name_text, stored))
                 cr.commit()
         else:
             if stored is not None:
-                name_text = 'E-1000' + str(stored)
+                name_text = 'E-0' + str(stored)
                 cr.execute('update leih_admission set name=%s where id=%s', (name_text, stored))
                 cr.commit()
 
