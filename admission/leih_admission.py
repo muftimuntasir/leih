@@ -55,6 +55,7 @@ class leih_admission(osv.osv):
         'after_discount': fields.float("Discount Amount"),
         'other_discount': fields.float("Other Discount"),
         'grand_total': fields.float("Grand Total"),
+        'advance':fields.float("Advance"),
         'paid': fields.float("Paid"),
         'due': fields.float("Due"),
         'type': fields.selection([('cash', 'Cash'), ('bank', 'Bank')], 'Payment Type'),
