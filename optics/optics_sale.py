@@ -48,6 +48,7 @@ class optics_sale(osv.osv):
         'hard_cover': fields.boolean("Cover", default=True),
         'cell_pad': fields.boolean("Cell Pad", default=True),
         'frame_id': fields.many2one('product.product', 'Frame'),
+        'quantity':fields.integer('Quantity'),
         'qty_available':fields.integer("Stock Quantity", readonly=True),
         'delivery_id': fields.many2one('stock.picking', 'Delivery Challan'),
         'price': fields.float('Price'),
@@ -73,6 +74,33 @@ class optics_sale(osv.osv):
             'Status', default='pending', readonly=True)
     }
 
+    _defaults = {
+        'quantity': 1
+    }
+
+
+
+    def onchange_quantity(self, cr, uid, ids, quantity,frame_id, context=None):
+        tests = {'values': {}}
+        import pdb
+        pdb.set_trace()
+
+        unit_price = frame_id.list_price
+        total_price = unit_price * quantity
+
+        abc = {'price': total_price}
+        tests['value'] = abc
+        #
+
+        return tests
+
+    @api.onchange('quantity')
+    def onchange_frame_bill_qty(self):
+        frame_code = self.frame_id
+        self.price = frame_code.list_price * self.quantity
+        return 'X'
+
+
 
 
     # if same item exist in line
@@ -82,7 +110,7 @@ class optics_sale(osv.osv):
         stored = int(ids[0])
         if stored_obj.state == 'confirmed':
             raise osv.except_osv(_('Warning!'),
-                                 _('Already it is  Confirmed. Yuo can not change.'))
+                                 _('Already it is  Confirmed. You can not change.'))
         if stored_obj.paid != False:
             for bills_vals in stored_obj:
                 mr_value = {
@@ -128,8 +156,8 @@ class optics_sale(osv.osv):
                         'picking_id': picking_id,
                         'picking_type_id': 13,
                         'product_id': order.frame_id.id,
-                        'product_uos_qty': abs(1),
-                        'product_uom_qty': abs(1),
+                        'product_uos_qty': abs(order.quantity),
+                        'product_uom_qty': abs(order.quantity),
                         'state': 'draft',
                         'location_id': location_id,
                         'location_dest_id': destination_id,
