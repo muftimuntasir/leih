@@ -16,7 +16,7 @@ class cash_collection(osv.osv):
 
         # mr_obj = self.pool.get("leih.money.receipt").search(self.cr, self.uid, [('date','>=',self.date)])
         if self.type=='bill':
-            vals_parameter = [('bill_id', '!=', False),('already_collected','!=',True),('state','!=','cancel')]
+            vals_parameter = [('bill_id', '!=', False),('diagonostic_bill', '=', True),('already_collected','!=',True),('state','!=','cancel')]
             if self.date:
                 vals_parameter.append(('date','=',self.date))
             mr_obj=self.env['leih.money.receipt'].search(vals_parameter)
@@ -28,6 +28,22 @@ class cash_collection(osv.osv):
                 abc['amount']=record.amount
                 total = total +record.amount
                 child_list.append([0, False, abc])
+
+        if self.type=='bill_others':
+            vals_parameter = [('bill_id', '!=', False),('diagonostic_bill', '!=', True),('already_collected','!=',True),('state','!=','cancel')]
+            if self.date:
+                vals_parameter.append(('date','=',self.date))
+            mr_obj=self.env['leih.money.receipt'].search(vals_parameter)
+
+            for record in mr_obj:
+                abc = {}
+                abc['bill_admission_opd_id']=record.bill_id.name
+                abc['mr_no']=record.id
+                abc['amount']=record.amount
+                total = total +record.amount
+                child_list.append([0, False, abc])
+
+
         if self.type=='admission':
             vals_parameter = [('admission_id', '!=', False), ('already_collected', '!=', True),('state','!=','cancel')]
             if self.date:
@@ -197,7 +213,7 @@ class cash_collection(osv.osv):
         'name': fields.char("Cash Collection No"),
         # 'date': fields.date("Date"),
         'date': fields.datetime("Date", default=lambda self: fields.datetime.now()),
-        'type': fields.selection([('bill','Bill'),('opd','OPD'),('admission','Admission'),('optics','Optics')], 'Type'),
+        'type': fields.selection([('bill','Bill [Diagnosis]'),('bill_others','Bill [others]'),('opd','OPD'),('admission','Admission'),('optics','Optics')], 'Type'),
         'total': fields.float("Total"),
         'journal_id':fields.many2one('account.move', 'Journal '),
         'debit_act_id':fields.many2one('account.account', 'Debit Account ', required=True),

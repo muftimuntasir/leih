@@ -70,12 +70,16 @@ class bill_register_payment(osv.osv):
         value['amount']=vals['amount']
         value['type']=vals['type']
         value['p_type'] = 'due_payment'
+
         # value['user_id']=vals['user_id']
+        stored_obj = self.pool.get("bill.register").browse(cr, uid, vals['bill_id'], context=None)
+        diagonostic_bill = stored_obj.diagonostic_bill
+        value['diagonostic_bill'] = diagonostic_bill
 
         mr_object=self.pool.get("leih.money.receipt")
         mr_id=mr_object.create(cr, uid, value, context=context)
 
-        stored_obj = self.pool.get("bill.register").browse(cr, uid, vals['bill_id'], context=None)
+
 
         ## Bill Status Will Change
 

@@ -69,6 +69,7 @@ class bill_register(osv.osv):
         'address': fields.char("Address",store=False),
         'age': fields.char("Age",store=False),
         'sex':fields.char("Sex",store=False),
+        'diagonostic_bill':fields.boolean("Diagonstic Bill"),
         'ref_doctors': fields.many2one('doctors.profile','Reffered by', required="True"),
         'delivery_date': fields.function(_delivery_dates,string="Delivery Date",type='date',store=True),
         'bill_register_line_id': fields.one2many('bill.register.line', 'bill_register_id', 'Item Entry',required=True),
@@ -91,6 +92,9 @@ class bill_register(osv.osv):
         'state': fields.selection(
             [('pending', 'Pending'), ('confirmed', 'Confirmed'), ('cancelled', 'Cancelled')],
             'Status', default='pending', readonly=True)
+    }
+    _defaults = {
+        'diagonostic_bill': False
     }
 
     @api.multi
@@ -120,6 +124,8 @@ class bill_register(osv.osv):
     def bill_confirm(self, cr, uid, ids, context=None):
 
         stored_obj = self.browse(cr, uid, [ids[0]], context=context)
+
+        diagonostic_bill = stored_obj.diagonostic_bill
         ## Bill Status Will Change
 
         if stored_obj.state == 'confirmed':
@@ -243,7 +249,7 @@ class bill_register(osv.osv):
                 mr_id = mr_obj.create(cr, uid, mr_value, context=context)
                 if mr_id is not None:
                     mr_name = 'MR#' + str(mr_id)
-                    cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
+                    cr.execute('update leih_money_receipt set name=%s,diagonostic_bill=%s where id=%s', (mr_name,diagonostic_bill, mr_id))
                     cr.commit()
                 # if mr_id is not None:
                 #     try:
@@ -328,10 +334,14 @@ class bill_register(osv.osv):
 
     def btn_pay_bill(self, cr, uid, ids, context=None):
         if not ids: return []
+        inv = self.browse(cr, uid, ids[0], context=context)
+        if inv.state == 'pending':
+            raise osv.except_osv(_('Warning'), _('Please Confirm and Print the Bill'))
+        if inv.total <= inv.paid:
+            raise osv.except_osv(_('Full Paid'), _('Nothing to Pay Here. Already Full Paid'))
 
         dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'leih','bill_register_payment_form_view')
         #
-        inv = self.browse(cr, uid, ids[0], context=context)
 
         # total=inv.total
         # import pdb
@@ -385,6 +395,38 @@ class bill_register(osv.osv):
 
         if context is None:
             context = {}
+
+        child_ids =["MRI",'X-Ray','Radiology & Imaging','Pathology','Bio-Chemistry','Haematology','Serology','Micro-Biology','CT Scan','USG','Diagnostic','X-Ray','Echocardiogram']
+
+        ### Check Diagonostice Items available or not. If avvailable then no ther component will be there
+
+        get_all_depts =[]
+        for items in vals.get('bill_register_line_id'):
+            if items[2].get('department'):
+                if items[2].get('department') not in get_all_depts:
+                    get_all_depts.append(items[2].get('department'))
+
+        ## Check Diagnsis exists
+        mixed_up = False
+        vals['diagonostic_bill'] = False
+
+        intersection_result = list(set(child_ids) & set(get_all_depts))
+        if len(intersection_result)>0 and len(intersection_result) == len(get_all_depts):
+            mixed_up = False
+            vals['diagonostic_bill'] = True
+        elif len(intersection_result)>0 and  len(intersection_result) != len(get_all_depts):
+            mixed_up=True
+
+        if mixed_up == True:
+            raise osv.except_osv(_('Attention'),
+                                 _('This investigation has diagnosis and others department mix up'))
+
+
+        ### Ends Here Diagonostic Items
+        #
+        #
+        # import pdb
+        # pdb.set_trace()
 
         stored = super(bill_register, self).create(cr, uid, vals, context) # return ID int object
 

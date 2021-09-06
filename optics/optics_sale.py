@@ -237,7 +237,7 @@ class optics_sale(osv.osv):
         if not ids: return []
         inv = self.browse(cr, uid, ids[0], context=context)
         if inv.state == 'pending':
-            raise osv.except_osv(_('Warning'), _('Please Confirm and Print the Optcs Form'))
+            raise osv.except_osv(_('Warning'), _('Please Confirm and Print the Optics Form'))
         if inv.total == inv.paid:
             raise osv.except_osv(_('Full Paid'), _('Nothing to Pay Here. Already Full Paid'))
         dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'leih',

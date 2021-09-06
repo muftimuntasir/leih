@@ -333,9 +333,15 @@ class leih_admission(osv.osv):
     def btn_pay(self, cr, uid, ids, context=None):
         if not ids: return []
 
+        inv = self.browse(cr, uid, ids[0], context=context)
+        if inv.state == 'pending' or inv.state=='cancelled':
+            raise osv.except_osv(_('Warning'), _('Please Confirm and Print the Bill'))
+        if inv.total <= inv.paid:
+            raise osv.except_osv(_('Full Paid'), _('Nothing to Pay Here. Already Full Paid'))
+
         dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'leih', 'admission_payment_form_view')
         #
-        inv = self.browse(cr, uid, ids[0], context=context)
+
         # total=inv.total
         # import pdb
         # pdb.set_trace()
