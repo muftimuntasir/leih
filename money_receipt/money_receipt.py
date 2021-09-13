@@ -12,7 +12,7 @@ class money_receipt(osv.osv):
         'bill_id':fields.many2one("bill.register","BIll ID"),
         'admission_id':fields.many2one("leih.admission","Admission ID"),
         'optics_sale_id':fields.many2one("optics.sale","Optics Sale ID"),
-        'amount':fields.float("Amount"),
+        'amount':fields.float("Paid Amount"),
         'bill_total_amount':fields.float("Total Amount"),
         'due_amount':fields.float("Due Amount"),
         'p_type':fields.selection([
