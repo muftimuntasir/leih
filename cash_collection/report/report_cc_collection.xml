@@ -15,7 +15,8 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Billing Amount</th>
+                            <th>Diagnostic Amount</th>
+                            <th>Other Amount</th>
                             <th>Admission Amount</th>
                             <th>OPD Amount</th>
                             <th>Optics Amount</th>
@@ -28,6 +29,7 @@
                          <tr t-foreach="get_user_names(data['form']['date_start'],data['form']['date_end'])" t-as="move_a">
                                 <td><span t-esc="move_a['user_name']"/></td>
                                 <td><span t-esc="move_a['bill_collection']"/></td>
+                                <td><span t-esc="move_a['bill_other_collection']"/></td>
                                 <td><span t-esc="move_a['admission_collection']"/></td>
                                 <td><span t-esc="move_a['opd_collection']"/></td>
                                 <td><span t-esc="move_a['optics_collection']"/></td>

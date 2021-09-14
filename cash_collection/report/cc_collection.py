@@ -14,7 +14,11 @@ class collcetion_details(report_sxw.rml_parse):
         result = []
 
         bill_q = "select sum(amount) as totla_collection, create_uid from leih_money_receipt where bill_id is not Null " \
-                 "and state='confirm' and (create_date <= '%s') and (create_date >= '%s') group by create_uid"
+                 "and state='confirm' and diagonostic_bill=TRUE and (create_date <= '%s') and (create_date >= '%s') group by create_uid"
+
+
+        bill_others = "select sum(amount) as totla_collection, create_uid from leih_money_receipt where bill_id is not Null " \
+                 "and state='confirm' and (diagonostic_bill=FALSE OR diagonostic_bill IS NULL) and (create_date <= '%s') and (create_date >= '%s') group by create_uid"
 
         add_q= "select sum(amount) as totla_collection, create_uid from leih_money_receipt where admission_id is not Null" \
                " and state='confirm' and (create_date <= '%s') and (create_date >= '%s') group by create_uid"
@@ -31,6 +35,14 @@ class collcetion_details(report_sxw.rml_parse):
             if items[1] is not participant_ids:
                 participant_ids.append(items[1])
             bill_info[items[1]]=items[0]
+
+        self.cr.execute(bill_others % (end_date,st_dat))
+        participants_ids = []
+        bill_other_info = {}
+        for items in self.cr.fetchall():
+            if items[1] is not participants_ids:
+                participants_ids.append(items[1])
+            bill_other_info[items[1]]=items[0]
 
 
         ## Bill Collction Ends Here
@@ -94,14 +106,16 @@ class collcetion_details(report_sxw.rml_parse):
 
         for user_id in participant_ids:
             b_amnt = bill_info.get(user_id) if bill_info.get(user_id) else 0
+            b_other_amnt=bill_other_info.get(user_id) if bill_other_info.get(user_id) else 0
             adm_amnt = adm_info.get(user_id) if adm_info.get(user_id) else 0
             opt_amnt= optic_info.get(user_id) if optic_info.get(user_id) else 0
             opd_amnt= opd_info.get(user_id) if opd_info.get(user_id) else 0
 
-            total = b_amnt + adm_amnt + opt_amnt + opd_amnt
+            total = b_amnt + b_other_amnt+ adm_amnt + opt_amnt + opd_amnt
             result.append({
                 'user_name':user_info.get(user_id),
                 'bill_collection': b_amnt,
+                'bill_other_collection':b_other_amnt,
                 'admission_collection': adm_amnt,
                 'optics_collection': opt_amnt,
                 'opd_collection':opd_amnt,
