@@ -37,11 +37,11 @@ class collcetion_details(report_sxw.rml_parse):
             bill_info[items[1]]=items[0]
 
         self.cr.execute(bill_others % (end_date,st_dat))
-        participants_ids = []
+        participant_ids = []
         bill_other_info = {}
         for items in self.cr.fetchall():
-            if items[1] is not participants_ids:
-                participants_ids.append(items[1])
+            if items[1] is not participant_ids:
+                participant_ids.append(items[1])
             bill_other_info[items[1]]=items[0]
 
 
