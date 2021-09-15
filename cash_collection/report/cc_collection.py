@@ -1,3 +1,4 @@
+from datetime import timedelta
 import datetime
 import pytz
 import time
@@ -126,7 +127,22 @@ class collcetion_details(report_sxw.rml_parse):
         return result
 
     def _get_context_text(self, t_dat=None, end_date=None):
-        txt = "Start Date " + str(t_dat)  + " End Date " + str(end_date)
+        datestr=str(t_dat)
+
+        datetimeobj=datetime.datetime.strptime(datestr, "%Y-%m-%d %H:%M:%S")
+        newtime = datetimeobj + timedelta(hours=6)
+        newformate=newtime.strftime("%d-%m-%Y %H:%M:%S")
+
+        datestr=str(end_date)
+
+        datetimeobjs=datetime.datetime.strptime(datestr, "%Y-%m-%d %H:%M:%S")
+        newtimes = datetimeobjs + timedelta(hours=6)
+        newformates=newtimes.strftime("%d-%m-%Y %H:%M:%S")
+
+
+        # import pdb
+        # pdb.set_trace()
+        txt = "Start Date " + newformate  + " End Date " + newformates
         return txt
 
     def __init__(self, cr, uid, name, context):
