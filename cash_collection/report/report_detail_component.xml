@@ -11,109 +11,202 @@
                             </div>
                         </div>
 
-                <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th>Department</th>
-                            <th>Name</th>
-                            <th>Count</th>
-                            <th>Amount</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <t t-set="total_opd" t-value="0"/>
-                        <t t-set="total_physiotherapy" t-value="0"/>
-                        <t t-set="total_dental" t-value="0"/>
-                        <t t-set="total_pathology" t-value="0"/>
-                        <t t-set="total_xray" t-value="0"/>
-                        <t t-set="total_mri_ct" t-value="0"/>
-                        <t t-set="total_echo" t-value="0"/>
-                        <t t-set="total_sonology" t-value="0"/>
-                        <t t-set="total_minor" t-value="0"/>
-                        <t t-set="total_phaco" t-value="0"/>
-                        <t t-set="total_sics" t-value="0"/>
-                        <t t-set="total_retina" t-value="0"/>
-                        <t t-set="total_other_surgery" t-value="0"/>
-                        <t t-set="total_other_indoor" t-value="0"/>
-                        <t t-set="total_vr" t-value="0"/>
-                         <tr t-foreach="get_user_names(data['form']['date_start'],data['form']['date_end'])" t-as="move_a">
-                             <t t-if="move_a['test_dept'] == 'OPD'">
-                                 <t t-set="total_opd" t-value="total_opd+move_a['test_amnt']"/>
-                             </t>
-                               <t t-if="move_a['test_dept'] == 'Physiotherapy'">
-                                 <t t-set="total_physiotherapy" t-value="total_physiotherapy+move_a['test_amnt']"/>
-                             </t>
-                             <t t-if="move_a['test_dept'] == 'Dental'">
-                                 <t t-set="total_dental" t-value="total_dental+move_a['test_amnt']"/>
-                             </t>
-                             <t t-if="move_a['test_dept'] == 'Pathology' or move_a['test_dept'] == 'Bio-Chemistry' or move_a['test_dept'] == 'Haematology' or move_a['test_dept'] == 'Micro-Biology' or move_a['test_dept'] == 'Serology' or move_a['test_dept'] == 'Stool' or move_a['test_dept'] == 'Urine'">
-                                 <t t-set="total_pathology" t-value="total_pathology+move_a['test_amnt']"/>
-                             </t>
-
-                             <t t-if="move_a['test_dept'] == 'Radiology' or move_a['test_dept'] == 'X-Ray' ">
-                                 <t t-set="total_xray" t-value="total_xray+move_a['test_amnt']"/>
-                             </t>
-
-                             <t t-if="move_a['test_dept'] == 'MRI' or move_a['test_dept'] == 'CT Scan' ">
-                                 <t t-set="total_mri_ct" t-value="total_mri_ct+move_a['test_amnt']"/>
-                             </t>
-
-                             <t t-if="move_a['test_dept'] == 'Sonology'">
-                                 <t t-set="total_sonology" t-value="total_sonology+move_a['test_amnt']"/>
-                             </t>
-
-                             <t t-if="move_a['test_dept'] == 'Minor-OT'">
-                                 <t t-set="total_minor" t-value="total_minor+move_a['test_amnt']"/>
-                             </t>
-                             <t t-if="move_a['test_dept'] == 'Phaco Surgery'">
-                                 <t t-set="total_phaco" t-value="total_phaco+move_a['test_amnt']"/>
-                             </t>
-                             <t t-if="move_a['test_dept'] == 'SICS Surgery'">
-                                 <t t-set="total_sics" t-value="total_sics+move_a['test_amnt']"/>
-                             </t>
-
-                             <t t-if="move_a['test_dept'] == 'Retinal Surgery' or move_a['test_dept'] == 'Retinal Injection'">
-                                 <t t-set="total_retina" t-value="total_retina+move_a['test_amnt']"/>
-                             </t>
-
-                             <t t-if="move_a['test_dept'] == 'Others Surgery' or move_a['test_dept'] == 'Glucoma Surgery' or move_a['test_dept'] == 'Oculoplasy Surgery'">
-                                 <t t-set="total_other_surgery" t-value="total_other_surgery+move_a['test_amnt']"/>
-                             </t>
-
-                             <t t-if="move_a['test_dept'] == 'Indoor'">
-                                 <t t-set="total_other_indoor" t-value="total_other_indoor+move_a['test_amnt']"/>
-                             </t>
-                             <t t-if="move_a['test_dept'] == 'VR' or move_a['test_dept'] == 'VR ( Retina)'">
-                                 <t t-set="total_vr" t-value="total_vr+move_a['test_amnt']"/>
-                             </t>
+<!--                <table class="table table-condensed">-->
 
 
+<!--                         <span t-esc="get_user_names(data['form']['date_start'],data['form']['date_end'])" t-as="move_a"/>-->
+                        <t t-set="all_vals_dict" t-value="get_user_names(data['form']['date_start'],data['form']['date_end'])"/>
 
-                                <td><span t-esc="move_a['test_dept']"/></td>
-                                <td><span t-esc="move_a['test_name']"/></td>
-                                <td><span t-esc="move_a['test_count']"/></td>
-                                <td><span t-esc="move_a['test_amnt']"/></td>
+<!--                        #fetching the details of opd components-->
+                        <t t-set="opd_income" t-value="all_vals_dict['opd_income']"/>
+                        <h4 style="text-align:center;">OPD Details</h4>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <th>Item</th>
+                                                <th>Rate</th>
+                                                <th>Qty</th>
+                                                <th>Total</th>
+                                            </thead>
+                                            <t t-set="total_opd" t-value="0"/>
+                                            <tr t-foreach="opd_income" t-as="move_a">
+                                                <td><span t-esc="move_a[3]"/></td>
+                                                <td><span t-esc="move_a[2]"/></td>
+                                                <td><span t-esc="move_a[1]"/></td>
+                                                <td><span t-esc="move_a[0]"/></td>
+                                                <t t-set="total_opd" t-value="total_opd+move_a[0]"/>
+
+                                            </tr>
+                                            </table>
+                        <table class="table table-condensed">
+                                            <thead>
+                                                <th>Total OPD Income</th>
+                                            </thead>
+                                            <td><span t-esc="total_opd"/>/- </td>
+                                        </table>
+
+                        <t t-set="diagnostic_items" t-value="all_vals_dict['diagnostic']"/>
+                        <h4 style="text-align:center;">Diagnostic Incomes</h4>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <th>Department</th>
+                                                <th>Item Name</th>
+                                                <th>Qty</th>
+                                                <th>Rate</th>
+                                                <th>Total</th>
+                                            </thead>
+                                            <tr t-foreach="diagnostic_items" t-as="move_a">
+                                                <td><span t-esc="move_a[0]"/></td>
+                                                <td><span t-esc="move_a[1]"/></td>
+                                                <td><span t-esc="move_a[2]"/></td>
+                                                <td><span t-esc="move_a[3]"/></td>
+                                                <td><span t-esc="move_a[4]"/></td>
+
+                                            </tr>
+                                            </table>
+                        <table class="table table-condensed">
+                                                <thead>
+                                                <th>Total Value</th>
+                                                <th>BLF Discount</th>
+                                                <th>Doctor Discount</th>
+                                                <th>Paid</th>
+                                                <th>Due</th>
+                                                <th>Due Coll.</th>
+                                                <th>Total</th>
+
+                                            </thead>
+
+                                            <t t-set="diagnostic_income" t-value="all_vals_dict['diagnostic_income']"/>
+                                            <t t-set="duecollection" t-value="0"/>
+                                            <t t-set="advance" t-value="0"/>
+                                            <tr t-foreach="diagnostic_income" t-as="move_a">
+                                                <t t-set="advance" t-value="move_a[0]-move_a[1]-move_a[2]-move_a[4]"/>
+                                                <td><span t-esc="move_a[0]"/></td>
+                                                <td><span t-esc="move_a[1]"/></td>
+                                                <td><span t-esc="move_a[2]"/></td>
+                                                <td><span t-esc="advance"/></td>
+                                                <td><span t-esc="move_a[4]"/></td>
+                                                <td><span t-esc="move_a[3]-advance"/></td>
+                                                <td><span t-esc="move_a[3]"/></td>
+
+                                            </tr>
+
+                                        </table>
+<!--                        View of other investigation -->
+
+                         <t t-set="diagnostic_items" t-value="all_vals_dict['other_investigations']"/>
+                        <h4 style="text-align:center;">Income from other Departments</h4>
+                                        <table class="table table-condensed">
+                                            <thead>
+                                                <th>Department</th>
+                                                <th>Item Name</th>
+                                                <th>Qty</th>
+                                                <th>Rate</th>
+                                                <th>Total</th>
+                                            </thead>
+                                            <tr t-foreach="diagnostic_items" t-as="move_a">
+                                                <td><span t-esc="move_a[0]"/></td>
+                                                <td><span t-esc="move_a[1]"/></td>
+                                                <td><span t-esc="move_a[2]"/></td>
+                                                <td><span t-esc="move_a[3]"/></td>
+                                                <td><span t-esc="move_a[4]"/></td>
+
+                                            </tr>
+                                            </table>
+                        <table class="table table-condensed">
+                                                <thead>
+                                                <th>Total Value</th>
+                                                <th>BLF Discount</th>
+                                                <th>Doctor Discount</th>
+                                                <th>Paid</th>
+                                                <th>Due</th>
+                                                <th>Due Coll.</th>
+                                                <th>Total</th>
+
+                                            </thead>
+
+                                            <t t-set="diagnostic_income" t-value="all_vals_dict['other_incomes']"/>
+                                            <t t-set="duecollection" t-value="0"/>
+                                            <t t-set="advance" t-value="0"/>
+                                            <tr t-foreach="diagnostic_income" t-as="move_a">
+                                                <t t-set="advance" t-value="move_a[0]-move_a[1]-move_a[2]-move_a[4]"/>
+                                                <td><span t-esc="move_a[0]"/></td>
+                                                <td><span t-esc="move_a[1]"/></td>
+                                                <td><span t-esc="move_a[2]"/></td>
+                                                <td><span t-esc="advance"/></td>
+                                                <td><span t-esc="move_a[4]"/></td>
+                                                <td><span t-esc="move_a[3]-advance"/></td>
+                                                <td><span t-esc="move_a[3]"/></td>
+
+                                            </tr>
+
+                                        </table>
+
+                        <t t-set="admission_items" t-value="all_vals_dict['admission_query']"/>
+                        <h4 style="text-align:center;">Admission Incomes</h4>
+                            <table class="table table-condensed">
+                                            <thead>
+                                                <th>Department</th>
+                                                <th>Item Name</th>
+                                                <th>Qty</th>
+                                                <th>Rate</th>
+                                                <th>Total</th>
+                                            </thead>
+                                            <tr t-foreach="admission_items" t-as="move_a">
+                                                <td><span t-esc="move_a[0]"/></td>
+                                                <td><span t-esc="move_a[1]"/></td>
+                                                <td><span t-esc="move_a[2]"/></td>
+                                                <td><span t-esc="move_a[3]"/></td>
+                                                <td><span t-esc="move_a[4]"/></td>
+
+                                            </tr>
+                            </table>
+                        <table class="table table-condensed">
+                                                <thead>
+                                                <th>Total Value</th>
+                                                <th>BLF Discount</th>
+                                                <th>Doctor Discount</th>
+                                                <th>Paid</th>
+                                                <th>Due</th>
+                                                <th>Due Coll.</th>
+                                                <th>Total</th>
+
+                                            </thead>
+
+                                            <t t-set="admission_incomes" t-value="all_vals_dict['admission_incomes']"/>
+                                            <t t-set="duecollection" t-value="0"/>
+                                            <t t-set="advance" t-value="0"/>
+                                            <tr t-foreach="admission_incomes" t-as="move_a">
+                                                <t t-set="advance" t-value="move_a[0]-move_a[1]-move_a[2]-move_a[4]"/>
+                                                <td><span t-esc="move_a[0]"/></td>
+                                                <td><span t-esc="move_a[1]"/></td>
+                                                <td><span t-esc="move_a[2]"/></td>
+                                                <td><span t-esc="advance"/></td>
+                                                <td><span t-esc="move_a[4]"/></td>
+                                                <td><span t-esc="move_a[3]-advance"/></td>
+                                                <td><span t-esc="move_a[3]"/></td>
+
+                                            </tr>
+
+                                        </table>
 
 
 
-                            </tr>
-                    </tbody>
 
-                </table>
-                        <h6>Total OPD: <span t-esc="total_opd"/>/-</h6>
-                        <h6>Total Physiotherapy: <span t-esc="total_physiotherapy"/>/-</h6>
-                        <h6>Total Dental: <span t-esc="total_dental"/>/-</h6>
-                        <h6>Total VR: <span t-esc="total_vr"/>/-</h6>
-                        <h6>Total Pathology: <span t-esc="total_pathology"/>/-</h6>
-                        <h6>Total X-ray: <span t-esc="total_xray"/>/-</h6>
-                        <h6>Total MRI-CT: <span t-esc="total_mri_ct"/>/-</h6>
-                        <h6>Total Minor OT: <span t-esc="total_minor"/>/-</h6>
-                        <h6>Total Phaco: <span t-esc="total_phaco"/>/-</h6>
-                        <h6>Total SICS: <span t-esc="total_sics"/>/-</h6>
-                        <h6>Total Retina: <span t-esc="total_retina"/>/-</h6>
-                        <h6>Total Other surgery: <span t-esc="total_other_surgery"/>/-</h6>
-                        <h6>Total Other Indoor: <span t-esc="total_other_indoor"/>/-</h6>
+
+
+<!--                        <tr t-foreach="all_vals_dict['diagnostic']" t-as="diagnostic">-->
+<!--                            <tr t-foreach="diagnostic" t-as="move_a">-->
+<!--                                <span t-esc="move_a"/>-->
+
+
+<!--                          <td class="text-right">-->
+<!--                            <t t-esc="total" t-esc-options='{"widget": "monetary", "display_currency": "res_company.currency_id"}'/>-->
+<!--                          </td>-->
+<!--                        </tr>-->
+<!--                        </tr>-->
+
+<!--                </table>-->
+
 
 
                     </div>

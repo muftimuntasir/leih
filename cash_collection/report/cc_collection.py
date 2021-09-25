@@ -38,7 +38,6 @@ class collcetion_details(report_sxw.rml_parse):
             bill_info[items[1]]=items[0]
 
         self.cr.execute(bill_others % (end_date,st_dat))
-        participant_ids = []
         bill_other_info = {}
         for items in self.cr.fetchall():
             if items[1] is not participant_ids:
