@@ -79,13 +79,25 @@ class detail_collcetion_details(report_sxw.rml_parse):
         self.cr.execute(diagnostic_income % (end_date,st_dat))
         diag_income = []
         for items in self.cr.fetchall():
-            diag_income.append(items)
+            new_list=[]
+            for item in items:
+                if item==None:
+                    item=int(0)
+                    new_list.append(item)
+                else:
+                    item=item
+                    new_list.append(item)
+
+            diag_income.append(new_list)
+
+
         result_dict['diagnostic_income'] = diag_income
 
         self.cr.execute(opd_component_q % (end_date,st_dat))
         opd_income = []
         for items in self.cr.fetchall():
             opd_income.append(items)
+
         result_dict['opd_income'] = opd_income
 
 
@@ -93,12 +105,14 @@ class detail_collcetion_details(report_sxw.rml_parse):
         other_investigations=[]
         for items in self.cr.fetchall():
             other_investigations.append(items)
+
         result_dict['other_investigations']=other_investigations
 
         self.cr.execute(others_income % (end_date,st_dat))
         other_incomes=[]
         for items in self.cr.fetchall():
             other_incomes.append(items)
+
         result_dict['other_incomes']=other_incomes
 
         self.cr.execute(aadmission_query % (end_date,st_dat))
