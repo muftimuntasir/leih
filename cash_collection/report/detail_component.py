@@ -42,7 +42,7 @@ class detail_collcetion_details(report_sxw.rml_parse):
                          " (b.create_date >= '%s') group by bl.department,e.name,bl.price order by bl.department"
 
         diagnostic_income="select sum(bill_total_amount) as Total,sum(b.other_discount) as Discount,sum(b.doctors_discounts), sum(lmr.amount) as paid, sum(lmr.due_amount) as due from bill_register as b," \
-                          "leih_money_receipt as lmr where b.id=lmr.bill_id and (lmr.create_date <= '%s') and (lmr.create_date >= '%s')" \
+                          "leih_money_receipt as lmr where b.id=lmr.bill_id and (lmr.create_date <= '%s') and (lmr.create_date >= '%s') and lmr.state!='cancel' " \
                           " and b.diagonostic_bill=True"
 
         others_investigation="select bl.department,e.name,count(bl.name),bl.price,sum(bl.price) from bill_register as b,bill_register_line as bl,examination_entry as e " \
@@ -50,14 +50,14 @@ class detail_collcetion_details(report_sxw.rml_parse):
                              "(b.create_date >= '%s') group by bl.department,e.name,bl.price order by bl.department"
         others_income="select sum(bill_total_amount) as Total,sum(b.other_discount) as Discount,sum(b.doctors_discounts), sum(lmr.amount) as paid, sum(lmr.due_amount) as due from bill_register as b," \
                       "leih_money_receipt as lmr where b.id=lmr.bill_id and (lmr.create_date <= '%s') and " \
-                      "(lmr.create_date >= '%s') and (b.diagonostic_bill=FALSE or b.diagonostic_bill IS NULL)"
+                      "(lmr.create_date >= '%s') and (b.diagonostic_bill=FALSE or b.diagonostic_bill IS NULL) and lmr.state!='cancel'"
 
         aadmission_query="select al.department,e.name,count(al.name),al.price,sum(al.price) from leih_admission as a,leih_admission_line as al,examination_entry as e " \
                          "where al.leih_admission_id=a.id and al.name=e.id and (a.create_date <= '%s') and (a.create_date >= '%s') " \
                          "and a.state='activated' group by al.department,e.name,al.price order by al.department"
 
         admission_income="select sum(lmr.bill_total_amount) as Total,sum(a.other_discount) as Discount,sum(a.doctors_discounts), sum(lmr.amount) as paid, sum(lmr.due_amount) as due from leih_admission as a," \
-                         "leih_money_receipt as lmr where a.id=lmr.admission_id and (lmr.create_date <= '%s') and (lmr.create_date >= '%s')"
+                         "leih_money_receipt as lmr where a.id=lmr.admission_id and (lmr.create_date <= '%s') and (lmr.create_date >= '%s') and lmr.state!='cancel'"
 
 
 

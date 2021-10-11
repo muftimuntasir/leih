@@ -22,7 +22,7 @@ access_billing_menu_product_lens,product.lens,model_product_lens,group_billing_m
 access_billing_menu_optics_sale_payment,optics.sale.payment,model_optics_sale_payment,group_billing_menu_optics_sale,1,1,1,1
 
 
-access_billing_menu_money_receipt,leih.money.receipt,model_leih_money_receipt,group_billing_menu_money_receipt,1,1,1,0
+access_billing_menu_money_receipt,leih.money.receipt,model_leih_money_receipt,group_billing_menu_bill_register,1,1,1,0
 
 access_billing_menu_discount_category,discount.category,model_discount_category,group_billing_menu_discount_category,1,1,1,0
 
