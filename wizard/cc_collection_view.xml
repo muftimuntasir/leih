@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        
 
         <record id="view_cc_collection" model="ir.ui.view">
             <field name="name">CC Details</field>

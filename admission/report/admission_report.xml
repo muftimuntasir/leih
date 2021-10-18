@@ -142,23 +142,23 @@
                         </t>
                                 </div>
                                 <div class="col-xs-7 pull-left">
-                            <div align="right" style="mergin-right:15px;">
+                            <div align="center" style="mergin-right:15px;">
                                     <strong>Sub Total:</strong>
                                     <span t-field="o.total"/>
                                 </div>
-                            <div align="right" style="mergin-right:15px;">
+                            <div align="center" style="mergin-right:15px;">
                                     <strong>Others Discount:</strong>
                                     <span t-field="o.other_discount"/>
                                 </div>
-                                 <div align="right" style="mergin-right:15px;">
+                                 <div align="center" style="mergin-right:15px;">
                                     <strong>Grand Total:</strong>
                                     <span t-field="o.grand_total"/>
                                 </div>
-                                 <div align="right" style="mergin-right:15px;">
+                                 <div align="center" style="mergin-right:15px;">
                                     <strong>Paid Amount:</strong>
                                     <span t-field="o.paid"/>
                                 </div>
-                                 <div align="right" style="mergin-right:15px;">
+                                 <div align="center" style="mergin-right:15px;">
                                     <strong>Due:</strong>
                                     <span t-field="o.due"/>
                                 </div>
@@ -167,6 +167,8 @@
 
                             <strong>In Words(Grand Total):</strong>
                             <span t-esc="o.amount_to_text(o.grand_total, 'BDT')"/>
+
+                            <p>Created By:  <span t-esc="user.name"/></p>
 
 
 

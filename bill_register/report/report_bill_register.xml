@@ -111,7 +111,7 @@
 
                             </table>
                             <div class="row">
-                                                                <div class="col-xs-5">
+                                <div class="col-xs-5">
                                     <p style="align:center"><strong>Payment Details</strong></p>
                                     <t t-foreach="request.env['leih.money.receipt'].search([('bill_id', '=', o.name)])" t-as="obj">
                                                              <div>
@@ -131,28 +131,28 @@
                                 </div>
 
                             <div class="col-xs-7 pull-left">
-                            <div align="right" style="mergin-right:10px;">
+                            <div align="center" style="mergin-right:25px;">
                                     <strong>Sub Total:</strong>
                                     <span t-field="o.total_without_discount"/>
                                 </div>
-                                <div align="right">
+                                <div align="center" style="mergin-right:25px;">
                                     <strong>Referral  Discount(%):</strong>
                                     <span t-field="o.doctors_discounts"/>
                                 </div>
-                                <div align="right">
+                                <div align="center" style="mergin-right:25px;">
                                     <strong>Others  Discount:</strong>
                                     <span t-field="o.other_discount"/>
                                 </div>
 
-                                 <div align="right">
+                                 <div align="center" style="mergin-right:25px;">
                                     <strong>Grand Total:</strong>
                                     <span t-field="o.grand_total"/>
                                 </div>
-                                 <div align="right">
+                                 <div align="center" style="mergin-right:25px;">
                                     <strong>Paid Amount:</strong>
                                     <span t-field="o.paid"/>
                                 </div>
-                                 <div align="right">
+                                 <div align="center" style="mergin-right:25px;">
                                     <strong>Due Amount:</strong>
                                     <span t-field="o.due"/>
                                 </div>
@@ -161,6 +161,9 @@
 
                             <strong>In Words(Grand Total):</strong>
                             <span t-esc="o.amount_to_text(o.grand_total, 'BDT')"/>
+
+                            <p>Created By:  <span t-esc="user.name"/></p>
+
 
 
 
