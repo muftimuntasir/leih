@@ -1,6 +1,7 @@
 from openerp import api
 from openerp.exceptions import ValidationError
 from openerp.osv import fields, osv
+from openerp import SUPERUSER_ID, api
 from openerp.tools.translate import _
 from datetime import date, time, timedelta, datetime
 from openerp.tools.amount_to_text_en import amount_to_text
@@ -89,12 +90,14 @@ class bill_register(osv.osv):
         'bank_name': fields.char('Bank Name'),
         'due': fields.float("Due"),
         'date':fields.datetime("Date", readonly=True,default=lambda self: fields.datetime.now()),
+        'user_id': fields.many2one('res.users', 'Assigned to', select=True, track_visibility='onchange'),
         'state': fields.selection(
             [('pending', 'Pending'), ('confirmed', 'Confirmed'), ('cancelled', 'Cancelled')],
             'Status', default='pending', readonly=True)
     }
     _defaults = {
-        'diagonostic_bill': False
+        'diagonostic_bill': False,
+        'user_id': lambda obj, cr, uid, context: uid,
     }
 
     @api.multi

@@ -1,6 +1,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import api
+from openerp import SUPERUSER_ID, api
 from datetime import date, time
 from openerp.tools.amount_to_text_en import amount_to_text
 PACKAGE_FIELDS=('name','price')
@@ -62,11 +63,16 @@ class leih_admission(osv.osv):
         'card_no': fields.char('Card No.'),
         'bank_name': fields.char('Bank Name'),
         'date': fields.datetime("Date", readonly=True, default=lambda self: fields.datetime.now()),
+        'user_id': fields.many2one('res.users', 'Assigned to', select=True, track_visibility='onchange'),
         'state': fields.selection(
             [('pending', 'Pending'),('activated', 'Admitted'), ('released', 'Released'), ('cancelled', 'Cancelled')],
             'Status',default='pending', readonly=True,
         ),
         'emergency_covert_time':fields.datetime("Admission Convert time"),
+    }
+
+    _defaults = {
+        'user_id': lambda obj, cr, uid, context: uid,
     }
 
     @api.multi

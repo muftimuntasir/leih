@@ -168,7 +168,7 @@
                             <strong>In Words(Grand Total):</strong>
                             <span t-esc="o.amount_to_text(o.grand_total, 'BDT')"/>
 
-                            <p>Created By:  <span t-esc="user.name"/></p>
+                        <p>Created By:  <span t-esc="o.user_id.name"/></p>
 
 
 
