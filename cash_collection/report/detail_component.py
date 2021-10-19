@@ -120,6 +120,8 @@ class detail_collcetion_details(report_sxw.rml_parse):
         for items in self.cr.fetchall():
             admission_query.append(items)
         result_dict['admission_query']=admission_query
+        # import pdb
+        # pdb.set_trace()
 
 
         self.cr.execute(admission_income % (end_date,st_dat))
