@@ -115,6 +115,11 @@
                                                 <td><span t-esc="move_a[4]"/></td>
 
                                             </tr>
+
+
+
+
+
                                             </table>
                         <table class="table table-condensed">
                                                 <thead>
