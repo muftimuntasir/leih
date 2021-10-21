@@ -45,10 +45,12 @@ class bill_register(osv.osv):
         'date':fields.date("Date", readonly=True,default=lambda self: fields.datetime.now()),
         'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
         'opd_ticket_line_id': fields.one2many('opd.ticket.line', 'opd_ticket_id', 'Investigations',required=True),
+        'user_id': fields.many2one('res.users', 'Assigned to', select=True, track_visibility='onchange'),
         # 'total': fields.function(_totalpayable,string="Total",type='float',store=True),
         'total': fields.float(string="Total")
     }
     _defaults = {
+        'user_id': lambda obj, cr, uid, context: uid,
         # 'opd_ticket_line_id':[[0, False, {'department': 'Medicine', 'price': 100, 'name': 1, 'total_amount': 100}]],
     }
 

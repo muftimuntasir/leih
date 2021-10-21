@@ -62,11 +62,14 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-xs-8">
+                                    <div class="col-xs-5">
                                         <span t-esc="o.opd_ticket_line_id.name.name"/>
                                     </div>
-                                            <div class="col-xs-4">
-                                        Mobile No: <span t-esc="o.mobile"/>
+                                            <div class="col-xs-3" align="left">
+                                        Mob: <span t-esc="o.mobile"/>
+                                    </div>
+                                    <div class="col-xs-4" align="left">
+                                        Created by: <span t-esc="o.user_id.name"/>
                                     </div>
                                 </div>
 
