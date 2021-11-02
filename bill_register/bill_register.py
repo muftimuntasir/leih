@@ -399,7 +399,7 @@ class bill_register(osv.osv):
         if context is None:
             context = {}
 
-        child_ids =["MRI",'X-Ray','Radiology & Imaging','Pathology','Bio-Chemistry','Haematology','Serology','Micro-Biology','CT Scan','USG','Diagnostic','X-Ray','Echocardiogram','Hormone']
+        child_ids =["MRI",'X-Ray','Radiology & Imaging','Pathology','Bio-Chemistry','Haematology','Serology','Micro-Biology','CT Scan','USG','Diagnostic','X-Ray','Echocardiogram','Hormone','Immunology']
 
         ### Check Diagonostice Items available or not. If avvailable then no ther component will be there
 
