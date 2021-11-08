@@ -129,6 +129,7 @@ membership products (schemes).
         'inventory/inventory_product_entry_confirmed_view.xml',
         'inventory/inventory_product_entry_verified_view.xml',
         'advance_cash/advance_cash_view.xml',
+        'bill_register/bill_register_line_view.xml',
 
 
 
