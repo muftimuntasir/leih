@@ -49,7 +49,7 @@ class bill_register_payment(osv.osv):
     _columns = {
         'name':fields.char("Cash Collection ID", readonly=True),
         'bill_id': fields.many2one('bill.register', 'Bill ID', readoly=True),
-        'date': fields.date('Date'),
+        'date': fields.date('Date',required=True),
         'amount': fields.float('Receive Amount', required=True),
         'type': fields.selection([('bank','Bank'),('cash','Cash')],'Type', required=True),
         'card_no':fields.char('Card No.'),
