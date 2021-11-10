@@ -51,7 +51,7 @@ class bill_register_payment(osv.osv):
         'bill_id': fields.many2one('bill.register', 'Bill ID', readoly=True),
         'date': fields.date('Date',required=True),
         'amount': fields.float('Receive Amount', required=True),
-        'type': fields.selection([('bank','Bank'),('cash','Cash')],'Type', required=True),
+        'type': fields.selection([('bank','Bank'),('cash','Cash')],'Type'),
         'card_no':fields.char('Card No.'),
         'bank_name':fields.char('Bank Name'),
         'money_receipt_id': fields.many2one('leih.money.receipt', 'Money Receipt ID'),
