@@ -65,14 +65,14 @@
                                 </tree>
                             </field>
                           </page>
-                        <page string="Journal Relations">
-                            <field name="bill_journal_relation_id" mode="tree">
-                                <tree string="Journal Relations" editable="top">
-                                    <field name="bill_journal_relation_id"/>
-                                    <field name="journal_id"/>
-                                </tree>
-                            </field>
-                        </page>
+<!--                        <page string="Journal Relations">-->
+<!--                            <field name="bill_journal_relation_id" mode="tree">-->
+<!--                                <tree string="Journal Relations" editable="top">-->
+<!--                                    <field name="bill_journal_relation_id"/>-->
+<!--                                    <field name="journal_id"/>-->
+<!--                                </tree>-->
+<!--                            </field>-->
+<!--                        </page>-->
 
                     </notebook>
 

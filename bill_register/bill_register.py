@@ -75,7 +75,7 @@ class bill_register(osv.osv):
         'delivery_date': fields.function(_delivery_dates,string="Delivery Date",type='date',store=True),
         'bill_register_line_id': fields.one2many('bill.register.line', 'bill_register_id', 'Item Entry',required=True),
         'bill_register_payment_line_id': fields.one2many("bill.register.payment.line", "bill_register_payment_line_id","Bill Register Payment"),
-        'bill_journal_relation_id': fields.one2many("bill.journal.relation", "bill_journal_relation_id","Journal"),
+        # 'bill_journal_relation_id': fields.one2many("bill.journal.relation", "bill_journal_relation_id","Journal"),
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
         # 'relation': fields.many2one("leih.investigation"),
         # 'total': fields.float(_totalpayable,string="Total",type='float',store=True),
