@@ -75,6 +75,7 @@ class bill_register(osv.osv):
         'delivery_date': fields.function(_delivery_dates,string="Delivery Date",type='date',store=True),
         'bill_register_line_id': fields.one2many('bill.register.line', 'bill_register_id', 'Item Entry',required=True),
         'bill_register_payment_line_id': fields.one2many("bill.register.payment.line", "bill_register_payment_line_id","Bill Register Payment"),
+        'bill_journal_relation_id': fields.one2many("bill.journal.relation", "bill_journal_relation_id","Journal"),
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
         # 'relation': fields.many2one("leih.investigation"),
         # 'total': fields.float(_totalpayable,string="Total",type='float',store=True),
@@ -93,7 +94,8 @@ class bill_register(osv.osv):
         'user_id': fields.many2one('res.users', 'Assigned to', select=True, track_visibility='onchange'),
         'state': fields.selection(
             [('pending', 'Pending'), ('confirmed', 'Confirmed'), ('cancelled', 'Cancelled')],
-            'Status', default='pending', readonly=True)
+            'Status', default='pending', readonly=True),
+        'old_journal': fields.boolean("Old Journal")
     }
     _defaults = {
         'diagonostic_bill': False,
@@ -134,6 +136,8 @@ class bill_register(osv.osv):
         if stored_obj.state == 'confirmed':
             raise osv.except_osv(_('Warning!'),
                                  _('Already this Bill is Confirmed.'))
+
+        #this section is used to minimum payment for bill 35%
         grand_total=stored_obj.grand_total
         paid_amount=stored_obj.paid
         if grand_total!=0:
@@ -235,6 +239,8 @@ class bill_register(osv.osv):
 
             # import pdb
             # pdb.set_trace()
+
+            has_been_paid = 0
             if stored_obj.paid !=False:
                 for bills_vals in stored_obj:
                     # import pdb
@@ -248,8 +254,10 @@ class bill_register(osv.osv):
                         'bill_total_amount': stored_obj.total,
                         'due_amount': stored_obj.due,
                     }
+                    has_been_paid = stored_obj.paid
                 mr_obj = self.pool.get('leih.money.receipt')
                 mr_id = mr_obj.create(cr, uid, mr_value, context=context)
+
                 if mr_id is not None:
                     mr_name = 'MR#' + str(mr_id)
                     cr.execute('update leih_money_receipt set name=%s,diagonostic_bill=%s where id=%s', (mr_name,diagonostic_bill, mr_id))
@@ -261,6 +269,101 @@ class bill_register(osv.osv):
                 #         cr.commit()
                 #     except:
                 #         pass
+
+
+
+                ### Journal ENtry will be here
+
+                # line_ids = []
+                #
+                # if context is None: context = {}
+                # if context.get('period_id', False):
+                #     return context.get('period_id')
+                # periods = self.pool.get('account.period').find(cr, uid, context=context)
+                # period_id = periods and periods[0] or False
+                # ar_amount = stored_obj.due
+                #
+                # if ar_amount > 0:
+                #     line_ids.append((0, 0, {
+                #         'analytic_account_id': False,
+                #         'tax_code_id': False,
+                #         'tax_amount': 0,
+                #         'name': stored_obj.name,
+                #         'currency_id': False,
+                #         'credit': 0,
+                #         'date_maturity': False,
+                #         'account_id': 6010, ### Accounts Receivable ID
+                #         'debit': ar_amount,
+                #         'amount_currency': 0,
+                #         'partner_id': False,
+                #     }))
+                #
+                # if has_been_paid > 0:
+                #     line_ids.append((0, 0, {
+                #         'analytic_account_id': False,
+                #         'tax_code_id': False,
+                #         'tax_amount': 0,
+                #         'name': stored_obj.name,
+                #         'currency_id': False,
+                #         'credit': 0,
+                #         'date_maturity': False,
+                #         'account_id': 6,  ### Cash ID
+                #         'debit': has_been_paid,
+                #         'amount_currency': 0,
+                #         'partner_id': False,
+                #     }))
+                #
+                # for cc_obj in stored_obj.bill_register_line_id:
+                #     ledger_id=611
+                #     try:
+                #         ledger_id = cc_obj.name.accounts_id.id
+                #     except:
+                #         ledger_id= 611 ## Diagnostic Income Head , If we don't assign any Ledger
+                #
+                #
+                #
+                #     if context is None:
+                #         context = {}
+                #
+                #     line_ids.append((0, 0, {
+                #         'analytic_account_id': False,
+                #         'tax_code_id': False,
+                #         'tax_amount': 0,
+                #         'name': cc_obj.name.name,
+                #         'currency_id': False,
+                #         'account_id': cc_obj.name.accounts_id.id,
+                #         'credit': cc_obj.total_amount,
+                #         'date_maturity': False,
+                #         'debit': 0,
+                #         'amount_currency': 0,
+                #         'partner_id': False,
+                #     }))
+                #
+                #
+                #
+                #
+                # jv_entry = self.pool.get('account.move')
+                #
+                # j_vals = {'name': '/',
+                #           'journal_id': 2,  ## Sales Journal
+                #           'date': fields.date.today(),
+                #           'period_id': period_id,
+                #           'ref': stored_obj.name,
+                #           'line_id': line_ids
+                #
+                #           }
+                #
+                # saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
+                # # import pdb
+                # # pdb.set_trace()
+                # if saved_jv_id > 0:
+                #     journal_id = saved_jv_id
+                # jv_entry.button_validate(cr, uid, [saved_jv_id], context)
+
+
+
+
+                ### Ends the journal Entry Here
 
 
             return self.pool['report'].get_action(cr, uid, ids, 'leih.report_bill_register', context=context)
@@ -393,7 +496,7 @@ class bill_register(osv.osv):
         }
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
 
-  
+
     def create(self, cr, uid, vals, context=None):
 
         if context is None:
@@ -458,8 +561,8 @@ class bill_register(osv.osv):
         after_dis = (sumalltest* (self.doctors_discounts/100))
         self.after_discount = 0
 
-        self.grand_total=sumalltest -  self.other_discount
-        self.due=sumalltest - self.other_discount- self.paid
+        self.grand_total=sumalltest
+        self.due=sumalltest- self.paid
         self.total_without_discount=total_without_discount
         # import pdb
         # pdb.set_trace()
@@ -476,25 +579,67 @@ class bill_register(osv.osv):
 
     @api.onchange('doctors_discounts')
     def onchange_doc_discount(self):
-
-        result = {}
         discount = self.doctors_discounts
 
         for item in self.bill_register_line_id:
-            dis_amount = round(item.price - (item.price * discount / 100))
-            item.discount =discount
-            item.discount_amount =round((item.price * discount / 100))
-            item.total_amount =dis_amount
+            item.discount_percent=round((item.price*discount)/100)
+            item.discount=discount
+            item.total_discount = item.flat_discount + item.discount_percent
+            item.total_amount = item.price - item.total_discount
 
 
-
+            # if item.discount>0:
+            #     dis = round(item.price * discount / 100)
+            #     dis_amount=round(item.price-dis)
+            #     item.discount=discount
+            #     item.total_discount=item.price-item.total_amount
+            #     item.total_amount=dis_amount
+            #
+            # elif item.flat_discount>0 or item.discount<=0:
+            #     dis = round(item.total_amount * discount / 100)
+            #     dis_amount = round(item.total_amount - dis)
+            #     item.discount = discount
+            #     item.total_discount = item.price-item.total_amount
+            #     item.total_amount = dis_amount
         return "X"
 
     @api.onchange('other_discount')
     def onchange_other_discount(self):
-        self.grand_total = self.total - self.other_discount
-        self.due=self.total - self.other_discount- self.paid
-        return 'True'
+        other_discount = self.other_discount
+        total=self.total_without_discount
+        if total>0:
+            discount_distribution=other_discount/total
+            for item in self.bill_register_line_id:
+                item.flat_discount=0
+                item.flat_discount=round(item.price*discount_distribution)
+                item.total_discount=item.flat_discount+item.discount_percent
+                item.total_amount=item.price-item.total_discount
+
+
+
+
+
+
+
+
+
+
+            # discount_dec=other_discount/total
+            # discount_figure=1-discount_dec
+            #
+            # for item in self.bill_register_line_id:
+            #     dis_amount = round(item.price*discount_figure)
+            #     item.flat_discount =round((item.price-dis_amount))
+            #     item.total_discount = round(item.flat_discount+item.discount)
+            #     item.total_amount =dis_amount
+
+        #
+        #
+        #
+        #
+        # self.grand_total = self.total - self.other_discount
+        # self.due=self.total - self.other_discount- self.paid
+        return 'Y'
 
 
 
@@ -534,7 +679,9 @@ class test_information(osv.osv):
         # 'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
         'price': fields.integer("Price"),
         'discount': fields.integer("Discount (%)"),
-        'discount_amount': fields.integer("Discount Amount"),
+        'flat_discount': fields.integer("Flat Discount"),
+        'total_discount': fields.integer("Total Discount"),
+        'discount_percent':fields.integer("Discount Percent"),
         'total_amount': fields.integer("Total Amount"),
         'assign_doctors': fields.many2one('doctors.profile', 'Doctor'),
         'commission_paid': fields.boolean("Commission Paid"),
@@ -562,7 +709,7 @@ class test_information(osv.osv):
 
         dis_amount = round(price-(price* discount/100))
 
-        abc = {'total_amount':dis_amount, 'discount_amount':dis_amount}
+        abc = {'total_amount':dis_amount, 'total_discount':dis_amount}
         tests['value'] = abc
 
         return tests
@@ -598,6 +745,14 @@ class admission_payment_line(osv.osv):
         'money_receipt_id': fields.many2one('leih.money.receipt', 'Money Receipt ID'),
 
     }
+
+    class bill_journal_relations(osv.osv):
+        _name = 'bill.journal.relation'
+
+        _columns = {
+            'bill_journal_relation_id': fields.many2one('bill.register', 'bill register payment'),
+            'journal_id': fields.many2one('account.move',"Journal Id")
+        }
 
 
 

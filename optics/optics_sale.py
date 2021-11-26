@@ -215,6 +215,89 @@ class optics_sale(osv.osv):
             ### Ends Here
             cr.execute("update optics_sale set state='confirmed' where id=%s", (ids))
             cr.commit()
+
+            ###journal entry start
+            # line_ids = []
+            #
+            # if context is None: context = {}
+            # if context.get('period_id', False):
+            #     return context.get('period_id')
+            # periods = self.pool.get('account.period').find(cr, uid, context=context)
+            # period_id = periods and periods[0] or False
+            # ar_amount = stored_obj.due
+            # has_been_paid=stored_obj.paid
+            #
+            # if ar_amount > 0:
+            #     line_ids.append((0, 0, {
+            #         'analytic_account_id': False,
+            #         'tax_code_id': False,
+            #         'tax_amount': 0,
+            #         'name': stored_obj.name,
+            #         'currency_id': False,
+            #         'credit': 0,
+            #         'date_maturity': False,
+            #         'account_id': 6010,  ### Accounts Receivable ID
+            #         'debit': ar_amount,
+            #         'amount_currency': 0,
+            #         'partner_id': False,
+            #     }))
+            #
+            # if has_been_paid > 0:
+            #     line_ids.append((0, 0, {
+            #         'analytic_account_id': False,
+            #         'tax_code_id': False,
+            #         'tax_amount': 0,
+            #         'name': stored_obj.name,
+            #         'currency_id': False,
+            #         'credit': 0,
+            #         'date_maturity': False,
+            #         'account_id': 6,  ### Cash ID
+            #         'debit': has_been_paid,
+            #         'amount_currency': 0,
+            #         'partner_id': False,
+            #     }))
+            #
+            #     if context is None:
+            #         context = {}
+            #
+            # if stored_obj.total:
+            #     line_ids.append((0, 0, {
+            #         'analytic_account_id': False,
+            #         'tax_code_id': False,
+            #         'tax_amount': 0,
+            #         'name': stored_obj.name,
+            #         'currency_id': False,
+            #         'account_id': 867,
+            #         'credit': stored_obj.total,
+            #         'date_maturity': False,
+            #         'debit': 0,
+            #         'amount_currency': 0,
+            #         'partner_id': False,
+            #     }))
+            #
+            # jv_entry = self.pool.get('account.move')
+            #
+            # j_vals = {'name': '/',
+            #           'journal_id': 2,  ## Sales Journal
+            #           'date': fields.date.today(),
+            #           'period_id': period_id,
+            #           'ref': stored_obj.name,
+            #           'line_id': line_ids
+            #
+            #           }
+            #
+            # saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
+            # # import pdb
+            # # pdb.set_trace()
+            # if saved_jv_id > 0:
+            #     journal_id = saved_jv_id
+            # jv_entry.button_validate(cr, uid, [saved_jv_id], context)
+
+
+
+            ###end journal entry
+
+
         else:
             raise osv.except_osv(_('Warning!'),
                                  _('Minimum Payment is Required'))

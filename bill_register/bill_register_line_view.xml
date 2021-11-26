@@ -17,7 +17,7 @@
                                     <field name="department"/>
                                     <field name="price"/>
                                     <field name="discount"/>
-                                    <field name="discount_amount"/>
+                                    <field name="total_discount"/>
                                     <field name="total_amount"/>
                                     <field name="assign_doctors"/>
 
@@ -60,7 +60,7 @@
                                     <field name="department"/>
                                     <field name="price"/>
                                     <field name="discount"/>
-                                    <field name="discount_amount"/>
+                                    <field name="total_discount"/>
                                     <field name="total_amount"/>
 
 

@@ -42,16 +42,19 @@
                                 <tree string="Select Referance Value" editable="bottom">
 
                                     <field name="name" on_change="onchange_test(name, context)"/>
-                                    <field name="price"/>
                                     <field name="department"/>
+                                    <field name="price"/>
                                     <field name="discount" on_change="onchange_discount(name,discount,context)"/>
+                                    <field name="discount_percent"/>
+                                    <field name="flat_discount"/>
+                                    <field name="total_discount"/>
                                     <field name="total_amount"/>
 
                                 </tree>
                             </field>
                           </page>
 
-                                                <page string="Guarantor">
+                        <page string="Guarantor">
                             <field name="guarantor_line_id" mode="tree">
                                 <tree string="Select Referance Value" editable="top">
 
@@ -64,7 +67,6 @@
                         <page string="Payment Info">
                             <field name="admission_payment_line_id" mode="tree">
                                 <tree string="Select Referance Value" editable="top">
-
                                     <field name="date"/>
                                     <field name="amount"/>
                                     <field name="type"/>
@@ -76,27 +78,25 @@
 
                     </notebook>
 
-                            <field name="bill_register_admission_line_id" mode="tree">
-                                <tree string="Select Referance Value" editable="top">
+<!--                            <field name="bill_register_admission_line_id" mode="tree">-->
+<!--                                <tree string="Select Referance Value" editable="top">-->
 
-                                    <field name="bill_id" on_change="onchange_bill_id(bill_id,context)"/>
-                                    <field name="total"/>
+<!--                                    <field name="bill_id" on_change="onchange_bill_id(bill_id,context)"/>-->
+<!--                                    <field name="total"/>-->
 
-                                </tree>
-                            </field>
+<!--                                </tree>-->
+<!--                            </field>-->
 
                     <group>
-                                <field name="total"/>
-                                <field name="doctors_discounts"/>
-                                <field name="after_discount"/>
-                                <field name="other_discount"/>
-                                <field name="grand_total"/>
-                                <field name="type"/>
-                                <field name="card_no"/>
-                                <field name="bank_name"/>
-                                <field name="paid"/>
-                                <field name="due"/>
-                            </group>
+
+                         <field name="total_without_discount"/>
+                        <field name="doctors_discounts"/>
+                        <field name="other_discount"/>
+                        <field name="total"/>
+                        <field name="grand_total"/>
+                        <field name="paid"/>
+                        <field name="due"/>
+                    </group>
                 </sheet>
             </form>
 

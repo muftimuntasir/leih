@@ -15,6 +15,7 @@ class bill_register_payment(osv.osv):
 
         payment_obj=self.browse(cr,uid,ids,context=None)
         bill_id=payment_obj.bill_id.id
+        bill_register_id=payment_obj.bill_id.name
         eve_mee_obj = self.pool.get('bill.register.payment.line')
         pay_date=payment_obj.date
         pay_amount = payment_obj.amount
@@ -30,18 +31,83 @@ class bill_register_payment(osv.osv):
         if updated_amount <0:
             updated_amount=0
 
-
-
-
-
-
-
         service_dict={'date': pay_date,'amount':pay_amount,'type': pay_type,'card_no':pay_card ,'bill_register_payment_line_id': bill_id,'money_receipt_id':money_receipt_id}
 
         service_id = eve_mee_obj.create(cr, uid, vals=service_dict, context=context)
 
         cr.execute("update bill_register set due=%s,paid=%s where id=%s", (updated_amount,updated_paid,bill_id))
         cr.commit()
+        # ###journal_entry
+        # line_ids = []
+        #
+        # if context is None: context = {}
+        # if context.get('period_id', False):
+        #     return context.get('period_id')
+        # periods = self.pool.get('account.period').find(cr, uid, context=context)
+        # period_id = periods and periods[0] or False
+        #
+        # if current_paid > 0:
+        #
+        #     line_ids.append((0, 0, {
+        #         'analytic_account_id': False,
+        #         'tax_code_id': False,
+        #         'tax_amount': 0,
+        #         'name': bill_register_id,
+        #         'currency_id': False,
+        #         'credit': 0,
+        #         'date_maturity': False,
+        #         'account_id': 6,  ### Cash ID
+        #         'debit': current_paid,
+        #         'amount_currency': 0,
+        #         'partner_id': False,
+        #     }))
+        #     if context is None:
+        #         context = {}
+        #
+        #     line_ids.append((0, 0, {
+        #         'analytic_account_id': False,
+        #         'tax_code_id': False,
+        #         'tax_amount': 0,
+        #         'name': bill_register_id,
+        #         'currency_id': False,
+        #         'credit': current_paid,
+        #         'date_maturity': False,
+        #         'account_id': 6010,  ### Accounts Receivable ID
+        #         'debit': 0,
+        #         'amount_currency': 0,
+        #         'partner_id': False,
+        #     }))
+        #
+        #
+        #
+        #
+        #
+        #
+        # jv_entry = self.pool.get('account.move')
+        #
+        # j_vals = {'name': '/',
+        #           'journal_id': 8,  ## Sales Journal
+        #           'date': fields.date.today(),
+        #           'period_id': period_id,
+        #           'ref': bill_register_id,
+        #           'line_id': line_ids
+        #
+        #           }
+        #
+        # # import pdb
+        # # pdb.set_trace()
+        # saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
+        #
+        # if saved_jv_id > 0:
+        #     journal_id = saved_jv_id
+        # jv_entry.button_validate(cr, uid, [saved_jv_id], context)
+
+
+        ###end journal
+
+
+
+
 
 
         return service_id

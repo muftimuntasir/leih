@@ -19,14 +19,12 @@
                         <field name="sample_req"/>
                         <field name="individual"/>
                         <field name="manual" on_change="onchange_manual(manual)"/>
-
                         <field name="merge"/>
                         <field name="dependency"/>
                         <field name="lab_not_required"/>
                         <field name="indoor"/>
                         <field name="sample_type"/>
-
-
+                        <field name="accounts_id"/>
 
 
                     </group>

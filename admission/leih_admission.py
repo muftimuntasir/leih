@@ -51,6 +51,7 @@ class leih_admission(osv.osv):
         'bill_register_admission_line_id': fields.one2many("bill.register.admission.line","admission_line_id","Bill Register"),
         'admission_payment_line_id': fields.one2many("admission.payment.line","admission_payment_line_id","Admission Payment"),
         'emergency':fields.boolean("Emergency Department"),
+        'total_without_discount': fields.float(string="Total without discount"),
         'total': fields.float(string="Total"),
         'doctors_discounts': fields.float("Discount(%)"),
         'after_discount': fields.float("Discount Amount"),
@@ -69,6 +70,7 @@ class leih_admission(osv.osv):
             'Status',default='pending', readonly=True,
         ),
         'emergency_covert_time':fields.datetime("Admission Convert time"),
+        'old_journal':fields.boolean("Old Journal")
     }
 
     _defaults = {
@@ -147,7 +149,6 @@ class leih_admission(osv.osv):
 
 
     def change_status(self, cr, uid, ids, context=None):
-        values = {}
         stored_obj = self.browse(cr, uid, [ids[0]], context=context)
         ## Bill Status Will Change
 
@@ -233,9 +234,8 @@ class leih_admission(osv.osv):
                     cr.execute('update diagnosis_sticker set name=%s where id=%s', (sample_text, sample_id))
                     cr.commit()
 
+        has_been_paid = 0
         if stored_obj.paid != False:
-
-
             ad_vals = {
                 'date':stored_obj.date,
                 'admission_id':stored_obj.id,
@@ -245,12 +245,101 @@ class leih_admission(osv.osv):
                 'bill_total_amount': stored_obj.total,
                 'due_amount': stored_obj.due,
             }
+            has_been_paid = stored_obj.paid
             mr_obj = self.pool.get('leih.money.receipt')
             mr_id = mr_obj.create(cr, uid, ad_vals, context=context)
             if mr_id is not None:
                 mr_name = 'MR#' + str(mr_id)
                 cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
                 cr.commit()
+            ### Journal ENtry will be here
+            # line_ids = []
+            #
+            # if context is None: context = {}
+            # if context.get('period_id', False):
+            #     return context.get('period_id')
+            # periods = self.pool.get('account.period').find(cr, uid, context=context)
+            # period_id = periods and periods[0] or False
+            #
+            # ar_amount = stored_obj.due
+            #
+            # if ar_amount > 0:
+            #     line_ids.append((0, 0, {
+            #         'analytic_account_id': False,
+            #         'tax_code_id': False,
+            #         'tax_amount': 0,
+            #         'name': stored_obj.name,
+            #         'currency_id': False,
+            #         'credit': 0,
+            #         'date_maturity': False,
+            #         'account_id': 6010,  ### Accounts Receivable ID
+            #         'debit': ar_amount,
+            #         'amount_currency': 0,
+            #         'partner_id': False,
+            #     }))
+            #
+            # if has_been_paid > 0:
+            #     line_ids.append((0, 0, {
+            #         'analytic_account_id': False,
+            #         'tax_code_id': False,
+            #         'tax_amount': 0,
+            #         'name': stored_obj.name,
+            #         'currency_id': False,
+            #         'credit': 0,
+            #         'date_maturity': False,
+            #         'account_id': 6,  ### Cash ID
+            #         'debit': has_been_paid,
+            #         'amount_currency': 0,
+            #         'partner_id': False,
+            #     }))
+            #
+            # for cc_obj in stored_obj.leih_admission_line_id:
+            #     ledger_id = 611
+            #     try:
+            #         ledger_id = cc_obj.name.accounts_id.id
+            #     except:
+            #         ledger_id = 611  ## Diagnostic Income Head , If we don't assign any Ledger
+            #
+            #     if context is None:
+            #         context = {}
+            #
+            #     line_ids.append((0, 0, {
+            #         'analytic_account_id': False,
+            #         'tax_code_id': False,
+            #         'tax_amount': 0,
+            #         'name': cc_obj.name.name,
+            #         'currency_id': False,
+            #         'account_id': cc_obj.name.accounts_id.id,
+            #         'credit': cc_obj.total_amount,
+            #         'date_maturity': False,
+            #         'debit': 0,
+            #         'amount_currency': 0,
+            #         'partner_id': False,
+            #     }))
+            #
+            # jv_entry = self.pool.get('account.move')
+            #
+            # j_vals = {'name': '/',
+            #           'journal_id': 2,  ## Sales Journal
+            #           'date': fields.date.today(),
+            #           'period_id': period_id,
+            #           'ref': stored_obj.name,
+            #           'line_id': line_ids
+            #
+            #           }
+            # # import pdb
+            # # pdb.set_trace()
+            #
+            # saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
+            # if saved_jv_id > 0:
+            #     journal_id = saved_jv_id
+            # jv_entry.button_validate(cr, uid, [saved_jv_id], context)
+
+
+            ###close here
+
+
+
         return self.pool['report'].get_action(cr, uid, ids, 'leih.report_admission', context=context)
 
 
@@ -433,14 +522,18 @@ class leih_admission(osv.osv):
     @api.onchange('leih_admission_line_id')
     def onchange_admission_line(self):
         sumalltest=0
+        total_without_discount = 0
         for item in self.leih_admission_line_id:
             sumalltest=sumalltest+item.total_amount
+            total_without_discount = total_without_discount + item.price
 
         self.total=sumalltest
         after_dis = (sumalltest* (self.doctors_discounts/100))
-        self.after_discount = after_dis
-        self.grand_total=sumalltest -  self.other_discount - after_dis
-        self.due=sumalltest - after_dis -  self.other_discount- self.paid
+        self.after_discount = 0
+
+        self.grand_total = sumalltest
+        self.due = sumalltest - self.paid
+        self.total_without_discount = total_without_discount
 
         return "X"
 
@@ -451,18 +544,42 @@ class leih_admission(osv.osv):
 
     @api.onchange('doctors_discounts')
     def onchange_doc_discount(self):
-        aft_discount=(self.total*(self.doctors_discounts/100))
-        self.after_discount=aft_discount
-        self.grand_total = self.total - aft_discount - self.other_discount
-        self.due=self.total - aft_discount - self.other_discount- self.paid
+        discount = self.doctors_discounts
+
+
+        for item in self.leih_admission_line_id:
+            item.discount_percent=round((item.price*discount)/100)
+            item.discount=discount
+            item.total_discount = item.flat_discount + item.discount_percent
+            item.total_amount = item.price - item.total_discount
+
+
+        #
+        # aft_discount=(self.total*(self.doctors_discounts/100))
+        # self.after_discount=aft_discount
+        # self.grand_total = self.total - aft_discount - self.other_discount
+        # self.due=self.total - aft_discount - self.other_discount- self.paid
 
         return "X"
 
     @api.onchange('other_discount')
     def onchange_other_discount(self):
-        self.grand_total = self.total - self.after_discount - self.other_discount
-        self.due=self.total - self.after_discount - self.other_discount- self.paid
-        return 'True'
+        other_discount = self.other_discount
+        total = self.total_without_discount
+        if total > 0:
+            discount_distribution = other_discount / total
+            for item in self.leih_admission_line_id:
+                item.flat_discount = 0
+                item.flat_discount = round(item.price * discount_distribution)
+                item.total_discount = item.flat_discount + item.discount_percent
+                item.total_amount = item.price - item.total_discount
+        return 'Nothing'
+
+
+
+        # self.grand_total = self.total - self.after_discount - self.other_discount
+        # self.due=self.total - self.after_discount - self.other_discount- self.paid
+        # return 'True'
 
 
 
@@ -499,6 +616,9 @@ class test_information(osv.osv):
         # 'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
         'price': fields.float("Price"),
         'discount': fields.float("Discount"),
+        'flat_discount': fields.integer("Flat Discount"),
+        'total_discount': fields.integer("Total Discount"),
+        'discount_percent': fields.integer("Discount Percent"),
         'total_amount': fields.float("Total Amount")
 
     }

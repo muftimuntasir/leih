@@ -28,6 +28,7 @@ class examination_entry(osv.osv):
         'lab_not_required': fields.boolean("No Lab Required"),
         'indoor': fields.boolean("Indoor Item"),
         'sample_type':fields.many2one('sample.type','Sample Type'),
+        'accounts_id':fields.many2one('account.account',"Account ID"),
         'examination_entry_line':fields.one2many('examination.entry.line','examinationentry_id','Parameters'),
         'merge_ids':fields.one2many('examination.merge.line','merge_id','Merge IDs'),
 

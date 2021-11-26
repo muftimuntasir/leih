@@ -15,6 +15,7 @@ class optics_sale_payment(osv.osv):
 
         payment_obj=self.browse(cr,uid,ids,context=None)
         optics_sale_id=payment_obj.optics_sale_id.id
+        optics_sale_name=payment_obj.optics_sale_id.name
         eve_mee_obj = self.pool.get('optics.sale.payment.line')
         pay_date=payment_obj.date
         pay_amount = payment_obj.amount
@@ -24,14 +25,76 @@ class optics_sale_payment(osv.osv):
         current_due =payment_obj.optics_sale_id.due
         current_paid =payment_obj.optics_sale_id.paid
         money_receipt_id =payment_obj.money_receipt_id.id
+        paid=payment_obj.amount
+
 
         updated_amount = current_due-pay_amount
         updated_paid = current_paid+pay_amount
         if updated_amount <0:
             updated_amount=0
+        #
+        # import pdb
+        # pdb.set_trace()
 
-
-
+            ###journal_entry
+        # line_ids = []
+        #
+        # if context is None: context = {}
+        # if context.get('period_id', False):
+        #     return context.get('period_id')
+        # periods = self.pool.get('account.period').find(cr, uid, context=context)
+        # period_id = periods and periods[0] or False
+        #
+        # if current_paid > 0:
+        #
+        #     line_ids.append((0, 0, {
+        #         'analytic_account_id': False,
+        #         'tax_code_id': False,
+        #         'tax_amount': 0,
+        #         'name': optics_sale_name,
+        #         'currency_id': False,
+        #         'credit': 0,
+        #         'date_maturity': False,
+        #         'account_id': 6,  ### Cash ID
+        #         'debit': paid,
+        #         'amount_currency': 0,
+        #         'partner_id': False,
+        #     }))
+        #     if context is None:
+        #         context = {}
+        #
+        #     line_ids.append((0, 0, {
+        #         'analytic_account_id': False,
+        #         'tax_code_id': False,
+        #         'tax_amount': 0,
+        #         'name': optics_sale_name,
+        #         'currency_id': False,
+        #         'credit': paid,
+        #         'date_maturity': False,
+        #         'account_id': 6010,  ### Accounts Receivable ID
+        #         'debit': 0,
+        #         'amount_currency': 0,
+        #         'partner_id': False,
+        #     }))
+        #
+        # jv_entry = self.pool.get('account.move')
+        #
+        # j_vals = {'name': '/',
+        #           'journal_id': 8,  ## Sales Journal
+        #           'date': fields.date.today(),
+        #           'period_id': period_id,
+        #           'ref': optics_sale_name,
+        #           'line_id': line_ids
+        #
+        #           }
+        #
+        # # import pdb
+        # # pdb.set_trace()
+        # saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
+        #
+        # if saved_jv_id > 0:
+        #     journal_id = saved_jv_id
+        # jv_entry.button_validate(cr, uid, [saved_jv_id], context)
 
 
 
