@@ -15,7 +15,7 @@ class admission_payment(osv.osv):
 
         payment_obj=self.browse(cr,uid,ids,context=None)
         admission_id=payment_obj.admission_id.id
-        admission_id=payment_obj.admission_id.name
+        # admission_id=payment_obj.admission_id.name
         eve_mee_obj = self.pool.get('admission.payment.line')
         pay_date=payment_obj.date
         pay_amount = payment_obj.amount
@@ -32,8 +32,8 @@ class admission_payment(osv.osv):
             updated_amount=0
 
         service_dict={'date': pay_date,'amount':pay_amount,'type': pay_type,'card_no':pay_card ,'admission_payment_line_id': admission_id,'money_receipt_id':money_receipt_id}
-
         service_id = eve_mee_obj.create(cr, uid, vals=service_dict, context=context)
+
         cr.execute("update leih_admission set due=%s,paid=%s where id=%s", (updated_amount, updated_paid, admission_id))
         cr.commit()
 
