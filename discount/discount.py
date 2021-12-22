@@ -27,69 +27,75 @@ class discount(osv.osv):
 
     def approve_discount(self,cr,uid,ids,context=None):
         discount_object = self.browse(cr, uid, ids, context=None)
-        bill_id=discount_object.bill_no.id
-        admission_id=discount_object.admission_id.id
-        total_discount=discount_object.total_discount
-        # import pdb
-        # pdb.set_trace()
+        if discount_object.state=='approve':
+            raise osv.except_osv(_('Warning!'),
+                                 _('Discount is already confirmed!'))
 
-        # confirm button code
-        if bill_id != False:
-            # fetching data from bill_register
-            query = "select grand_total,paid,due from bill_register where id=%s"
-            cr.execute(query, ([bill_id]))
-            all_data = cr.dictfetchall()
-            # grand_total = 0
-            # paid_amount = 0
-            # due_amount = 0
-            for item in all_data:
-                grand_total = item.get('grand_total')
-                paid_amount = item.get('paid')
-                due_amount = item.get('due')
-            if due_amount < total_discount:
-                raise osv.except_osv(_('Warning!'),
-                                     _('Not permissed to make discount more than due!'))
-            elif due_amount >= total_discount:
-                grand_total = grand_total - total_discount
-                due_amount = due_amount - total_discount
+        else:
+            bill_id=discount_object.bill_no.id
+            admission_id=discount_object.admission_id.id
+            total_discount=discount_object.total_discount
 
-            cr.execute('update bill_register set other_discount=%s,grand_total=%s,due=%s where id=%s',
-                       (total_discount, grand_total, due_amount, bill_id))
-            cr.commit()
+            # import pdb
+            # pdb.set_trace()
 
-        elif admission_id != False:
-            query = "select grand_total,paid,due from leih_admission where id=%s"
-            cr.execute(query, ([admission_id]))
-            all_data = cr.dictfetchall()
-            grand_total = 0
-            paid_amount = 0
-            due_amount = 0
-            for item in all_data:
-                grand_total = item.get('grand_total')
-                paid_amount = item.get('paid')
-                due_amount = item.get('due')
+            # confirm button code
+            if bill_id != False:
+                # fetching data from bill_register
+                query = "select grand_total,paid,due from bill_register where id=%s"
+                cr.execute(query, ([bill_id]))
+                all_data = cr.dictfetchall()
+                # grand_total = 0
+                # paid_amount = 0
+                # due_amount = 0
+                for item in all_data:
+                    grand_total = item.get('grand_total')
+                    paid_amount = item.get('paid')
+                    due_amount = item.get('due')
+                if due_amount < total_discount:
+                    raise osv.except_osv(_('Warning!'),
+                                         _('Not permissed to make discount more than due!'))
+                elif due_amount >= total_discount:
+                    grand_total = grand_total - total_discount
+                    due_amount = due_amount - total_discount
 
-            if due_amount < total_discount:
-                raise osv.except_osv(_('Warning!'),
-                                     _('Not permissed to make discount more than due!'))
-            elif due_amount >= total_discount:
-                grand_total = grand_total - total_discount
-                due_amount = due_amount - total_discount
-            cr.execute('update leih_admission set other_discount=%s,grand_total=%s,due=%s where id=%s',
-                       (total_discount, grand_total, due_amount, admission_id))
-            cr.commit()
+                cr.execute('update bill_register set other_discount=%s,grand_total=%s,due=%s where id=%s',
+                           (total_discount, grand_total, due_amount, bill_id))
+                cr.commit()
 
-        # end confirm button code
+            elif admission_id != False:
+                query = "select grand_total,paid,due from leih_admission where id=%s"
+                cr.execute(query, ([admission_id]))
+                all_data = cr.dictfetchall()
+                grand_total = 0
+                paid_amount = 0
+                due_amount = 0
+                for item in all_data:
+                    grand_total = item.get('grand_total')
+                    paid_amount = item.get('paid')
+                    due_amount = item.get('due')
+
+                if due_amount < total_discount:
+                    raise osv.except_osv(_('Warning!'),
+                                         _('Not permissed to make discount more than due!'))
+                elif due_amount >= total_discount:
+                    grand_total = grand_total - total_discount
+                    due_amount = due_amount - total_discount
+                cr.execute('update leih_admission set other_discount=%s,grand_total=%s,due=%s where id=%s',
+                           (total_discount, grand_total, due_amount, admission_id))
+                cr.commit()
+
+            # end confirm button code
 
 
-        if ids is not None:
-            cr.execute("update discount set state='approve' where id=%s", (ids))
-            cr.commit()
-        return True
-    def cancel_discount(self,cr,uid,ids,context=None):
-        if ids is not None:
-            cr.execute("update discount set state='cancel' where id=%s", (ids))
-            cr.commit()
+            if ids is not None:
+                cr.execute("update discount set state='approve' where id=%s", (ids))
+                cr.commit()
+            return True
+        def cancel_discount(self,cr,uid,ids,context=None):
+            if ids is not None:
+                cr.execute("update discount set state='cancel' where id=%s", (ids))
+                cr.commit()
         return True
 
 
