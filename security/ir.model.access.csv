@@ -17,6 +17,53 @@ access_billing_menu_bill_register_payment_line,bill.register.payment.line,model_
 
 
 
+
+
+
+
+
+access_billing_menu_bill_register_edit,bill.register,model_bill_register,group_billing_menu_bill_register_edit,1,1,1,1
+access_billing_menu_bill_register_line_edit,bill.register.line,model_bill_register_line,group_billing_menu_bill_register_edit,1,1,1,1
+access_billing_menu_bill_register_payment_line_edit,bill.register.payment.line,model_bill_register_payment_line,group_billing_menu_bill_register_edit,1,1,1,1
+access_billing_menu_bill_journal_relation_id_edit,bill.journal.relation,model_bill_journal_relation,group_billing_menu_bill_register_edit,1,1,1,1
+access_examination_entry_edit,examination.entry,model_examination_entry,group_billing_menu_bill_register_edit,1,1,1,1
+
+
+
+
+
+access_leih_admission_activated_edit,leih.admission,model_leih_admission,group_billing_menu_bill_register_edit,1,1,1,1
+access_leih_admission_line_activated_edit,leih.admission.line,model_leih_admission_line,group_billing_menu_bill_register_edit,1,1,1,1
+access_patient_guarantor_activated_edit,patient.guarantor,model_patient_guarantor,group_billing_menu_bill_register_edit,1,1,1,1
+access_admission_payment_line_activated_edit,admission.payment.line,model_admission_payment_line,group_billing_menu_bill_register_edit,1,1,1,1
+access_bill_register_admission_line_activated_edit,bill.register.admission.line,model_bill_register_admission_line,group_billing_menu_bill_register_edit,1,1,1,1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+access_billing_menu_bill_journal_relation_id,bill.journal.relation,model_bill_journal_relation,group_billing_menu_bill_register,1,1,1,1
+
 access_billing_menu_optics_sale,optics.sale,model_optics_sale,group_billing_menu_optics_sale,1,1,1,0
 access_billing_menu_optics_lens_sale_line_id,optics.lens.sale.line,model_optics_lens_sale_line,group_billing_menu_optics_sale,1,1,1,1
 access_billing_menu_optics_sale_payment_line_id,optics.sale.payment.line,model_optics_sale_payment_line,group_billing_menu_optics_sale,1,1,1,1
@@ -60,6 +107,12 @@ access_leih_admission_line_activated,leih.admission.line,model_leih_admission_li
 access_patient_guarantor_activated,patient.guarantor,model_patient_guarantor,group_admission_menu_activated,1,1,1,1
 access_admission_payment_line_activated,admission.payment.line,model_admission_payment_line,group_admission_menu_activated,1,1,1,1
 access_bill_register_admission_line_activated,bill.register.admission.line,model_bill_register_admission_line,group_admission_menu_activated,1,1,1,1
+
+
+
+
+
+
 
 access_leih_admission_released,leih.admission,model_leih_admission,group_admission_menu_released,1,0,1,0
 access_leih_admission_line_released,leih.admission.line,model_leih_admission_line,group_admission_menu_released,1,1,1,1
