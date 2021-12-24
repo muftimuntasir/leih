@@ -111,7 +111,15 @@ class detail_collcetion_details(report_sxw.rml_parse):
         self.cr.execute(others_income % (end_date,st_dat))
         other_incomes=[]
         for items in self.cr.fetchall():
-            other_incomes.append(items)
+            new_list=[]
+            for item in items:
+                if item==None:
+                    item=int(0)
+                    new_list.append(item)
+                else:
+                    item=item
+                    new_list.append(item)
+            other_incomes.append(new_list)
 
         result_dict['other_incomes']=other_incomes
 
@@ -127,7 +135,15 @@ class detail_collcetion_details(report_sxw.rml_parse):
         self.cr.execute(admission_income % (end_date,st_dat))
         admission_incomes=[]
         for items in self.cr.fetchall():
-            admission_incomes.append(items)
+            new_list=[]
+            for item in items:
+                if item==None:
+                    item=int(0)
+                    new_list.append(item)
+                else:
+                    item=item
+                    new_list.append(item)
+            admission_incomes.append(new_list)
         result_dict['admission_incomes']=admission_incomes
 
         # import pdb
