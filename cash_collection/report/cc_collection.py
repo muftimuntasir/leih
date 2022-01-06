@@ -12,80 +12,182 @@ class collcetion_details(report_sxw.rml_parse):
     def _get_user_names(self, t_dat=None, end_date=None):
         st_dat=t_dat
         end_date= end_date
+        user_id=self.uid
         result = []
+        if self.uid == 1:
 
-        bill_q = "select sum(amount) as totla_collection, create_uid from leih_money_receipt where bill_id is not Null " \
-                 "and state='confirm' and diagonostic_bill=TRUE and (create_date <= '%s') and (create_date >= '%s') group by create_uid"
-
-
-        bill_others = "select sum(amount) as totla_collection, create_uid from leih_money_receipt where bill_id is not Null " \
-                 "and state='confirm' and (diagonostic_bill=FALSE OR diagonostic_bill IS NULL) and (create_date <= '%s') and (create_date >= '%s') group by create_uid"
-
-        add_q= "select sum(amount) as totla_collection, create_uid from leih_money_receipt where admission_id is not Null" \
-               " and state='confirm' and (create_date <= '%s') and (create_date >= '%s') group by create_uid"
-
-        optic_q = "select sum(amount) as totla_collection, create_uid from leih_money_receipt where optics_sale_id is not Null" \
-                  " and state='confirm' and (create_date <= '%s') and (create_date >= '%s') group by create_uid"
+            bill_q = "select sum(amount) as totla_collection, create_uid from leih_money_receipt where bill_id is not Null " \
+                     "and state='confirm' and diagonostic_bill=TRUE and (create_date <= '%s') and (create_date >= '%s') group by create_uid"
 
 
-        ## It sis For BIll Data Collction
-        self.cr.execute(bill_q % (end_date,st_dat))
-        participant_ids = []
-        bill_info = {}
-        for items in self.cr.fetchall():
-            if items[1] is not participant_ids:
-                participant_ids.append(items[1])
-            bill_info[items[1]]=items[0]
+            bill_others = "select sum(amount) as totla_collection, create_uid from leih_money_receipt where bill_id is not Null " \
+                     "and state='confirm' and (diagonostic_bill=FALSE OR diagonostic_bill IS NULL) and (create_date <= '%s') and (create_date >= '%s') group by create_uid"
 
-        self.cr.execute(bill_others % (end_date,st_dat))
-        bill_other_info = {}
-        for items in self.cr.fetchall():
-            if items[1] is not participant_ids:
-                participant_ids.append(items[1])
-            bill_other_info[items[1]]=items[0]
+            add_q= "select sum(amount) as totla_collection, create_uid from leih_money_receipt where admission_id is not Null" \
+                   " and state='confirm' and (create_date <= '%s') and (create_date >= '%s') group by create_uid"
+
+            optic_q = "select sum(amount) as totla_collection, create_uid from leih_money_receipt where optics_sale_id is not Null" \
+                      " and state='confirm' and (create_date <= '%s') and (create_date >= '%s') group by create_uid"
+
+            self.cr.execute(bill_q % (end_date, st_dat))
+            participant_ids = []
+            bill_info = {}
+            for items in self.cr.fetchall():
+                if items[1] is not participant_ids:
+                    participant_ids.append(items[1])
+                bill_info[items[1]] = items[0]
+
+            self.cr.execute(bill_others % (end_date, st_dat))
+            bill_other_info = {}
+            for items in self.cr.fetchall():
+                if items[1] is not participant_ids:
+                    participant_ids.append(items[1])
+                bill_other_info[items[1]] = items[0]
+
+            ## Bill Collction Ends Here
+
+            ## It sis For Addmission Data Collction
+
+            self.cr.execute(add_q % (end_date, st_dat))
+
+            adm_info = {}
+            for items in self.cr.fetchall():
+                if items[1] is not participant_ids:
+                    participant_ids.append(items[1])
+                adm_info[items[1]] = items[0]
+
+            ## Addmission Collction Ends Here
+
+            ## It sis For Addmission Data Collction
+            self.cr.execute(optic_q % (end_date, st_dat))
+
+            optic_info = {}
+            for items in self.cr.fetchall():
+                if items[1] is not participant_ids:
+                    participant_ids.append(items[1])
+                optic_info[items[1]] = items[0]
+
+            ## OPD Data Query
+            opd_q = "select sum(total) as total_b, create_uid from opd_ticket " \
+                    "where (create_date <='%s') and (create_date >='%s') group by create_uid"
+
+            self.cr.execute(opd_q % (end_date, st_dat))
+
+            opd_info = {}
+            for items in self.cr.fetchall():
+                if items[1] is not participant_ids:
+                    participant_ids.append(items[1])
+                opd_info[items[1]] = items[0]
+
+        else:
+            bill_q = "select sum(amount) as totla_collection, create_uid from leih_money_receipt where bill_id is not Null " \
+                     "and state='confirm' and diagonostic_bill=TRUE and (create_date <= '%s') and (create_date >= '%s') and (create_uid=%s) group by create_uid"
+
+            bill_others = "select sum(amount) as totla_collection, create_uid from leih_money_receipt where bill_id is not Null " \
+                          "and state='confirm' and (diagonostic_bill=FALSE OR diagonostic_bill IS NULL) and (create_date <= '%s') and (create_date >= '%s') and (create_uid=%s) group by create_uid"
+
+            add_q = "select sum(amount) as totla_collection, create_uid from leih_money_receipt where admission_id is not Null" \
+                    " and state='confirm' and (create_date <= '%s') and (create_date >= '%s') and (create_uid=%s) group by create_uid"
+
+            optic_q = "select sum(amount) as totla_collection, create_uid from leih_money_receipt where optics_sale_id is not Null" \
+                      " and state='confirm' and (create_date <= '%s') and (create_date >= '%s') and (create_uid=%s) group by create_uid"
+
+            self.cr.execute(bill_q % (end_date, st_dat, user_id))
+            participant_ids = []
+            bill_info = {}
+            for items in self.cr.fetchall():
+                if items[1] is not participant_ids:
+                    participant_ids.append(items[1])
+                bill_info[items[1]] = items[0]
+
+            self.cr.execute(bill_others % (end_date, st_dat, user_id))
+            bill_other_info = {}
+            for items in self.cr.fetchall():
+                if items[1] is not participant_ids:
+                    participant_ids.append(items[1])
+                bill_other_info[items[1]] = items[0]
+
+            ## Bill Collction Ends Here
+
+            ## It sis For Addmission Data Collction
+
+            self.cr.execute(add_q % (end_date, st_dat, user_id))
+
+            adm_info = {}
+            for items in self.cr.fetchall():
+                if items[1] is not participant_ids:
+                    participant_ids.append(items[1])
+                adm_info[items[1]] = items[0]
+
+            ## Addmission Collction Ends Here
+
+            ## It sis For Addmission Data Collction
+            self.cr.execute(optic_q % (end_date, st_dat, user_id))
+
+            optic_info = {}
+            for items in self.cr.fetchall():
+                if items[1] is not participant_ids:
+                    participant_ids.append(items[1])
+                optic_info[items[1]] = items[0]
+            ## OPD Data Query
+            opd_q = "select sum(total) as total_b, create_uid from opd_ticket " \
+                    "where (create_date <='%s') and (create_date >='%s') and (create_uid=%s) group by create_uid"
+
+            self.cr.execute(opd_q % (end_date, st_dat,user_id))
+
+            opd_info = {}
+            for items in self.cr.fetchall():
+                if items[1] is not participant_ids:
+                    participant_ids.append(items[1])
+                opd_info[items[1]] = items[0]
+
+                ## Optics Ends Here
 
 
-        ## Bill Collction Ends Here
 
-        ## It sis For Addmission Data Collction
-
-        self.cr.execute(add_q % (end_date, st_dat))
-
-        adm_info = {}
-        for items in self.cr.fetchall():
-            if items[1] is not participant_ids:
-                participant_ids.append(items[1])
-            adm_info[items[1]] = items[0]
+        # ## It sis For BIll Data Collction
+        # self.cr.execute(bill_q % (end_date,st_dat,user_id))
+        # participant_ids = []
+        # bill_info = {}
+        # for items in self.cr.fetchall():
+        #     if items[1] is not participant_ids:
+        #         participant_ids.append(items[1])
+        #     bill_info[items[1]]=items[0]
+        #
+        # self.cr.execute(bill_others % (end_date,st_dat,user_id))
+        # bill_other_info = {}
+        # for items in self.cr.fetchall():
+        #     if items[1] is not participant_ids:
+        #         participant_ids.append(items[1])
+        #     bill_other_info[items[1]]=items[0]
+        #
+        #
+        # ## Bill Collction Ends Here
+        #
+        # ## It sis For Addmission Data Collction
+        #
+        # self.cr.execute(add_q % (end_date, st_dat,user_id))
+        #
+        # adm_info = {}
+        # for items in self.cr.fetchall():
+        #     if items[1] is not participant_ids:
+        #         participant_ids.append(items[1])
+        #     adm_info[items[1]] = items[0]
+        #
+        # ## Addmission Collction Ends Here
+        #
+        # ## It sis For Addmission Data Collction
+        # self.cr.execute(optic_q % (end_date,st_dat,user_id))
+        #
+        # optic_info = {}
+        # for items in self.cr.fetchall():
+        #     if items[1] is not participant_ids:
+        #         participant_ids.append(items[1])
+        #     optic_info[items[1]] = items[0]
 
         ## Addmission Collction Ends Here
 
-        ## It sis For Addmission Data Collction
-        self.cr.execute(optic_q % (end_date,st_dat))
 
-        optic_info = {}
-        for items in self.cr.fetchall():
-            if items[1] is not participant_ids:
-                participant_ids.append(items[1])
-            optic_info[items[1]] = items[0]
-
-        ## Addmission Collction Ends Here
-
-        ## OPD Data Query
-        opd_q = "select sum(total) as total_b, create_uid from opd_ticket " \
-                "where (create_date <='%s') and (create_date >='%s') group by create_uid"
-
-
-
-        self.cr.execute(opd_q % (end_date, st_dat))
-
-        opd_info = {}
-        for items in self.cr.fetchall():
-            if items[1] is not participant_ids:
-                participant_ids.append(items[1])
-            opd_info[items[1]] = items[0]
-
-
-        ## Optics Ends Here
 
 
         participant_ids = list(set(participant_ids))
