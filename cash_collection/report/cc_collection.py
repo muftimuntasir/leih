@@ -14,7 +14,7 @@ class collcetion_details(report_sxw.rml_parse):
         end_date= end_date
         user_id=self.uid
         result = []
-        if self.uid == 1:
+        if self.uid == 1 or self.uid==21 or self.uid==26 or self.uid==31:
 
             bill_q = "select sum(amount) as totla_collection, create_uid from leih_money_receipt where bill_id is not Null " \
                      "and state='confirm' and diagonostic_bill=TRUE and (create_date <= '%s') and (create_date >= '%s') group by create_uid"
