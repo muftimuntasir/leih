@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+
+
+<!--<record id="purchase_quototion_label_replace" model="ir.ui.view">-->
+<!--          <field name="name">Replace</field>-->
+<!--          <field name="model">ward.managment</field>-->
+<!--          <field name="inherit_id" ref="purchase.report_purchasequotation_document" />-->
+<!--          <field name="arch" type="xml">-->
+<!--            <data>-->
+<!--            <xpath expr="//h2" position="replace">-->
+<!--                <h2>This contact us title has been changed by an imported module</h2>-->
+<!--            </xpath>-->
+<!--                <xpath expr="//field[@name='name']" position="after">-->
+<!--                    <h1>Hello</h1>-->
+<!--                </xpath>-->
+
+<!--            </data>-->
+<!--          </field>-->
+<!--        </record>-->
+
+
+
+    <template id="contactusss_test" name="Contact Form" inherit_id="purchase.report_purchasequotation_document">
+        <xpath expr="//h2" position="replace">
+            <h2>Purchase Requisition <span t-field="o.name"/></h2>
+        </xpath>
+    </template>
+
+    </data>
+</openerp>
