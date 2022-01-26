@@ -14,7 +14,7 @@
                         <button string="Add payment" type="object" name="btn_pay_bill" groups="base.group_user"/>
                         <button string="Corporate Discount" type="object" name="btn_corporate_discount" groups="base.group_user"/>
                         <button string="Confirm and Print" type="object" name="bill_confirm" groups="base.group_user"/>
-                        <button string="Cancel" type="object" name="bill_cancel" groups="base.group_user"/>
+                        <button string="Cancel" type="object" name="bill_cancel" groups="leih.group_bill_register_button_cancel"/>
                     </header>
                 <sheet>
 
@@ -65,14 +65,13 @@
                                 </tree>
                             </field>
                           </page>
-<!--                        <page string="Journal Relations">-->
-<!--                            <field name="bill_journal_relation_id" mode="tree">-->
-<!--                                <tree string="Journal Relations" editable="top">-->
-<!--                                    <field name="bill_journal_relation_id"/>-->
-<!--                                    <field name="journal_id"/>-->
-<!--                                </tree>-->
-<!--                            </field>-->
-<!--                        </page>-->
+                        <page string="Journal Relations">
+                            <field name="bill_journal_relation_id" mode="tree">
+                                <tree string="Journal Relations" editable="top">
+                                    <field name="journal_id"/>
+                                </tree>
+                            </field>
+                        </page>
 
                     </notebook>
 
@@ -148,7 +147,7 @@
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
         <menuitem name="Billing" id="leih_billing_menu" parent="leih_menu" sequence="2"/>
-        <menuitem name="Investigation" id="investigation_menu_mainform" parent="leih_billing_menu" action="investigation_action" groups="leih.group_billing_menu_bill_register"/>
+        <menuitem name="Investigation" id="investigation_menu_mainform" parent="leih_billing_menu" action="investigation_action" groups="leih.group_billing_menu_bill_register,leih.group_billing_menu_bill_register_edit"/>
 
         <template id="assets_backends" name="bill_team assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">

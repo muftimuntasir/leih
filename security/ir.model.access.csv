@@ -15,13 +15,6 @@ access_billing_menu_bill_register_line,bill.register.line,model_bill_register_li
 access_billing_menu_bill_register_payment_line,bill.register.payment.line,model_bill_register_payment_line,group_billing_menu_bill_register,1,1,1,1
 
 
-
-
-
-
-
-
-
 access_billing_menu_bill_register_edit,bill.register,model_bill_register,group_billing_menu_bill_register_edit,1,1,1,1
 access_billing_menu_bill_register_line_edit,bill.register.line,model_bill_register_line,group_billing_menu_bill_register_edit,1,1,1,1
 access_billing_menu_bill_register_payment_line_edit,bill.register.payment.line,model_bill_register_payment_line,group_billing_menu_bill_register_edit,1,1,1,1
@@ -37,6 +30,7 @@ access_leih_admission_line_activated_edit,leih.admission.line,model_leih_admissi
 access_patient_guarantor_activated_edit,patient.guarantor,model_patient_guarantor,group_billing_menu_bill_register_edit,1,1,1,1
 access_admission_payment_line_activated_edit,admission.payment.line,model_admission_payment_line,group_billing_menu_bill_register_edit,1,1,1,1
 access_bill_register_admission_line_activated_edit,bill.register.admission.line,model_bill_register_admission_line,group_billing_menu_bill_register_edit,1,1,1,1
+access_billing_menu_money_receipt_edit,leih.money.receipt,model_leih_money_receipt,group_billing_menu_bill_register_edit,1,1,1,0
 
 
 
