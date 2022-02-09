@@ -67,6 +67,12 @@
                                     <b>Reffered By:</b><span t-field="o.ref_doctors"/>
 
                                 </div>
+                                    <t t-if="o.referral">
+                                    <div class="col-xs-6">
+                                    <b>Referral:</b><span t-field="o.referral"/>
+
+                                </div>
+                                    </t>
                                 </div>
 
 

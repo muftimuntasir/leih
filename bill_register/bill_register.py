@@ -70,6 +70,7 @@ class bill_register(osv.osv):
         'address': fields.char("Address",store=False),
         'age': fields.char("Age",store=False),
         'sex':fields.char("Sex",store=False),
+	'referral':fields.char("Referral"),
         'diagonostic_bill':fields.boolean("Diagonstic Bill"),
         'ref_doctors': fields.many2one('doctors.profile','Reffered by', required="True"),
         'delivery_date': fields.function(_delivery_dates,string="Delivery Date",type='date',store=True),
