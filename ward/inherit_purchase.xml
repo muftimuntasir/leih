@@ -27,6 +27,63 @@
         <xpath expr="//h2" position="replace">
             <h2>Purchase Requisition <span t-field="o.name"/></h2>
         </xpath>
+
+       <xpath expr="(//p)[position()=last()]" position="after">
+           <br/>
+           <br/>
+            <div class="row">
+                <div class="col-xs-2">
+                    <strong><u>Created By</u></strong>
+                </div>
+                <div class="col-xs-2">
+                    <strong><u>AD(Admin)</u></strong>
+                </div>
+                                <div class="col-xs-2">
+                    <strong><u>DD(F &amp; H)</u></strong>
+                </div>
+                <div class="col-xs-1">
+                    <strong><u>DG</u></strong>
+                </div>
+                <div class="col-xs-2">
+                    <strong><u>Treasurer</u></strong>
+                </div>
+                <div class="col-xs-3 text-left">
+                    <strong><u>Secretary General</u></strong>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+
+
+<!--        inherit code for purchase oreder pages-->
+
+         <template id="templatepurchase" name="Contact Form" inherit_id="purchase.report_purchaseorder_document">
+
+       <xpath expr="(//p)[position()=last()]" position="after">
+           <br/>
+           <br/>
+            <div class="row">
+                <div class="col-xs-2">
+                    <strong><u>Created By</u></strong>
+                </div>
+                <div class="col-xs-2">
+                    <strong><u>AD(Admin)</u></strong>
+                </div>
+                                <div class="col-xs-2">
+                    <strong><u>DD(F &amp; H)</u></strong>
+                </div>
+                <div class="col-xs-1">
+                    <strong><u>DG(Lei&amp;H)</u></strong>
+                </div>
+                <div class="col-xs-2">
+                    <strong><u>Treasurer(BLF)</u></strong>
+                </div>
+                <div class="col-xs-3 text-left">
+                    <strong><u>Secretary General(BLF)</u></strong>
+                </div>
+            </div>
+        </xpath>
     </template>
 
     </data>
