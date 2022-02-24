@@ -273,9 +273,6 @@ class collcetion_details(report_sxw.rml_parse):
 
         for items in self.cr.fetchall():
             user_info[items[1]]=items[0]
-
-
-
         ### Ends Here
 
         for user_id in participant_ids:

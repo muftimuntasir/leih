@@ -109,9 +109,6 @@ class inventory_product_entry(osv.osv):
 
     def confirm_transfer(self, cr, uid, ids, context=None):
 
-
-
-
         cc_ids = ids
         for id in cc_ids:
             ir_obj = self.browse(cr, uid, ids, context=context)
@@ -148,11 +145,13 @@ class inventory_product_entry(osv.osv):
             line_ids = []
 
             for items in ir_obj.inventory_product_entry_line_ids:
+
                 move_line.append([0,False,{
                     'product_id':items.product_name.id,
                     'product_uom': 1,
                     'product_uom_qty':items.quantity,
                     'product_uos_qty': items.quantity,
+                    'price_unit': items.unit_price,
                     'name':ir_obj.name,
                     'location_id':sorce_id,
                     'location_dest_id':dest_id,
@@ -185,6 +184,8 @@ class inventory_product_entry(osv.osv):
             trans_browse = self.pool.get('stock.transfer_details').browse(cr, uid, trans_search, context=context)
 
             trans_browse.do_detailed_transfer()
+            # import pdb
+            # pdb.set_trace()
 
 
 
@@ -305,7 +306,7 @@ class inventory_product_entry_line(osv.osv):
         cat_object = self.pool.get('product.category').browse(cr, uid, categ_id, context=context)
         unit_price=dep_object.standard_price
 
-        abc = {'account_id':cat_object.property_account_expense_categ,'unit_price':unit_price,'quantity':1,'total_price': unit_price}
+        abc = {'account_id':cat_object.property_stock_account_input_categ,'unit_price':unit_price,'quantity':1,'total_price': unit_price}
         tests['value'] = abc
         return tests
 
@@ -329,6 +330,12 @@ class inventory_product_entry_line(osv.osv):
         abc = {'total_price': total_amount}
         tests['value'] = abc
         return tests
+# class stock_picking(osv.osv):
+#     _inherit = "stock.picking"
+#
+#     def create(self,cr, uid, vals, context=None):
+#         import pdb
+#         pdb.set_trace()
 
 
 

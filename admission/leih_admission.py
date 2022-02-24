@@ -50,6 +50,7 @@ class leih_admission(osv.osv):
         'guarantor_line_id':fields.one2many("patient.guarantor","admission_id","Guarantor Name"),
         'bill_register_admission_line_id': fields.one2many("bill.register.admission.line","admission_line_id","Bill Register"),
         'admission_payment_line_id': fields.one2many("admission.payment.line","admission_payment_line_id","Admission Payment"),
+        'admission_journal_relation_id': fields.one2many("bill.journal.relation", "admission_journal_relation_id", "Journal"),
         'emergency':fields.boolean("Emergency Department"),
         'total_without_discount': fields.float(string="Total without discount"),
         'total': fields.float(string="Total"),
@@ -150,13 +151,12 @@ class leih_admission(osv.osv):
 
     def change_status(self, cr, uid, ids, context=None):
         stored_obj = self.browse(cr, uid, [ids[0]], context=context)
+        journal_object = self.pool.get("bill.journal.relation")
         ## Bill Status Will Change
 
         if stored_obj.state == 'activated':
             raise osv.except_osv(_('Warning!'),
                                  _('Already this Bill is Confirmed.'))
-        cr.execute("update leih_admission set state='activated' where id=%s", (ids))
-        cr.commit()
 
         stored = int(ids[0])
 
@@ -253,97 +253,135 @@ class leih_admission(osv.osv):
                 cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
                 cr.commit()
             ### Journal ENtry will be here
-            # line_ids = []
-            #
-            # if context is None: context = {}
-            # if context.get('period_id', False):
-            #     return context.get('period_id')
-            # periods = self.pool.get('account.period').find(cr, uid, context=context)
-            # period_id = periods and periods[0] or False
-            #
-            # ar_amount = stored_obj.due
-            #
-            # if ar_amount > 0:
-            #     line_ids.append((0, 0, {
-            #         'analytic_account_id': False,
-            #         'tax_code_id': False,
-            #         'tax_amount': 0,
-            #         'name': stored_obj.name,
-            #         'currency_id': False,
-            #         'credit': 0,
-            #         'date_maturity': False,
-            #         'account_id': 6010,  ### Accounts Receivable ID
-            #         'debit': ar_amount,
-            #         'amount_currency': 0,
-            #         'partner_id': False,
-            #     }))
-            #
-            # if has_been_paid > 0:
-            #     line_ids.append((0, 0, {
-            #         'analytic_account_id': False,
-            #         'tax_code_id': False,
-            #         'tax_amount': 0,
-            #         'name': stored_obj.name,
-            #         'currency_id': False,
-            #         'credit': 0,
-            #         'date_maturity': False,
-            #         'account_id': 6,  ### Cash ID
-            #         'debit': has_been_paid,
-            #         'amount_currency': 0,
-            #         'partner_id': False,
-            #     }))
-            #
-            # for cc_obj in stored_obj.leih_admission_line_id:
-            #     ledger_id = 611
-            #     try:
-            #         ledger_id = cc_obj.name.accounts_id.id
-            #     except:
-            #         ledger_id = 611  ## Diagnostic Income Head , If we don't assign any Ledger
-            #
-            #     if context is None:
-            #         context = {}
-            #
-            #     line_ids.append((0, 0, {
-            #         'analytic_account_id': False,
-            #         'tax_code_id': False,
-            #         'tax_amount': 0,
-            #         'name': cc_obj.name.name,
-            #         'currency_id': False,
-            #         'account_id': cc_obj.name.accounts_id.id,
-            #         'credit': cc_obj.total_amount,
-            #         'date_maturity': False,
-            #         'debit': 0,
-            #         'amount_currency': 0,
-            #         'partner_id': False,
-            #     }))
-            #
-            # jv_entry = self.pool.get('account.move')
-            #
-            # j_vals = {'name': '/',
-            #           'journal_id': 2,  ## Sales Journal
-            #           'date': fields.date.today(),
-            #           'period_id': period_id,
-            #           'ref': stored_obj.name,
-            #           'line_id': line_ids
-            #
-            #           }
-            # # import pdb
-            # # pdb.set_trace()
-            #
-            # saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
-            # if saved_jv_id > 0:
-            #     journal_id = saved_jv_id
-            # jv_entry.button_validate(cr, uid, [saved_jv_id], context)
+        if stored_obj:
+            line_ids = []
 
+            if context is None: context = {}
+            if context.get('period_id', False):
+                return context.get('period_id')
+            periods = self.pool.get('account.period').find(cr, uid, context=context)
+            period_id = periods and periods[0] or False
+            # if mehtod is cash
+            if stored_obj.payment_type.name == 'Cash':
+                has_been_paid = stored_obj.paid
+                ar_amount = stored_obj.due
+                account_id = 6
+            elif stored_obj.payment_type.name == 'Visa Card':
+                has_been_paid = stored_obj.to_be_paid
+                ar_amount = stored_obj.due
+                account_id = stored_obj.payment_type.account.id
 
+            if ar_amount > 0:
+                line_ids.append((0, 0, {
+                    'analytic_account_id': False,
+                    'tax_code_id': False,
+                    'tax_amount': 0,
+                    'name': stored_obj.name,
+                    'currency_id': False,
+                    'credit': 0,
+                    'date_maturity': False,
+                    'account_id': 195,  ### Accounts Receivable ID
+                    'debit': ar_amount,
+                    'amount_currency': 0,
+                    'partner_id': False,
+                }))
+
+            if has_been_paid > 0:
+                line_ids.append((0, 0, {
+                    'analytic_account_id': False,
+                    'tax_code_id': False,
+                    'tax_amount': 0,
+                    'name': stored_obj.name,
+                    'currency_id': False,
+                    'credit': 0,
+                    'date_maturity': False,
+                    'account_id': account_id,  ### Cash ID
+                    'debit': has_been_paid,
+                    'amount_currency': 0,
+                    'partner_id': False,
+                }))
+
+            for cc_obj in stored_obj.leih_admission_line_id:
+                ledger_id = 611
+                try:
+                    ledger_id = cc_obj.name.accounts_id.id
+                except:
+                    ledger_id = 611  ## Diagnostic Income Head , If we don't assign any Ledger
+
+                if context is None:
+                    context = {}
+
+                line_ids.append((0, 0, {
+                    'analytic_account_id': False,
+                    'tax_code_id': False,
+                    'tax_amount': 0,
+                    'name': cc_obj.name.name,
+                    'currency_id': False,
+                    'account_id': cc_obj.name.accounts_id.id,
+                    'credit': cc_obj.total_amount,
+                    'date_maturity': False,
+                    'debit': 0,
+                    'amount_currency': 0,
+                    'partner_id': False,
+                }))
+            if stored_obj.service_charge > 0:
+                line_ids.append((0, 0, {
+                    'analytic_account_id': False,
+                    'tax_code_id': False,
+                    'tax_amount': 0,
+                    'name': stored_obj.payment_type.name,
+                    'currency_id': False,
+                    'credit': stored_obj.service_charge,
+                    'date_maturity': False,
+                    'account_id': stored_obj.payment_type.service_charge_account.id,  ### Cash ID
+                    'debit': 0,
+                    'amount_currency': 0,
+                    'partner_id': False,
+                }))
+
+            jv_entry = self.pool.get('account.move')
+
+            j_vals = {'name': '/',
+                      'journal_id': 2,  ## Sales Journal
+                      'date': stored_obj.date,
+                      'period_id': period_id,
+                      'ref': stored_obj.name,
+                      'line_id': line_ids
+
+                      }
+            # import pdb
+            # pdb.set_trace()
+
+            saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
+            if saved_jv_id > 0:
+                journal_id = saved_jv_id
+                try:
+                    jv_entry.button_validate(cr, uid, [saved_jv_id], context)
+                    cr.execute("update leih_admission set state='activated' where id=%s", (ids))
+                    cr.commit()
+                    journal_dict = {'journal_id': journal_id, 'admission_journal_relation_id': stored_obj.id}
+                    journal_object.create(cr, uid, vals=journal_dict, context=context)
+                except:
+                    import pdb
+                    pdb.set_trace()
             ###close here
-
-
 
         return self.pool['report'].get_action(cr, uid, ids, 'leih.report_admission', context=context)
 
 
     def admission_cancel(self, cr, uid, ids, context=None):
+
+        #unlink journal items
+        cr.execute("select  id as jounral_id from account_move where ref = (select name from leih_admission where id=%s limit 1)",(ids))
+        joural_ids = cr.fetchall()
+        context = context
+
+        itm = [itm[0] for itm in joural_ids]
+        if len(itm) > 0:
+            uid = 1
+            moves = self.pool.get('account.move').browse(cr, uid, itm, context=context)
+            moves.button_cancel()  ## Cancelling
+            moves.unlink()  ### Deleting Journal
         ## Bill Status Will Change
 
         cr.execute("update leih_admission set state='cancelled' where id=%s", (ids))
@@ -519,6 +557,158 @@ class leih_admission(osv.osv):
 
         return stored
 
+    def write(self, cr, uid, ids,vals,context=None):
+
+
+        if vals.get('leih_admission_line_id') or uid == 1:
+            cr.execute("select id as journal_ids from account_move where ref = (select name from leih_admission where id=%s limit 1)",(ids))
+            journal_ids = cr.fetchall()
+            context=context
+
+
+            itm = [itm[0] for itm in journal_ids]
+
+            if len(itm)>0:
+
+                uid=1
+                moves =self.pool.get('account.move').browse(cr, uid, itm, context=context)
+                xx=moves.button_cancel() ## Cancelling
+                bill_journal_id=[]
+                # cr.execute("delete from bill_journal_relation where id in (select id from bill_journal_relation where journal_id in %s)",(tuple(itm)))
+                user_q="select id from bill_journal_relation where journal_id in %s"
+                # cr.execute("select id from bill_journal_relation where journal_id in %s",(tuple(itm)))
+                cr.execute(user_q, (tuple(itm),))
+                journal_id = cr.fetchall()
+                for item in journal_id:
+                    bill_journal_id.append(item[0])
+
+                query="delete from bill_journal_relation where id in %s"
+                cr.execute(query,(tuple(bill_journal_id),))
+
+
+
+
+                # if len(itm)>1:
+                #     cr.execute("delete from bill_journal_relation where id = (select id from bill_journal_relation where journal_id=%s)", ([itm[0]]))
+                #     cr.execute("delete from bill_journal_relation where id = (select id from bill_journal_relation where journal_id=%s)", ([itm[1]]))
+                #     cr.commit()
+                # else:
+                #     cr.execute("delete from bill_journal_relation where id = (select id from bill_journal_relation where journal_id=%s)",(itm))
+
+                # import pdb
+                # pdb.set_trace()
+
+                moves.unlink()
+                updated=super(leih_admission, self).write(cr, uid, ids, vals, context=context)
+                #journal entry will be here
+
+
+                    ### Journal ENtry will be here
+
+                stored_obj = self.browse(cr, uid, [ids[0]], context=context)
+                journal_object = self.pool.get("bill.journal.relation")
+                has_been_paid = stored_obj.paid
+                if stored_obj:
+                    line_ids = []
+
+                    if context is None: context = {}
+                    if context.get('period_id', False):
+                        return context.get('period_id')
+                    periods = self.pool.get('account.period').find(cr, uid, context=context)
+                    period_id = periods and periods[0] or False
+                    ar_amount = stored_obj.due
+
+                    if ar_amount > 0:
+                        line_ids.append((0, 0, {
+                            'analytic_account_id': False,
+                            'tax_code_id': False,
+                            'tax_amount': 0,
+                            'name': stored_obj.name,
+                            'currency_id': False,
+                            'credit': 0,
+                            'date_maturity': False,
+                            'account_id': 195, ### Accounts Receivable ID
+                            'debit': ar_amount,
+                            'amount_currency': 0,
+                            'partner_id': False,
+                        }))
+
+                    if has_been_paid > 0:
+                        line_ids.append((0, 0, {
+                            'analytic_account_id': False,
+                            'tax_code_id': False,
+                            'tax_amount': 0,
+                            'name': stored_obj.name,
+                            'currency_id': False,
+                            'credit': 0,
+                            'date_maturity': False,
+                            'account_id': 6,  ### Cash ID
+                            'debit': has_been_paid,
+                            'amount_currency': 0,
+                            'partner_id': False,
+                        }))
+
+                    for cc_obj in stored_obj.leih_admission_line_id:
+                        ledger_id=611
+                        try:
+                            ledger_id = cc_obj.name.accounts_id.id
+                        except:
+                            ledger_id= 611 ## Diagnostic Income Head , If we don't assign any Ledger
+
+
+
+                        if context is None:
+                            context = {}
+
+                        line_ids.append((0, 0, {
+                            'analytic_account_id': False,
+                            'tax_code_id': False,
+                            'tax_amount': 0,
+                            'name': cc_obj.name.name,
+                            'currency_id': False,
+                            'account_id': cc_obj.name.accounts_id.id,
+                            'credit': cc_obj.total_amount,
+                            'date_maturity': False,
+                            'debit': 0,
+                            'amount_currency': 0,
+                            'partner_id': False,
+                        }))
+
+
+
+
+                    jv_entry = self.pool.get('account.move')
+
+                    j_vals = {'name': '/',
+                              'journal_id': 2,  ## Sales Journal
+                              'date': stored_obj.date,
+                              'period_id': period_id,
+                              'ref': stored_obj.name,
+                              'line_id': line_ids
+
+                              }
+
+                    saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
+                    if saved_jv_id > 0:
+                        journal_id = saved_jv_id
+                        try:
+                            jv_entry.button_validate(cr,uid, [saved_jv_id], context)
+                            cr.execute("update leih_admission set state='confirmed' where id=%s", (ids))
+                            cr.commit()
+                            journal_dict={'journal_id':journal_id,'admission_journal_relation_id':stored_obj.id}
+                            journal_object.create(cr,uid,vals=journal_dict,context=context)
+                        except:
+                            import pdb
+                            pdb.set_trace()
+                    return updated
+                    ### Ends the journal Entry Here
+        else:
+            raise osv.except_osv(_('Warning!'),
+                                 _("You cannot Edit the bill"))
+            return "NOthing"
+
+
+
     @api.onchange('leih_admission_line_id')
     def onchange_admission_line(self):
         sumalltest=0
@@ -540,6 +730,12 @@ class leih_admission(osv.osv):
     @api.onchange('paid')
     def onchange_paid(self):
         self.due = self.grand_total - self.paid
+        if self.payment_type:
+            if self.payment_type.service_charge>0:
+                interest = self.payment_type.service_charge
+                service_charge = (self.paid * interest) / 100
+                self.service_charge = service_charge
+                self.to_be_paid = self.paid + service_charge
         return 'x'
 
     @api.onchange('doctors_discounts')
@@ -663,7 +859,7 @@ class admission_payment_line(osv.osv):
         'admission_payment_line_id': fields.many2one('leih.admission', 'admission payment'),
         'date':fields.datetime("Date"),
         'amount':fields.float('amount'),
-        'type':fields.selection([('bank','Bank'),('cash','Cash')],'Type'),
+        'type':fields.char('Type'),
         'card_no':fields.char('Card Number'),
         'bank_name':fields.char('Bank Name')
 

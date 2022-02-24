@@ -213,87 +213,110 @@ class optics_sale(osv.osv):
                     cr.execute("update optics_sale set delivery_id=%s where id=%s", (picking_id, ids[0]))
                     cr.commit()
             ### Ends Here
-            cr.execute("update optics_sale set state='confirmed' where id=%s", (ids))
-            cr.commit()
 
             ###journal entry start
-            # line_ids = []
-            #
-            # if context is None: context = {}
-            # if context.get('period_id', False):
-            #     return context.get('period_id')
-            # periods = self.pool.get('account.period').find(cr, uid, context=context)
-            # period_id = periods and periods[0] or False
-            # ar_amount = stored_obj.due
-            # has_been_paid=stored_obj.paid
-            #
-            # if ar_amount > 0:
-            #     line_ids.append((0, 0, {
-            #         'analytic_account_id': False,
-            #         'tax_code_id': False,
-            #         'tax_amount': 0,
-            #         'name': stored_obj.name,
-            #         'currency_id': False,
-            #         'credit': 0,
-            #         'date_maturity': False,
-            #         'account_id': 6010,  ### Accounts Receivable ID
-            #         'debit': ar_amount,
-            #         'amount_currency': 0,
-            #         'partner_id': False,
-            #     }))
-            #
-            # if has_been_paid > 0:
-            #     line_ids.append((0, 0, {
-            #         'analytic_account_id': False,
-            #         'tax_code_id': False,
-            #         'tax_amount': 0,
-            #         'name': stored_obj.name,
-            #         'currency_id': False,
-            #         'credit': 0,
-            #         'date_maturity': False,
-            #         'account_id': 6,  ### Cash ID
-            #         'debit': has_been_paid,
-            #         'amount_currency': 0,
-            #         'partner_id': False,
-            #     }))
-            #
-            #     if context is None:
-            #         context = {}
-            #
-            # if stored_obj.total:
-            #     line_ids.append((0, 0, {
-            #         'analytic_account_id': False,
-            #         'tax_code_id': False,
-            #         'tax_amount': 0,
-            #         'name': stored_obj.name,
-            #         'currency_id': False,
-            #         'account_id': 867,
-            #         'credit': stored_obj.total,
-            #         'date_maturity': False,
-            #         'debit': 0,
-            #         'amount_currency': 0,
-            #         'partner_id': False,
-            #     }))
-            #
-            # jv_entry = self.pool.get('account.move')
-            #
-            # j_vals = {'name': '/',
-            #           'journal_id': 2,  ## Sales Journal
-            #           'date': fields.date.today(),
-            #           'period_id': period_id,
-            #           'ref': stored_obj.name,
-            #           'line_id': line_ids
-            #
-            #           }
-            #
-            # saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
-            # # import pdb
-            # # pdb.set_trace()
-            # if saved_jv_id > 0:
-            #     journal_id = saved_jv_id
-            # jv_entry.button_validate(cr, uid, [saved_jv_id], context)
+        if stored_obj:
+            line_ids = []
+
+            if context is None: context = {}
+            if context.get('period_id', False):
+                return context.get('period_id')
+            periods = self.pool.get('account.period').find(cr, uid, context=context)
+            period_id = periods and periods[0] or False
+            ar_amount = stored_obj.due
+            payment_method=stored_obj.payment_type
+            if payment_method.service_charge<=0:
+                has_been_paid=stored_obj.paid
+            else:
+                has_been_paid=stored_obj.to_be_paid
+            ar_acc=6099
+            account=stored_obj.payment_type.account.id
+            service_account=stored_obj.payment_type.service_charge_account.id
 
 
+
+            if ar_amount > 0:
+                line_ids.append((0, 0, {
+                    'analytic_account_id': False,
+                    'tax_code_id': False,
+                    'tax_amount': 0,
+                    'name': stored_obj.name,
+                    'currency_id': False,
+                    'credit': 0,
+                    'date_maturity': False,
+                    'account_id': ar_acc,  ### Accounts Receivable ID
+                    'debit': ar_amount,
+                    'amount_currency': 0,
+                    'partner_id': False,
+                }))
+
+            if has_been_paid > 0:
+                line_ids.append((0, 0, {
+                    'analytic_account_id': False,
+                    'tax_code_id': False,
+                    'tax_amount': 0,
+                    'name': stored_obj.name,
+                    'currency_id': False,
+                    'credit': 0,
+                    'date_maturity': False,
+                    'account_id': account,  ### Cash ID
+                    'debit': has_been_paid,
+                    'amount_currency': 0,
+                    'partner_id': False,
+                }))
+
+                if context is None:
+                    context = {}
+
+            if stored_obj.total:
+                line_ids.append((0, 0, {
+                    'analytic_account_id': False,
+                    'tax_code_id': False,
+                    'tax_amount': 0,
+                    'name': stored_obj.name,
+                    'currency_id': False,
+                    'account_id': 6098,  ##sepcticle income
+                    'credit': stored_obj.total,
+                    'date_maturity': False,
+                    'debit': 0,
+                    'amount_currency': 0,
+                    'partner_id': False,
+                }))
+            if stored_obj.service_charge>0:
+                line_ids.append((0, 0, {
+                    'analytic_account_id': False,
+                    'tax_code_id': False,
+                    'tax_amount': 0,
+                    'name': stored_obj.name,
+                    'currency_id': False,
+                    'account_id': service_account,  ##sepcticle income
+                    'credit': stored_obj.service_charge,
+                    'date_maturity': False,
+                    'debit': 0,
+                    'amount_currency': 0,
+                    'partner_id': False,
+                }))
+
+            jv_entry = self.pool.get('account.move')
+
+            j_vals = {'name': '/',
+                      'journal_id': 2,  ## Sales Journal
+                      'date': fields.date.today(),
+                      'period_id': period_id,
+                      'ref': stored_obj.name,
+                      'line_id': line_ids
+                      }
+
+            saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
+            if saved_jv_id > 0:
+                journal_id = saved_jv_id
+                try:
+                    jv_entry.button_validate(cr,uid, [saved_jv_id], context)
+                    cr.execute("update optics_sale set state='confirmed' where id=%s", (ids))
+                    cr.commit()
+                except:
+                    import pdb
+                    pdb.set_trace()
 
             ###end journal entry
 
@@ -393,6 +416,12 @@ class optics_sale(osv.osv):
     @api.onchange('paid')
     def onchange_paid(self):
         self.due = self.total - self.paid
+        if self.payment_type:
+            if self.payment_type.service_charge>0:
+                interest = self.payment_type.service_charge
+                service_charge = (self.paid * interest) / 100
+                self.service_charge = service_charge
+                self.to_be_paid = self.paid + service_charge
         return 'x'
 
     @api.onchange('price')
@@ -553,7 +582,7 @@ class admission_payment_line(osv.osv):
         'optics_sale_payment_line_id': fields.many2one('optics.sale', 'bill register payment'),
         'date': fields.datetime("Date"),
         'amount': fields.float('Amount'),
-        'type': fields.selection([('bank', 'Bank'), ('cash', 'Cash')], 'Type'),
+        'type': fields.char('Type'),
         'card_no': fields.char('Card Number'),
         'bank_name': fields.char('Bank Name'),
         'money_receipt_id': fields.many2one('leih.money.receipt', 'Money Receipt ID'),

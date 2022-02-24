@@ -67,7 +67,11 @@
                             <hr/>
                             <br/><br/>
 
-                            <table class="table table-condensed">
+        <div class="row">
+
+
+
+                            <table class="table table-condensed col-md-6">
                                 <thead>
                                     <tr>
                                         <th>S.N.</th>
@@ -100,12 +104,10 @@
 
                                             </td>
 
- <td>
+                                            <td>
                                                 <span t-field="z.remarks"/>
 
                                             </td>
-
-
 
                                         </tr>
 
@@ -114,8 +116,7 @@
                                 </tbody>
 
                             </table>
-
-
+                            </div>
                         </div>
                     </t>
                 </t>

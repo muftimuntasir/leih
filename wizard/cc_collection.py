@@ -19,7 +19,10 @@ class cc_collection(osv.osv_memory):
             context = {}
         datas = {'ids': context.get('active_ids', [])}
         res = self.read(cr, uid, ids, ['date_start', 'date_end',], context=context)
+        import pdb
+        pdb.set_trace()
         res = res and res[0] or {}
+
         datas['form'] = res
         if res.get('id',False):
             datas['ids']=[res['id']]

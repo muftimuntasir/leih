@@ -20,7 +20,7 @@ class money_receipt(osv.osv):
             ('due_payment', 'Due Payment')], 'Payment Method'),
         'already_collected':fields.boolean("Collected", default=False),
         'diagonostic_bill':fields.boolean("Diagonstic Bill"),
-        'type':fields.selection([('bank','Bank'),('cash','Cash')],string="Type", default='cash'),
+        'type':fields.many2one("payment.type","Type"),
         'user_id':fields.many2one('res.users','Current User', default=lambda self: self.env.user.id),
         'state': fields.selection([
             ('confirm', 'confirm'),

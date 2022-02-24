@@ -5,9 +5,6 @@ from datetime import date, time
 class doctors_profile(osv.osv):
     _name = "doctors.profile"
 
-
-
-
     _columns = {
 
         'name': fields.char("Doctor Name",required=True),

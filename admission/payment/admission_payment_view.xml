@@ -16,9 +16,10 @@
                                 <field name="date"/>
                                 <field name="admission_id"/>
                                 <field name="amount"/>
-                                <field name="type"/>
-                                <field name="card_no"/>
-                                <field name="bank_name"/>
+                                <field name="payment_type"/>
+                                <field name="service_charge"/>
+                                <field name="to_be_paid"/>
+                                <field name="account_number"/>
                             </group>
 
                         </group>
@@ -60,9 +61,7 @@
                                 <field name="name"/>
                                 <field name="admission_id"/>
                                 <field name="amount"/>
-                                <field name="type"/>
-                                <field name="card_no"/>
-                                <field name="bank_name"/>
+                                <field name="payment_type"/>
 
 
                 </tree>

@@ -86,6 +86,94 @@ class bill_register(osv.osv):
             name_text = 'OPD-0' + str(stored)
             cr.execute('update opd_ticket set name=%s where id=%s', (name_text, stored))
             cr.commit()
+            stored_obj = self.browse(cr, uid,stored, context=context)
+
+            ###OPD JOurnal Start Here
+            if stored_obj:
+
+                line_ids = []
+
+                if context is None: context = {}
+                if context.get('period_id', False):
+                    return context.get('period_id')
+                periods = self.pool.get('account.period').find(cr, uid, context=context)
+                period_id = periods and periods[0] or False
+                has_been_paid = stored_obj.total
+
+                line_ids.append((0, 0, {
+                    'analytic_account_id': False,
+                    'tax_code_id': False,
+                    'tax_amount': 0,
+                    'name': stored_obj.name,
+                    'currency_id': False,
+                    'credit': 0,
+                    'date_maturity': False,
+                    'account_id': 6,  ### Cash ID
+                    'debit': has_been_paid,
+                    'amount_currency': 0,
+                    'partner_id': False,
+                }))
+
+                for cc_obj in stored_obj.opd_ticket_line_id:
+                    # import pdb
+                    # pdb.set_trace()
+                    total = 0
+
+                    if cc_obj.name.name:
+                        # ledger_id = 611
+                        # try:
+                        #     ledger_id = cc_obj.name.accounts_id.id
+                        # except:
+                        #     ledger_id = 611  ## Diagnostic Income Head , If we don't assign any Ledger
+
+                        if context is None:
+                            context = {}
+
+                        line_ids.append((0, 0, {
+                            'analytic_account_id': False,
+                            'tax_code_id': False,
+                            'tax_amount': 0,
+                            'name': cc_obj.name.name,
+                            'currency_id': False,
+                            'account_id': cc_obj.name.accounts_id.id,
+                            'credit': cc_obj.total_amount,
+                            'date_maturity': False,
+                            'debit': 0,
+                            'amount_currency': 0,
+                            'partner_id': False,
+                        }))
+                    # import pdb
+                    # pdb.set_trace()
+
+                jv_entry = self.pool.get('account.move')
+
+                j_vals = {'name': '/',
+                          'journal_id': 2,  ## Sales Journal
+                          'date': stored_obj.date,
+                          'period_id': 24,
+                          'ref': stored_obj.name,
+                          'line_id': line_ids
+
+                          }
+
+                # import pdb
+                # pdb.set_trace()
+
+                saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
+                if saved_jv_id > 0:
+                    journal_id = saved_jv_id
+                    try:
+
+                        jv_entry.button_validate(cr, uid, [saved_jv_id], context)
+                    except:
+                        import pdb
+                        pdb.set_trace()
+
+
+               ###ENd of Journal
+
+
+
         return stored
 
     @api.onchange('opd_ticket_line_id')

@@ -16,9 +16,10 @@
                                 <field name="date"/>
                                 <field name="optics_sale_id"/>
                                 <field name="amount"/>
-                                <field name="type"/>
-                                <field name="card_no"/>
-                                <field name="bank_name"/>
+                                <field name="payment_type"/>
+                                <field name="service_charge"/>
+                                <field name="to_be_paid"/>
+                                <field name="account_number"/>
                             </group>
 
                         </group>
@@ -56,13 +57,11 @@
             <field name="model">optics.sale.payment</field>
             <field name="arch" type="xml">
                 <tree string="Bill List" default_order='id desc'>
-
-                                <field name="name"/>
+<field name="name"/>
+                                <field name="date"/>
                                 <field name="optics_sale_id"/>
                                 <field name="amount"/>
-                                <field name="type"/>
-                                <field name="card_no"/>
-                                <field name="bank_name"/>
+                                <field name="payment_type"/>
 
 
                 </tree>

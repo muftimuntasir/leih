@@ -75,6 +75,13 @@
                                 </tree>
                             </field>
                           </page>
+                        <page string="Journal Relations">
+                            <field name="admission_journal_relation_id" mode="tree">
+                                <tree string="Journal Relations" editable="top">
+                                    <field name="journal_id"/>
+                                </tree>
+                            </field>
+                        </page>
 
                     </notebook>
 

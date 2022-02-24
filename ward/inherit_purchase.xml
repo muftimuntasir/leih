@@ -3,25 +3,14 @@
 <openerp>
     <data>
 
-
-<!--<record id="purchase_quototion_label_replace" model="ir.ui.view">-->
-<!--          <field name="name">Replace</field>-->
-<!--          <field name="model">ward.managment</field>-->
-<!--          <field name="inherit_id" ref="purchase.report_purchasequotation_document" />-->
-<!--          <field name="arch" type="xml">-->
-<!--            <data>-->
-<!--            <xpath expr="//h2" position="replace">-->
-<!--                <h2>This contact us title has been changed by an imported module</h2>-->
-<!--            </xpath>-->
-<!--                <xpath expr="//field[@name='name']" position="after">-->
-<!--                    <h1>Hello</h1>-->
-<!--                </xpath>-->
-
-<!--            </data>-->
-<!--          </field>-->
-<!--        </record>-->
-
-
+        <report
+            string="Print Stock"
+            id="report_purchase_stock"
+            model="purchase.order"
+            report_type="qweb-pdf"
+            name="leih.report_purchasestock"
+            file="leih.report_purchasestock"
+        />
 
     <template id="contactusss_test" name="Contact Form" inherit_id="purchase.report_purchasequotation_document">
         <xpath expr="//h2" position="replace">
@@ -32,23 +21,23 @@
            <br/>
            <br/>
             <div class="row">
-                <div class="col-xs-2">
-                    <strong><u>Created By</u></strong>
-                </div>
-                <div class="col-xs-2">
+                <div class="col-xs-1">
                     <strong><u>AD(Admin)</u></strong>
                 </div>
-                                <div class="col-xs-2">
+                <div class="col-xs-2">
                     <strong><u>DD(F &amp; H)</u></strong>
                 </div>
-                <div class="col-xs-1">
-                    <strong><u>DG</u></strong>
+                <div class="col-xs-2">
+                    <strong><u>DD(LEI&amp;H)</u></strong>
+                </div>
+                <div class="col-xs-2">
+                    <strong><u>DG(LEI&amp;H)</u></strong>
                 </div>
                 <div class="col-xs-2">
                     <strong><u>Treasurer</u></strong>
                 </div>
-                <div class="col-xs-3 text-left">
-                    <strong><u>Secretary General</u></strong>
+                <div class="col-xs-2 text-left">
+                    <strong><u>S. General</u></strong>
                 </div>
             </div>
         </xpath>

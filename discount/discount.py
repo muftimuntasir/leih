@@ -115,11 +115,6 @@ class discount(osv.osv):
         percent_discounted_amount = (total_amount * total_percent) / 100
         total_discount=total_fixed+percent_discounted_amount
         self.total_discount=total_discount
-
-
-
-
-
         return "X"
 
 

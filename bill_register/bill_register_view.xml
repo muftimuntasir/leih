@@ -30,6 +30,7 @@
                         <field name="address"/>
                         <field name="mobile"/>
                         <field name="ref_doctors"/>
+                        <field name="referral"/>
                         <field name="delivery_date"/>
                     </group>
                     <notebook>

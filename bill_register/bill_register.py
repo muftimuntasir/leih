@@ -70,12 +70,13 @@ class bill_register(osv.osv):
         'address': fields.char("Address",store=False),
         'age': fields.char("Age",store=False),
         'sex':fields.char("Sex",store=False),
+        'referral':fields.char("Referral"),
         'diagonostic_bill':fields.boolean("Diagonstic Bill"),
-        'ref_doctors': fields.many2one('doctors.profile','Reffered by', required="True"),
+        'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
         'delivery_date': fields.function(_delivery_dates,string="Delivery Date",type='date',store=True),
         'bill_register_line_id': fields.one2many('bill.register.line', 'bill_register_id', 'Item Entry',required=True),
         'bill_register_payment_line_id': fields.one2many("bill.register.payment.line", "bill_register_payment_line_id","Bill Register Payment"),
-        # 'bill_journal_relation_id': fields.one2many("bill.journal.relation", "bill_journal_relation_id","Journal"),
+        'bill_journal_relation_id': fields.one2many("bill.journal.relation", "bill_journal_relation_id","Journal"),
         # 'footer_connection': fields.one2many('leih.footer', 'relation', 'Parameters', required=True),
         # 'relation': fields.many2one("leih.investigation"),
         # 'total': fields.float(_totalpayable,string="Total",type='float',store=True),
@@ -95,7 +96,7 @@ class bill_register(osv.osv):
         'state': fields.selection(
             [('pending', 'Pending'), ('confirmed', 'Confirmed'), ('cancelled', 'Cancelled')],
             'Status', default='pending', readonly=True),
-        'old_journal': fields.boolean("Old Journal")
+        'old_journal': fields.boolean("Old Journal"),
     }
     _defaults = {
         'diagonostic_bill': False,
@@ -129,6 +130,7 @@ class bill_register(osv.osv):
     def bill_confirm(self, cr, uid, ids, context=None):
 
         stored_obj = self.browse(cr, uid, [ids[0]], context=context)
+        journal_object=self.pool.get("bill.journal.relation")
 
         diagonostic_bill = stored_obj.diagonostic_bill
         ## Bill Status Will Change
@@ -145,9 +147,6 @@ class bill_register(osv.osv):
         if grand_total==0:
             percent_amount=0
         if percent_amount>35 or grand_total==0:
-            cr.execute("update bill_register set state='confirmed' where id=%s", (ids))
-            cr.commit()
-
 
             stored = int(ids[0])
 
@@ -163,9 +162,6 @@ class bill_register(osv.osv):
 
             already_merged = []
             custom_name=''
-
-
-
             for items in stored_obj.bill_register_line_id:
                 custom_name = ''
                 state = 'sample'
@@ -176,9 +172,6 @@ class bill_register(osv.osv):
                 if items.name.manual != True or items.name.lab_not_required != True:
 
                     custom_name = custom_name + ' ' + str(items.name.name)
-
-
-
                     if items.name.id not in already_merged:
 
                         child_list = []
@@ -188,8 +181,6 @@ class bill_register(osv.osv):
                             'department_id':items.name.department.name,
                             'state':state
                         }
-
-
 
                         for test_item in items.name.examination_entry_line:
 
@@ -252,9 +243,8 @@ class bill_register(osv.osv):
                         'type':stored_obj.type,
                         'p_type': 'advance',
                         'bill_total_amount': stored_obj.total,
-                        'due_amount': stored_obj.due,
+                        'due_amount': stored_obj.due
                     }
-                    has_been_paid = stored_obj.paid
                 mr_obj = self.pool.get('leih.money.receipt')
                 mr_id = mr_obj.create(cr, uid, mr_value, context=context)
 
@@ -262,107 +252,129 @@ class bill_register(osv.osv):
                     mr_name = 'MR#' + str(mr_id)
                     cr.execute('update leih_money_receipt set name=%s,diagonostic_bill=%s where id=%s', (mr_name,diagonostic_bill, mr_id))
                     cr.commit()
-                # if mr_id is not None:
-                #     try:
-                #         mr_name = 'MR#' + str(mr_id)
-                #         cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
-                #         cr.commit()
-                #     except:
-                #         pass
-
 
 
                 ### Journal ENtry will be here
 
-                # line_ids = []
-                #
-                # if context is None: context = {}
-                # if context.get('period_id', False):
-                #     return context.get('period_id')
-                # periods = self.pool.get('account.period').find(cr, uid, context=context)
-                # period_id = periods and periods[0] or False
-                # ar_amount = stored_obj.due
-                #
-                # if ar_amount > 0:
-                #     line_ids.append((0, 0, {
-                #         'analytic_account_id': False,
-                #         'tax_code_id': False,
-                #         'tax_amount': 0,
-                #         'name': stored_obj.name,
-                #         'currency_id': False,
-                #         'credit': 0,
-                #         'date_maturity': False,
-                #         'account_id': 6010, ### Accounts Receivable ID
-                #         'debit': ar_amount,
-                #         'amount_currency': 0,
-                #         'partner_id': False,
-                #     }))
-                #
-                # if has_been_paid > 0:
-                #     line_ids.append((0, 0, {
-                #         'analytic_account_id': False,
-                #         'tax_code_id': False,
-                #         'tax_amount': 0,
-                #         'name': stored_obj.name,
-                #         'currency_id': False,
-                #         'credit': 0,
-                #         'date_maturity': False,
-                #         'account_id': 6,  ### Cash ID
-                #         'debit': has_been_paid,
-                #         'amount_currency': 0,
-                #         'partner_id': False,
-                #     }))
-                #
-                # for cc_obj in stored_obj.bill_register_line_id:
-                #     ledger_id=611
-                #     try:
-                #         ledger_id = cc_obj.name.accounts_id.id
-                #     except:
-                #         ledger_id= 611 ## Diagnostic Income Head , If we don't assign any Ledger
-                #
-                #
-                #
-                #     if context is None:
-                #         context = {}
-                #
-                #     line_ids.append((0, 0, {
-                #         'analytic_account_id': False,
-                #         'tax_code_id': False,
-                #         'tax_amount': 0,
-                #         'name': cc_obj.name.name,
-                #         'currency_id': False,
-                #         'account_id': cc_obj.name.accounts_id.id,
-                #         'credit': cc_obj.total_amount,
-                #         'date_maturity': False,
-                #         'debit': 0,
-                #         'amount_currency': 0,
-                #         'partner_id': False,
-                #     }))
-                #
-                #
-                #
-                #
-                # jv_entry = self.pool.get('account.move')
-                #
-                # j_vals = {'name': '/',
-                #           'journal_id': 2,  ## Sales Journal
-                #           'date': fields.date.today(),
-                #           'period_id': period_id,
-                #           'ref': stored_obj.name,
-                #           'line_id': line_ids
-                #
-                #           }
-                #
-                # saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
-                # # import pdb
-                # # pdb.set_trace()
-                # if saved_jv_id > 0:
-                #     journal_id = saved_jv_id
-                # jv_entry.button_validate(cr, uid, [saved_jv_id], context)
+            if stored_obj:
+                line_ids = []
+
+                if context is None: context = {}
+                if context.get('period_id', False):
+                    return context.get('period_id')
+                periods = self.pool.get('account.period').find(cr, uid, context=context)
+                period_id = periods and periods[0] or False
+                # if method is cash
+                if stored_obj.payment_type.name=='Cash':
+                    has_been_paid = stored_obj.paid
+                    ar_amount = stored_obj.due
+                    account_id=6
+                elif stored_obj.payment_type.name == 'Visa Card':
+                    has_been_paid = stored_obj.to_be_paid
+                    ar_amount = stored_obj.due
+                    account_id=stored_obj.payment_type.account.id
+
+                if ar_amount > 0:
+                    line_ids.append((0, 0, {
+                        'analytic_account_id': False,
+                        'tax_code_id': False,
+                        'tax_amount': 0,
+                        'name': stored_obj.name,
+                        'currency_id': False,
+                        'credit': 0,
+                        'date_maturity': False,
+                        'account_id': 195, ### Accounts Receivable ID
+                        'debit': ar_amount,
+                        'amount_currency': 0,
+                        'partner_id': False,
+                    }))
+
+                if has_been_paid > 0:
+                    line_ids.append((0, 0, {
+                        'analytic_account_id': False,
+                        'tax_code_id': False,
+                        'tax_amount': 0,
+                        'name': stored_obj.name,
+                        'currency_id': False,
+                        'credit': 0,
+                        'date_maturity': False,
+                        'account_id': account_id,  ### Cash/Bank ID
+                        'debit': has_been_paid,
+                        'amount_currency': 0,
+                        'partner_id': False,
+                    }))
+
+                for cc_obj in stored_obj.bill_register_line_id:
+                    ledger_id=611
+                    try:
+                        ledger_id = cc_obj.name.accounts_id.id
+                    except:
+                        ledger_id= 611 ## Diagnostic Income Head , If we don't assign any Ledger
 
 
 
+                    if context is None:
+                        context = {}
 
+                    line_ids.append((0, 0, {
+                        'analytic_account_id': False,
+                        'tax_code_id': False,
+                        'tax_amount': 0,
+                        'name': cc_obj.name.name,
+                        'currency_id': False,
+                        'account_id': cc_obj.name.accounts_id.id,
+                        'credit': cc_obj.total_amount,
+                        'date_maturity': False,
+                        'debit': 0,
+                        'amount_currency': 0,
+                        'partner_id': False,
+                    }))
+                    # end cash statement
+
+
+                    # if payment type is card
+
+                if stored_obj.service_charge > 0:
+                    line_ids.append((0, 0, {
+                        'analytic_account_id': False,
+                        'tax_code_id': False,
+                        'tax_amount': 0,
+                        'name':stored_obj.payment_type.name,
+                        'currency_id': False,
+                        'credit': stored_obj.service_charge,
+                        'date_maturity': False,
+                        'account_id': stored_obj.payment_type.service_charge_account.id,  ### Cash ID
+                        'debit': 0,
+                        'amount_currency': 0,
+                        'partner_id': False,
+                    }))
+
+
+                        # end of card payment
+
+                jv_entry = self.pool.get('account.move')
+
+                j_vals = {'name': '/',
+                          'journal_id': 2,  ## Sales Journal
+                          'date': stored_obj.date,
+                          'period_id': period_id,
+                          'ref': stored_obj.name,
+                          'line_id': line_ids
+
+                          }
+
+                saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
+                if saved_jv_id > 0:
+                    journal_id = saved_jv_id
+                    try:
+                        jv_entry.button_validate(cr,uid, [saved_jv_id], context)
+                        cr.execute("update bill_register set state='confirmed' where id=%s", (ids))
+                        cr.commit()
+                        journal_dict={'journal_id':journal_id,'bill_journal_relation_id':stored_obj.id}
+                        journal_object.create(cr,uid,vals=journal_dict,context=context)
+                    except:
+                        import pdb
+                        pdb.set_trace()
                 ### Ends the journal Entry Here
 
 
@@ -370,6 +382,7 @@ class bill_register(osv.osv):
         else:
             raise osv.except_osv(_('Warning!'),
                                  _('PLease Pay minimum amount.'))
+
 
 
 
@@ -420,6 +433,37 @@ class bill_register(osv.osv):
         return True
 
     def bill_cancel(self, cr, uid, ids, context=None):
+
+        ##### Cancel Journal And Unlink/ Delete all journals
+
+        cr.execute("select  id as jounral_id from account_move where ref = (select name from bill_register where id=%s limit 1)",(ids))
+        joural_ids = cr.fetchall()
+        context=context
+
+        itm = [itm[0] for itm in joural_ids]
+        if len(itm)>0:
+            uid=1
+            moves =self.pool.get('account.move').browse(cr, uid, itm, context=context)
+            moves.button_cancel() ## Cancelling
+
+            bill_journal_id = []
+            # cr.execute("delete from bill_journal_relation where id in (select id from bill_journal_relation where journal_id in %s)",(tuple(itm)))
+            user_q = "select id from bill_journal_relation where journal_id in %s"
+            # cr.execute("select id from bill_journal_relation where journal_id in %s",(tuple(itm)))
+            cr.execute(user_q, (tuple(itm),))
+            journal_id = cr.fetchall()
+            for item in journal_id:
+                bill_journal_id.append(item[0])
+
+            query = "delete from bill_journal_relation where id in %s"
+            cr.execute(query, (tuple(bill_journal_id),))
+
+            moves.unlink()  ### Deleting Journal
+
+
+
+        #### Ends Here
+
         ## Bill Status Will Change
 
         cr.execute("update bill_register set state='cancelled' where id=%s", (ids))
@@ -541,13 +585,157 @@ class bill_register(osv.osv):
             name_text = 'Bill-0' + str(stored)
             cr.execute('update bill_register set name=%s where id=%s', (name_text, stored))
             cr.commit()
-
-
-
         return stored
 
-    def write(self, cr, uid, ids, vals, context=None):
-        return super(bill_register, self).write(cr, uid, ids, vals, context=context)
+    def write(self, cr, uid, ids,vals,context=None):
+
+
+        if vals.get('bill_register_line_id') or uid == 1:
+            cr.execute("select id as journal_ids from account_move where ref = (select name from bill_register where id=%s limit 1)",(ids))
+            journal_ids = cr.fetchall()
+            context=context
+            itm = [itm[0] for itm in journal_ids]
+
+            if len(itm)>0:
+
+                uid=1
+                moves =self.pool.get('account.move').browse(cr, uid, itm, context=context)
+                xx=moves.button_cancel() ## Cancelling
+                bill_journal_id=[]
+                # cr.execute("delete from bill_journal_relation where id in (select id from bill_journal_relation where journal_id in %s)",(tuple(itm)))
+                user_q="select id from bill_journal_relation where journal_id in %s"
+                # cr.execute("select id from bill_journal_relation where journal_id in %s",(tuple(itm)))
+                cr.execute(user_q, (tuple(itm),))
+                journal_id = cr.fetchall()
+                for item in journal_id:
+                    bill_journal_id.append(item[0])
+
+                query="delete from bill_journal_relation where id in %s"
+                cr.execute(query,(tuple(bill_journal_id),))
+
+
+
+
+                # if len(itm)>1:
+                #     cr.execute("delete from bill_journal_relation where id = (select id from bill_journal_relation where journal_id=%s)", ([itm[0]]))
+                #     cr.execute("delete from bill_journal_relation where id = (select id from bill_journal_relation where journal_id=%s)", ([itm[1]]))
+                #     cr.commit()
+                # else:
+                #     cr.execute("delete from bill_journal_relation where id = (select id from bill_journal_relation where journal_id=%s)",(itm))
+
+                # import pdb
+                # pdb.set_trace()
+
+                moves.unlink()
+                updated=super(bill_register, self).write(cr, uid, ids, vals, context=context)
+                #journal entry will be here
+
+
+                    ### Journal ENtry will be here
+
+                stored_obj = self.browse(cr, uid, [ids[0]], context=context)
+                journal_object = self.pool.get("bill.journal.relation")
+                if stored_obj:
+                    line_ids = []
+
+                    if context is None: context = {}
+                    if context.get('period_id', False):
+                        return context.get('period_id')
+                    periods = self.pool.get('account.period').find(cr, uid, context=context)
+                    period_id = periods and periods[0] or False
+                    has_been_paid = stored_obj.paid
+                    ar_amount = stored_obj.due
+
+                    if ar_amount > 0:
+                        line_ids.append((0, 0, {
+                            'analytic_account_id': False,
+                            'tax_code_id': False,
+                            'tax_amount': 0,
+                            'name': stored_obj.name,
+                            'currency_id': False,
+                            'credit': 0,
+                            'date_maturity': False,
+                            'account_id': 195, ### Accounts Receivable ID
+                            'debit': ar_amount,
+                            'amount_currency': 0,
+                            'partner_id': False,
+                        }))
+
+                    if has_been_paid > 0:
+                        line_ids.append((0, 0, {
+                            'analytic_account_id': False,
+                            'tax_code_id': False,
+                            'tax_amount': 0,
+                            'name': stored_obj.name,
+                            'currency_id': False,
+                            'credit': 0,
+                            'date_maturity': False,
+                            'account_id': 6,  ### Cash ID
+                            'debit': has_been_paid,
+                            'amount_currency': 0,
+                            'partner_id': False,
+                        }))
+
+                    for cc_obj in stored_obj.bill_register_line_id:
+                        ledger_id=611
+                        try:
+                            ledger_id = cc_obj.name.accounts_id.id
+                        except:
+                            ledger_id= 611 ## Diagnostic Income Head , If we don't assign any Ledger
+
+
+
+                        if context is None:
+                            context = {}
+
+                        line_ids.append((0, 0, {
+                            'analytic_account_id': False,
+                            'tax_code_id': False,
+                            'tax_amount': 0,
+                            'name': cc_obj.name.name,
+                            'currency_id': False,
+                            'account_id': cc_obj.name.accounts_id.id,
+                            'credit': cc_obj.total_amount,
+                            'date_maturity': False,
+                            'debit': 0,
+                            'amount_currency': 0,
+                            'partner_id': False,
+                        }))
+
+
+
+
+                    jv_entry = self.pool.get('account.move')
+
+                    j_vals = {'name': '/',
+                              'journal_id': 2,  ## Sales Journal
+                              'date': stored_obj.date,
+                              'period_id': period_id,
+                              'ref': stored_obj.name,
+                              'line_id': line_ids
+
+                              }
+
+                    saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
+                    if saved_jv_id > 0:
+                        journal_id = saved_jv_id
+                        try:
+                            jv_entry.button_validate(cr,uid, [saved_jv_id], context)
+                            cr.execute("update bill_register set state='confirmed' where id=%s", (ids))
+                            cr.commit()
+                            journal_dict={'journal_id':journal_id,'bill_journal_relation_id':stored_obj.id}
+                            journal_object.create(cr,uid,vals=journal_dict,context=context)
+                        except:
+                            import pdb
+                            pdb.set_trace()
+                    return updated
+                    ### Ends the journal Entry Here
+        else:
+            raise osv.except_osv(_('Warning!'),
+                                 _("You cannot Edit the bill"))
+            return "NOthing"
+
+
 
     @api.onchange('bill_register_line_id')
     def onchange_test_bill(self):
@@ -573,6 +761,12 @@ class bill_register(osv.osv):
     @api.onchange('paid')
     def onchange_paid(self):
         self.due = self.grand_total - self.paid
+        if self.payment_type:
+            if self.payment_type.service_charge>0:
+                interest = self.payment_type.service_charge
+                service_charge = (self.paid * interest) / 100
+                self.service_charge = service_charge
+                self.to_be_paid = self.paid + service_charge
         return 'x'
 
 
@@ -739,20 +933,32 @@ class admission_payment_line(osv.osv):
         'bill_register_payment_line_id': fields.many2one('bill.register', 'bill register payment'),
         'date':fields.datetime("Date"),
         'amount':fields.float('Amount'),
-        'type':fields.selection([('bank','Bank'),('cash','Cash')],'Type'),
+        'type':fields.char("Type"),
         'card_no':fields.char('Card Number'),
         'bank_name':fields.char('Bank Name'),
         'money_receipt_id': fields.many2one('leih.money.receipt', 'Money Receipt ID'),
 
     }
 
-    class bill_journal_relations(osv.osv):
-        _name = 'bill.journal.relation'
+class bill_journal_relations(osv.osv):
+    _name = 'bill.journal.relation'
 
-        _columns = {
-            'bill_journal_relation_id': fields.many2one('bill.register', 'bill register payment'),
-            'journal_id': fields.many2one('account.move',"Journal Id")
-        }
+    _columns = {
+        'bill_journal_relation_id': fields.many2one('bill.register', 'bill register payment'),
+        'admission_journal_relation_id': fields.many2one('leih.admission', 'Admission Journal'),
+        'journal_id': fields.integer("Journal Id"),
+    }
+
+
+# class accoun_move(osv.osv):
+#     _inherit ="account.move"
+#
+#     def write(self, cr, uid,ids, vals, context=None):
+#         import pdb
+#         pdb.set_trace()
+
+
+
 
 
 

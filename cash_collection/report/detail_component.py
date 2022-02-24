@@ -18,7 +18,7 @@ class detail_collcetion_details(report_sxw.rml_parse):
                           "(select opd_ticket_entry.name from opd_ticket_entry where opd_ticket_entry.id=opd_ticket_line.name) as name ,opd_ticket_line.department " \
                           "from opd_ticket_line,opd_ticket where opd_ticket_line.opd_ticket_id=opd_ticket.id and (opd_ticket.create_date <= '%s')" \
                           " and (opd_ticket.create_date >= '%s') " \
-                          "group by opd_ticket_line.name, opd_ticket_line.department,opd_ticket_line.price order by opd_ticket_line.department asc"
+                          "group by opd_ticket_line.name, opd_ticket_line.department,opd_ticket_line.price order by opd_ticket_line.price desc"
 
         bill_q = "select sum(bill_register_line.total_amount),count(bill_register_line.total_amount) as tl," \
                  " (select examination_entry.name from examination_entry where examination_entry.id=bill_register_line.name) as name,bill_register_line.department,(select sum(leih_money_receipt.bill_total_amount) as total from leih_money_receipt,bill_register where bill_register.id=leih_money_receipt.bill_id) " \

@@ -11,7 +11,7 @@
 
 <!--                        <button string="Add Test" type="object" name="add_new_test" groups="base.group_user"/>-->
 
-                        <button string="Confirm" type="object" name="confirm_transfer" groups="base.group_user"/>
+                        <button string="Confirm" type="object" name="confirm_transfer" groups="base.group_user" />
                         <button string="Cancel" type="object" name="inventory_requsition_cancel" groups="base.group_user"/>
                     </header>
                 <sheet>
@@ -84,6 +84,7 @@
                 <field name="department"/>
                 <field name="challan_id"/>
                 <field name="warehouse_id"/>
+                <field name="expense_journal_id"/>
                 <field name="state"/>
             </tree>
             </field>

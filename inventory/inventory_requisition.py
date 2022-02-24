@@ -12,6 +12,7 @@ class inventory_requisition(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse Location',required=True),
         'partner_id': fields.many2one('res.partner', 'Receiver'),
         'challan_id': fields.many2one('stock.picking', 'Challan NO'),
+        'expense_journal_id': fields.many2one('account.move', 'Expense Journal'),
         'department':fields.many2one("hr.department","Department",required=True),
         'inventory_requisition_line_ids':fields.one2many('inventory.requisition.line','inventory_requsition_id',string="Inventory Requision Items",required=True),
         'date':fields.date('Date'),
@@ -94,9 +95,78 @@ class inventory_requisition(osv.osv):
                 picking_obj.force_assign(cr, uid, [stock_picking_id], context=context)
                 picking_obj.action_done(cr, uid, [stock_picking_id], context=context)
 
+
+
+            ##### Create an Expense Journal ID ###################
+
+            jv_entry = self.pool.get('account.move')
+
+            if context is None: context = {}
+            if context.get('period_id', False):
+                return context.get('period_id')
+            periods = self.pool.get('account.period').find(cr, uid, context=context)
+            period_id = periods and periods[0] or False
+            line_ids =[]
+
+            stock_picking_obj = self.pool['stock.picking'].browse(cr, uid, [stock_picking_id],
+                                                                             context=context)[0]
+
+
+            for items in stock_picking_obj.move_lines:
+                inv_value=0
+                for q_it in items.quant_ids:
+                    inv_value = inv_value + q_it.inventory_value
+
+                import pdb
+                pdb.set_trace()
+
+
+
+                line_ids.append((0, 0, {
+                    'analytic_account_id': False,
+                    'tax_code_id': False,
+                    'tax_amount': 0,
+                    'name': ir_obj.name,
+                    'currency_id': False,
+                    'credit': 0,
+                    'date_maturity': False,
+                    'account_id': items.product_id.categ_id.property_account_expense_categ.id,  ### Cash ID
+                    'debit': inv_value,
+                    'amount_currency': 0,
+                    'partner_id': False,
+                }))
+                line_ids.append((0, 0, {
+                    'analytic_account_id': False,
+                    'tax_code_id': False,
+                    'tax_amount': 0,
+                    'name': ir_obj.name,
+                    'currency_id': False,
+                    'credit': inv_value,
+                    'date_maturity': False,
+                    'account_id': items.product_id.categ_id.property_stock_account_output_categ.id,  ### Accounts Receivable ID
+                    'debit': 0,
+                    'amount_currency': 0,
+                    'partner_id': False,
+                }))
+
+
+
+            j_vals = {'name': '/',
+                      'journal_id': 2,  ## Sales Journal
+                      'date':fields.date.today(),
+                      'period_id': period_id,
+                      'ref': ir_obj.name,
+                      'line_id': line_ids
+
+                      }
+
+            saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
+
+            ################## Ends Here Expense Here ############
+
             confirm_cash_collection_query = "UPDATE inventory_requisition SET state='confirmed'," \
-                                            "challan_id = {0} WHERE id={1}".format(
-                stock_picking_id, id)
+                                            "challan_id = {0}, expense_journal_id= {1} WHERE id={2}".format(
+                stock_picking_id,saved_jv_id, id)
             cr.execute(confirm_cash_collection_query)
             cr.commit()
 

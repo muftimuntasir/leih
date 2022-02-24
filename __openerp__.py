@@ -131,11 +131,11 @@ membership products (schemes).
         'advance_cash/advance_cash_view.xml',
         'bill_register/bill_register_line_view.xml',
         'ward/inherit_purchase.xml',
-
-
-
-
-
+        'ward/report_purchasestock.xml',
+        'payment_type/payment_type_view.xml',
+        'accounting_report/book_report_view.xml',
+        'accounting_report/report/cash_book_report.xml',
+        'accounting_report/report/report_cash_book.xml',
 
     ],
     'demo': [],
