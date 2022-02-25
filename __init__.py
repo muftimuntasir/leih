@@ -25,5 +25,5 @@ import wizard
 import inventory
 import advance_cash
 import payment_type
-import accounting_report
+# import accounting_report
 
