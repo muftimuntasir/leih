@@ -542,6 +542,10 @@ class bill_register(osv.osv):
 
 
     def create(self, cr, uid, vals, context=None):
+        if vals.get("due"):
+            if vals.get("due")<0:
+                raise osv.except_osv(_('Warning!'),
+                                     _("Check paid and grand total!"))
 
         if context is None:
             context = {}
@@ -551,10 +555,11 @@ class bill_register(osv.osv):
         ### Check Diagonostice Items available or not. If avvailable then no ther component will be there
 
         get_all_depts =[]
-        for items in vals.get('bill_register_line_id'):
-            if items[2].get('department'):
-                if items[2].get('department') not in get_all_depts:
-                    get_all_depts.append(items[2].get('department'))
+        if vals.get('bill_register_line_id'):
+            for items in vals.get('bill_register_line_id'):
+                if items[2].get('department'):
+                    if items[2].get('department') not in get_all_depts:
+                        get_all_depts.append(items[2].get('department'))
 
         ## Check Diagnsis exists
         mixed_up = False
@@ -588,13 +593,20 @@ class bill_register(osv.osv):
         return stored
 
     def write(self, cr, uid, ids,vals,context=None):
+        if vals.get("due"):
+            if vals.get("due")<0:
+                raise osv.except_osv(_('Warning!'),
+                                     _("Check paid and grand total!"))
 
 
         if vals.get('bill_register_line_id') or uid == 1:
             cr.execute("select id as journal_ids from account_move where ref = (select name from bill_register where id=%s limit 1)",(ids))
             journal_ids = cr.fetchall()
             context=context
+            updated = super(bill_register, self).write(cr, uid, ids, vals, context=context)
             itm = [itm[0] for itm in journal_ids]
+            # import pdb
+            # pdb.set_trace()
 
             if len(itm)>0:
 
@@ -627,7 +639,6 @@ class bill_register(osv.osv):
                 # pdb.set_trace()
 
                 moves.unlink()
-                updated=super(bill_register, self).write(cr, uid, ids, vals, context=context)
                 #journal entry will be here
 
 
@@ -730,10 +741,11 @@ class bill_register(osv.osv):
                             pdb.set_trace()
                     return updated
                     ### Ends the journal Entry Here
-        else:
-            raise osv.except_osv(_('Warning!'),
-                                 _("You cannot Edit the bill"))
-            return "NOthing"
+            else:
+                updated = super(bill_register, self).write(cr, uid, ids, vals, context=context)
+                # raise osv.except_osv(_('Warning!'),
+                #                      _("You cannot Edit the bill"))
+                return updated
 
 
 

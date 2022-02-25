@@ -535,6 +535,11 @@ class leih_admission(osv.osv):
 
 
     def create(self, cr, uid, vals, context=None):
+        if vals.get("due"):
+            if vals.get("due")<0:
+                raise osv.except_osv(_('Warning!'),
+                                     _("Check paid and grand total!"))
+
         if context is None:
             context = {}
         # import pdb
@@ -558,7 +563,10 @@ class leih_admission(osv.osv):
         return stored
 
     def write(self, cr, uid, ids,vals,context=None):
-
+        if vals.get("due"):
+            if vals.get("due")<0:
+                raise osv.except_osv(_('Warning!'),
+                                     _("Check paid and grand total!"))
 
         if vals.get('leih_admission_line_id') or uid == 1:
             cr.execute("select id as journal_ids from account_move where ref = (select name from leih_admission where id=%s limit 1)",(ids))
@@ -702,10 +710,11 @@ class leih_admission(osv.osv):
                             pdb.set_trace()
                     return updated
                     ### Ends the journal Entry Here
-        else:
-            raise osv.except_osv(_('Warning!'),
-                                 _("You cannot Edit the bill"))
-            return "NOthing"
+            else:
+                updated = super(leih_admission, self).write(cr, uid, ids, vals, context=context)
+                # raise osv.except_osv(_('Warning!'),
+                #                      _("You cannot Edit the bill"))
+                return updated
 
 
 

@@ -24,9 +24,6 @@ class cc_collection(osv.osv_memory):
         if res.get('id',False):
             datas['ids']=[res['id']]
 
-        import pdb
-        pdb.set_trace()
-
 
 
         return self.pool['report'].get_action(cr, uid, [], 'leih.report_detail_component', data=datas, context=context)
