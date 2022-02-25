@@ -150,7 +150,7 @@ class bill_register(osv.osv):
                 j_vals = {'name': '/',
                           'journal_id': 2,  ## Sales Journal
                           'date': stored_obj.date,
-                          'period_id': 24,
+                          'period_id': period_id,
                           'ref': stored_obj.name,
                           'line_id': line_ids
 
