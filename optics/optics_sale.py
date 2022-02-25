@@ -324,6 +324,63 @@ class optics_sale(osv.osv):
         else:
             raise osv.except_osv(_('Warning!'),
                                  _('Minimum Payment is Required'))
+        #journal for cogs
+        stock_picking_obj = self.pool['stock.picking'].browse(cr, uid, [picking_id],context=context)[0]
+        if len(stock_picking_obj)>0:
+            lines_ids = []
+
+            for items in stock_picking_obj.move_lines:
+                inv_value = 0
+                for q_it in items.quant_ids:
+                    inv_value = inv_value + abs(q_it.inventory_value)
+                    break
+                    # import pdb
+                    # pdb.set_trace()
+
+                lines_ids.append((0, 0, {
+                    'analytic_account_id': False,
+                    'tax_code_id': False,
+                    'tax_amount': 0,
+                    'name': order.name,
+                    'currency_id': False,
+                    'credit': 0,
+                    'date_maturity': False,
+                    'account_id': items.product_id.categ_id.property_account_expense_categ.id,  ### Cash ID
+                    'debit': abs(inv_value),
+                    'amount_currency': 0,
+                    'partner_id': False,
+                }))
+                lines_ids.append((0, 0, {
+                    'analytic_account_id': False,
+                    'tax_code_id': False,
+                    'tax_amount': 0,
+                    'name': order.name,
+                    'currency_id': False,
+                    'credit': abs(inv_value),
+                    'date_maturity': False,
+                    'account_id': items.product_id.categ_id.property_stock_account_output_categ.id,
+                    ### Accounts Receivable ID
+                    'debit': 0,
+                    'amount_currency': 0,
+                    'partner_id': False,
+                }))
+
+
+            jvv_entry = self.pool.get('account.move')
+
+
+            nj_vals = {'name': '/',
+                      'journal_id': 2,  ## Sales Journal
+                      'date': fields.date.today(),
+                      'period_id': period_id,
+                      'ref': order.name,
+                      'line_id': lines_ids
+
+                      }
+
+            saved_jv_ids = jvv_entry.create(cr, uid, nj_vals, context=context)
+
+
         return self.pool['report'].get_action(cr, uid, ids, 'leih.report_optics_sale', context=context)
 
     def onchange_patient(self, cr, uid, ids, name, context=None):

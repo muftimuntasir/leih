@@ -117,11 +117,6 @@ class inventory_requisition(osv.osv):
                 for q_it in items.quant_ids:
                     inv_value = inv_value + q_it.inventory_value
 
-                import pdb
-                pdb.set_trace()
-
-
-
                 line_ids.append((0, 0, {
                     'analytic_account_id': False,
                     'tax_code_id': False,

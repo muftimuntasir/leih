@@ -163,15 +163,15 @@ class bill_register_payment(osv.osv):
 
         return service_id
 
-    # def _default_payment_type(self):
-    #     return self.env['payment.type'].search([('name', '=', 'Cash')], limit=1).id
+    def _default_payment_type(self):
+        return self.env['payment.type'].search([('name', '=', 'Cash')], limit=1).id
 
     _columns = {
         'name':fields.char("Cash Collection ID", readonly=True),
         'bill_id': fields.many2one('bill.register', 'Bill ID', readoly=True),
         'date': fields.date('Date'),
         'amount': fields.float('Receive Amount', required=True),
-        'payment_type': fields.many2one('payment.type','Payment Type'),
+        'payment_type': fields.many2one('payment.type','Payment Type',default=_default_payment_type),
         'service_charge': fields.float("Service Charge"),
         'to_be_paid': fields.float("To be Paid"),
         'account_number':fields.char('Account No.'),
