@@ -394,10 +394,6 @@ class leih_admission(osv.osv):
         #for updates on cash collection
         cr.execute("update leih_money_receipt set state='cancel' where admission_id=%s", (ids))
         cr.commit()
-
-
-
-
         return True
 
 

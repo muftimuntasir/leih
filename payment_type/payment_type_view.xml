@@ -83,7 +83,7 @@
         </field>
         </record>
 
-        <menuitem name="Payment type" id="payment_type" parent="leih_opd_menu" action="payment_type_action" groups="leih.group_opd_menu_opd_ticket"/>
+        <menuitem name="Payment type" id="payment_type" parent="leih_opd_menu" action="payment_type_action" groups="leih.group_billing_menu_payment_type,leih.group_billing_menu_bill_register"/>
 
 
     </data>

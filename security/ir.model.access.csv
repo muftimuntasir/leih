@@ -32,12 +32,18 @@ access_admission_payment_line_activated_edit,admission.payment.line,model_admiss
 access_bill_register_admission_line_activated_edit,bill.register.admission.line,model_bill_register_admission_line,group_billing_menu_bill_register_edit,1,1,1,1
 access_billing_menu_money_receipt_edit,leih.money.receipt,model_leih_money_receipt,group_billing_menu_bill_register_edit,1,1,1,0
 access_billing_menu_bill_journal_relation_id,bill.journal.relation,model_bill_journal_relation,group_billing_menu_bill_register,1,1,1,1
+access_billing_menu_bill_payment,payment.type,model_payment_type,group_billing_menu_bill_register,1,1,1,1
+
+
+
+access_billing_menu_bill_payment,payment.type,model_payment_type,group_billing_menu_payment_type,1,1,1,1
 
 access_billing_menu_optics_sale,optics.sale,model_optics_sale,group_billing_menu_optics_sale,1,1,1,0
 access_billing_menu_optics_lens_sale_line_id,optics.lens.sale.line,model_optics_lens_sale_line,group_billing_menu_optics_sale,1,1,1,1
 access_billing_menu_optics_sale_payment_line_id,optics.sale.payment.line,model_optics_sale_payment_line,group_billing_menu_optics_sale,1,1,1,1
 access_billing_menu_product_lens,product.lens,model_product_lens,group_billing_menu_optics_sale,1,1,1,0
 access_billing_menu_optics_sale_payment,optics.sale.payment,model_optics_sale_payment,group_billing_menu_optics_sale,1,1,1,1
+
 
 
 access_billing_menu_money_receipt,leih.money.receipt,model_leih_money_receipt,group_billing_menu_bill_register,1,1,1,0
