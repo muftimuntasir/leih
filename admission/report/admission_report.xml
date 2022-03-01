@@ -5,7 +5,7 @@
             <t t-call="report.html_container">
 <!--                <t t-call="report.external_layout">-->
                     <t t-foreach="docs" t-as="o">
-                        <div class="page" style="font-size: 15px;">
+                        <div class="page" style="font-size: 16px !important;">
                             <div class="row">
                                 <div class="col-xs-3"></div>
                                 <div class="col-xs-3"></div>
