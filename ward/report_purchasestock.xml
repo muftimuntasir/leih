@@ -29,7 +29,9 @@
                 <thead>
                     <tr>
                         <th><strong>Description</strong></th>
-                        <th><strong>Available Qty</strong></th>
+                        <th><strong>Last Date of Purchase</strong></th>
+                        <th><strong>Quantity</strong></th>
+                        <th><strong>Current Balance</strong></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,9 +39,28 @@
                         <td>
                             <span t-field="order_line.name"/>
                         </td>
+                        <t t-set="date"/>
+                        <t t-set="qty"/>
+                        <t t-foreach="request.env['stock.move'].search([('product_id', '=', order_line.product_id.id),('location_id','=',8)], limit=1)" t-as="obj" >
+<!--                            <t t-if="obj.location_id.usage=='supplier'">-->
+<!--                                <t t-foreach="o.order_line" t-as="order_line"></t>-->
+                         <t t-set="date" t-value="obj.date"/>
+                         <t t-set="qty" t-value="obj.product_uom_qty"/>
+<!--                            <t t-if="obj.date is not False">-->
+<!--                            <td><span t-field="obj.date"/></td>-->
+<!--                            <td><span t-field="obj.product_uom_qty"/></td>-->
+<!--                             </t>-->
+<!--                            <t t-else="">-->
+<!--                                <td></td>-->
+<!--                            <td></td>-->
+<!--                            </t>-->
+                        </t>
+                        <td><span t-esc="date"/></td>
+                        <td><span t-esc="qty"/></td>
                         <td><span t-field="order_line.product_id.qty_available"/></td>
-<!--                        <td class="text-center">-->
-<!--                            <span t-field="order_line.date_planned"/>-->
+<!--                            </t>-->
+<!--                       <td class="text-center">-->
+<!--                             <span t-field="order_line.date_planned"/>-->
 <!--                        </td>-->
 <!--                        <td class="text-right">-->
 <!--                            <span t-field="order_line.product_qty"/>-->
