@@ -21,22 +21,16 @@
            <br/>
            <br/>
             <div class="row">
-                <div class="col-xs-1">
-                    <strong><u>AD(Admin)</u></strong>
+                <div class="col-xs-3 text-right">
+                    <strong><u>RS(LEI&amp;H)</u></strong>
                 </div>
-                <div class="col-xs-2">
-                    <strong><u>DD(F &amp; H)</u></strong>
-                </div>
-                <div class="col-xs-2">
-                    <strong><u>DD(LEI&amp;H)</u></strong>
-                </div>
-                <div class="col-xs-2">
+                <div class="col-xs-3 text-right">
                     <strong><u>DG(LEI&amp;H)</u></strong>
                 </div>
-                <div class="col-xs-2">
+                <div class="col-xs-3 text-right">
                     <strong><u>Treasurer</u></strong>
                 </div>
-                <div class="col-xs-2 text-left">
+                <div class="col-xs-3 text-right">
                     <strong><u>S. General</u></strong>
                 </div>
             </div>
@@ -53,23 +47,17 @@
            <br/>
            <br/>
             <div class="row">
-                <div class="col-xs-2">
-                    <strong><u>Created By</u></strong>
+                <div class="col-xs-3 text-right">
+                    <strong><u>RS(LEI&amp;H)</u></strong>
                 </div>
-                <div class="col-xs-2">
-                    <strong><u>AD(Admin)</u></strong>
+                <div class="col-xs-3 text-right">
+                    <strong><u>DG(LEI&amp;H)</u></strong>
                 </div>
-                                <div class="col-xs-2">
-                    <strong><u>DD(F &amp; H)</u></strong>
+                <div class="col-xs-3 text-right">
+                    <strong><u>Treasurer</u></strong>
                 </div>
-                <div class="col-xs-1">
-                    <strong><u>DG(Lei&amp;H)</u></strong>
-                </div>
-                <div class="col-xs-2">
-                    <strong><u>Treasurer(BLF)</u></strong>
-                </div>
-                <div class="col-xs-3 text-left">
-                    <strong><u>Secretary General(BLF)</u></strong>
+                <div class="col-xs-3 text-right">
+                    <strong><u>S. General</u></strong>
                 </div>
             </div>
         </xpath>
