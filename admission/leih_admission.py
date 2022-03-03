@@ -43,7 +43,7 @@ class leih_admission(osv.osv):
         'age': fields.char("Age",store=False),
         'sex':fields.char("Sex",store=False),
         'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
-        'delivery_date': fields.char("Delivery Date"),
+        'operation_date': fields.date("Operation Date",required=True),
         'release_note': fields.text("Release Note"),
         'package_name': fields.many2one("examine.package", string="Package"),
         'leih_admission_line_id': fields.one2many('leih.admission.line', 'leih_admission_id', 'Investigations'),
