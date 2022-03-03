@@ -697,8 +697,6 @@ class leih_admission(osv.osv):
                         journal_id = saved_jv_id
                         try:
                             jv_entry.button_validate(cr,uid, [saved_jv_id], context)
-                            cr.execute("update leih_admission set state='confirmed' where id=%s", (ids))
-                            cr.commit()
                             journal_dict={'journal_id':journal_id,'admission_journal_relation_id':stored_obj.id}
                             journal_object.create(cr,uid,vals=journal_dict,context=context)
                         except:
