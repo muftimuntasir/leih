@@ -6,7 +6,10 @@
             <field name="name">opd.ticket.views</field>
             <field name="model">opd.ticket</field>
             <field name="arch" type="xml">
-            <form string="Investigation">
+            <form string="OPD">
+                <header>
+                    <button string="Cancel" type="object" name="opd_cancel" groups="leih.group_bill_register_button_cancel"/>
+                </header>
                 <sheet>
 
                     <group>
@@ -86,6 +89,7 @@
                 <field name="age"/>
                 <field name="sex"/>
                 <field name="total"/>
+                <field name="state"/>
 
             </tree>
             </field>

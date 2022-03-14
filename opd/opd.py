@@ -46,13 +46,35 @@ class bill_register(osv.osv):
         'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
         'opd_ticket_line_id': fields.one2many('opd.ticket.line', 'opd_ticket_id', 'Investigations',required=True),
         'user_id': fields.many2one('res.users', 'Assigned to', select=True, track_visibility='onchange'),
-        # 'total': fields.function(_totalpayable,string="Total",type='float',store=True),
+        'state': fields.selection(
+            [('confirmed', 'Confirmed'), ('cancelled', 'Cancelled')],
+            'Status', default='confirmed', readonly=True),
         'total': fields.float(string="Total")
     }
     _defaults = {
         'user_id': lambda obj, cr, uid, context: uid,
         # 'opd_ticket_line_id':[[0, False, {'department': 'Medicine', 'price': 100, 'name': 1, 'total_amount': 100}]],
     }
+
+    def opd_cancel(self, cr, uid, ids, context=None):
+        cr.execute("select id as jounral_id from account_move where ref = (select name from opd_ticket where id=%s limit 1)",(ids))
+        joural_ids = cr.fetchall()
+        context = context
+
+        itm = [itm[0] for itm in joural_ids]
+        if len(itm) > 0:
+            uid = 1
+            moves = self.pool.get('account.move').browse(cr, uid, itm, context=context)
+            moves.button_cancel()  ## Cancelling
+            moves.unlink()  ### Deleting Journal
+
+        #### Ends Here
+
+        ## Bill Status Will Change
+
+        cr.execute("update opd_ticket set state='cancelled' where id=%s", (ids))
+        cr.commit()
+        return "C"
 
 
     def onchange_total(self,cr,uid,ids,name,context=None):
@@ -197,9 +219,6 @@ class test_information(osv.osv):
 
         'name': fields.many2one("opd.ticket.entry","Item Name",ondelete='cascade'),
         'opd_ticket_id': fields.many2one('opd.ticket', "Information"),
-        # 'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency",
-        #                               string="Currency", readonly=True, required=True),
-        # 'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account')),
         'price': fields.integer("Price"),
         'department':fields.char('Department'),
         'total_amount': fields.integer("Total Amount")
