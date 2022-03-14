@@ -232,26 +232,7 @@ class bill_register(osv.osv):
             # pdb.set_trace()
 
             has_been_paid = 0
-            if stored_obj.paid !=False:
-                for bills_vals in stored_obj:
-                    # import pdb
-                    # pdb.set_trace()
-                    mr_value={
-                        'date':stored_obj.date,
-                        'bill_id':int(stored),
-                        'amount':stored_obj.paid,
-                        'type':stored_obj.type,
-                        'p_type': 'advance',
-                        'bill_total_amount': stored_obj.total,
-                        'due_amount': stored_obj.due
-                    }
-                mr_obj = self.pool.get('leih.money.receipt')
-                mr_id = mr_obj.create(cr, uid, mr_value, context=context)
 
-                if mr_id is not None:
-                    mr_name = 'MR#' + str(mr_id)
-                    cr.execute('update leih_money_receipt set name=%s,diagonostic_bill=%s where id=%s', (mr_name,diagonostic_bill, mr_id))
-                    cr.commit()
 
 
                 ### Journal ENtry will be here
@@ -311,8 +292,6 @@ class bill_register(osv.osv):
                     except:
                         ledger_id= 611 ## Diagnostic Income Head , If we don't assign any Ledger
 
-
-
                     if context is None:
                         context = {}
 
@@ -360,7 +339,6 @@ class bill_register(osv.osv):
                           'period_id': period_id,
                           'ref': stored_obj.name,
                           'line_id': line_ids
-
                           }
 
                 saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
@@ -372,6 +350,27 @@ class bill_register(osv.osv):
                         cr.commit()
                         journal_dict={'journal_id':journal_id,'bill_journal_relation_id':stored_obj.id}
                         journal_object.create(cr,uid,vals=journal_dict,context=context)
+                        if stored_obj.paid != False:
+                            for bills_vals in stored_obj:
+                                # import pdb
+                                # pdb.set_trace()
+                                mr_value = {
+                                    'date': stored_obj.date,
+                                    'bill_id': int(stored),
+                                    'amount': stored_obj.paid,
+                                    'type': stored_obj.type,
+                                    'p_type': 'advance',
+                                    'bill_total_amount': stored_obj.total,
+                                    'due_amount': stored_obj.due
+                                }
+                            mr_obj = self.pool.get('leih.money.receipt')
+                            mr_id = mr_obj.create(cr, uid, mr_value, context=context)
+
+                            if mr_id is not None:
+                                mr_name = 'MR#' + str(mr_id)
+                                cr.execute('update leih_money_receipt set name=%s,diagonostic_bill=%s where id=%s',
+                                           (mr_name, diagonostic_bill, mr_id))
+                                cr.commit()
                     except:
                         import pdb
                         pdb.set_trace()

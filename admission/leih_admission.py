@@ -235,23 +235,6 @@ class leih_admission(osv.osv):
                     cr.commit()
 
         has_been_paid = 0
-        if stored_obj.paid != False:
-            ad_vals = {
-                'date':stored_obj.date,
-                'admission_id':stored_obj.id,
-                'amount':stored_obj.paid,
-                'type':stored_obj.type,
-                'p_type': 'advance',
-                'bill_total_amount': stored_obj.total,
-                'due_amount': stored_obj.due,
-            }
-            has_been_paid = stored_obj.paid
-            mr_obj = self.pool.get('leih.money.receipt')
-            mr_id = mr_obj.create(cr, uid, ad_vals, context=context)
-            if mr_id is not None:
-                mr_name = 'MR#' + str(mr_id)
-                cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
-                cr.commit()
             ### Journal ENtry will be here
         if stored_obj:
             line_ids = []
@@ -361,6 +344,23 @@ class leih_admission(osv.osv):
                     cr.commit()
                     journal_dict = {'journal_id': journal_id, 'admission_journal_relation_id': stored_obj.id}
                     journal_object.create(cr, uid, vals=journal_dict, context=context)
+                    if stored_obj.paid != False:
+                        ad_vals = {
+                            'date': stored_obj.date,
+                            'admission_id': stored_obj.id,
+                            'amount': stored_obj.paid,
+                            'type': stored_obj.type,
+                            'p_type': 'advance',
+                            'bill_total_amount': stored_obj.total,
+                            'due_amount': stored_obj.due,
+                        }
+                        has_been_paid = stored_obj.paid
+                        mr_obj = self.pool.get('leih.money.receipt')
+                        mr_id = mr_obj.create(cr, uid, ad_vals, context=context)
+                        if mr_id is not None:
+                            mr_name = 'MR#' + str(mr_id)
+                            cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
+                            cr.commit()
                 except:
                     import pdb
                     pdb.set_trace()

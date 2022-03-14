@@ -112,22 +112,6 @@ class optics_sale(osv.osv):
             raise osv.except_osv(_('Warning!'),
                                  _('Already it is  Confirmed. You can not change.'))
         if stored_obj.paid != False:
-            for bills_vals in stored_obj:
-                mr_value = {
-                    'date': stored_obj.date,
-                    'optics_sale_id': int(stored),
-                    'amount': stored_obj.paid,
-                    'type': stored_obj.type,
-                    'p_type': 'advance',
-                    'bill_total_amount': stored_obj.total,
-                    'due_amount': stored_obj.due,
-                }
-            mr_obj = self.pool.get('leih.money.receipt')
-            mr_id = mr_obj.create(cr, uid, mr_value, context=context)
-            if mr_id is not None:
-                mr_name = 'MR#' + str(mr_id)
-                cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
-                cr.commit()
             #### Create a challan
             picking_obj = self.pool.get('stock.picking')
             partner_obj = self.pool.get('res.partner')
@@ -314,6 +298,22 @@ class optics_sale(osv.osv):
                     jv_entry.button_validate(cr,uid, [saved_jv_id], context)
                     cr.execute("update optics_sale set state='confirmed' where id=%s", (ids))
                     cr.commit()
+                    for bills_vals in stored_obj:
+                        mr_value = {
+                            'date': stored_obj.date,
+                            'optics_sale_id': int(stored),
+                            'amount': stored_obj.paid,
+                            'type': stored_obj.type,
+                            'p_type': 'advance',
+                            'bill_total_amount': stored_obj.total,
+                            'due_amount': stored_obj.due,
+                        }
+                    mr_obj = self.pool.get('leih.money.receipt')
+                    mr_id = mr_obj.create(cr, uid, mr_value, context=context)
+                    if mr_id is not None:
+                        mr_name = 'MR#' + str(mr_id)
+                        cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
+                        cr.commit()
                 except:
                     import pdb
                     pdb.set_trace()
