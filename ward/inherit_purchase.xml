@@ -16,6 +16,14 @@
         <xpath expr="//h2" position="replace">
             <h2>Purchase Requisition <span t-field="o.name"/></h2>
         </xpath>
+                <xpath expr="//h2" position="before">
+                    <h5><b>Order Date:</b> <span t-field="o.date_order"/></h5>
+        </xpath>
+	    <xpath expr="//thead//tr//th[2]" position="replace">
+	    </xpath>
+
+        <xpath expr="//tbody//tr//td[2]" position="replace">
+	    </xpath>
 
        <xpath expr="(//p)[position()=last()]" position="after">
            <br/>
