@@ -5,6 +5,7 @@ import Patients
 import diagnosis_room
 import Group
 import examine_entry
+import payment_type
 import bill_register
 import sample
 import package
@@ -24,6 +25,5 @@ import optics
 import wizard
 import inventory
 import advance_cash
-import payment_type
 # import accounting_report
 

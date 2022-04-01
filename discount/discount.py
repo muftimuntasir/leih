@@ -1,7 +1,7 @@
 from openerp import api
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from datetime import date, time
+from datetime import date, time, timedelta, datetime
 
 class discount(osv.osv):
     _name = "discount"
@@ -12,6 +12,7 @@ class discount(osv.osv):
     _columns = {
 
         'name': fields.char("Discount Number"),
+        'date': fields.datetime("Date", readonly=True, default=lambda self: fields.datetime.now()),
         'admission_id':fields.many2one("leih.admission","Admission ID"),
         'bill_no': fields.many2one('bill.register','Bill No'),
         'patient_name': fields.char("Patient Name",required=True),
@@ -33,21 +34,22 @@ class discount(osv.osv):
 
         else:
             bill_id=discount_object.bill_no.id
+            bill_name=discount_object.bill_no
             admission_id=discount_object.admission_id.id
+            admission_name=discount_object.admission_id
             total_discount=discount_object.total_discount
-
-            # import pdb
-            # pdb.set_trace()
 
             # confirm button code
             if bill_id != False:
                 # fetching data from bill_register
-                query = "select grand_total,paid,due from bill_register where id=%s"
+                query = "select grand_total,paid,due,state from bill_register where id=%s"
                 cr.execute(query, ([bill_id]))
                 all_data = cr.dictfetchall()
-                # grand_total = 0
-                # paid_amount = 0
-                # due_amount = 0
+
+                if all_data[0]['state']!='confirmed':
+                    raise osv.except_osv(_('Error!'),
+                                         _('The bill is not in confirmed state yet!'))
+
                 for item in all_data:
                     grand_total = item.get('grand_total')
                     paid_amount = item.get('paid')
@@ -62,6 +64,70 @@ class discount(osv.osv):
                 cr.execute('update bill_register set other_discount=%s,grand_total=%s,due=%s where id=%s',
                            (total_discount, grand_total, due_amount, bill_id))
                 cr.commit()
+
+                # journal entry for approve discount
+                line_ids = []
+
+                if context is None: context = {}
+                if context.get('period_id', False):
+                    return context.get('period_id')
+                periods = self.pool.get('account.period').find(cr, uid, context=context)
+                period_id = periods and periods[0] or False
+
+
+                line_ids.append((0, 0, {
+                    'analytic_account_id': False,
+                    'tax_code_id': False,
+                    'tax_amount': 0,
+                    'name': discount_object.name,
+                    'currency_id': False,
+                    'credit': 0,
+                    'date_maturity': False,
+                    'account_id': discount_object.discount_line_id.accounts.id,  ### Cash ID
+                    'debit': total_discount,
+                    'amount_currency': 0,
+                    'partner_id': False,
+                }))
+                if context is None:
+                    context = {}
+
+                line_ids.append((0, 0, {
+                    'analytic_account_id': False,
+                    'tax_code_id': False,
+                    'tax_amount': 0,
+                    'name': discount_object.name,
+                    'currency_id': False,
+                    'credit': total_discount,
+                    'date_maturity': False,
+                    'account_id': 195,  ### Accounts Receivable ID
+                    'debit': 0,
+                    'amount_currency': 0,
+                    'partner_id': False,
+                }))
+
+                jv_entry = self.pool.get('account.move')
+
+                j_vals = {'name': '/',
+                          'journal_id': 6,  ## Cash Journal
+                          'date': fields.date.today(),
+                          'period_id': period_id,
+                          'ref': discount_object.bill_no,
+                          'line_id': line_ids
+
+                          }
+
+                # import pdb
+                # pdb.set_trace()
+                saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
+
+                if saved_jv_id > 0:
+                    if saved_jv_id > 0:
+                        journal_id = saved_jv_id
+                        try:
+                            jv_entry.button_validate(cr, uid, [saved_jv_id], context)
+                        except:
+                            import pdb
+                            pdb.set_trace()
 
             elif admission_id != False:
                 query = "select grand_total,paid,due from leih_admission where id=%s"
@@ -84,6 +150,70 @@ class discount(osv.osv):
                 cr.execute('update leih_admission set other_discount=%s,grand_total=%s,due=%s where id=%s',
                            (total_discount, grand_total, due_amount, admission_id))
                 cr.commit()
+
+                # journal entry will be here
+                # journal entry for approve discount
+                line_ids = []
+
+                if context is None: context = {}
+                if context.get('period_id', False):
+                    return context.get('period_id')
+                periods = self.pool.get('account.period').find(cr, uid, context=context)
+                period_id = periods and periods[0] or False
+
+                line_ids.append((0, 0, {
+                    'analytic_account_id': False,
+                    'tax_code_id': False,
+                    'tax_amount': 0,
+                    'name': discount_object.name,
+                    'currency_id': False,
+                    'credit': 0,
+                    'date_maturity': False,
+                    'account_id': discount_object.discount_line_id.accounts.id,  ### Cash ID
+                    'debit': total_discount,
+                    'amount_currency': 0,
+                    'partner_id': False,
+                }))
+                if context is None:
+                    context = {}
+
+                line_ids.append((0, 0, {
+                    'analytic_account_id': False,
+                    'tax_code_id': False,
+                    'tax_amount': 0,
+                    'name': discount_object.name,
+                    'currency_id': False,
+                    'credit': total_discount,
+                    'date_maturity': False,
+                    'account_id': 195,  ### Accounts Receivable ID
+                    'debit': 0,
+                    'amount_currency': 0,
+                    'partner_id': False,
+                }))
+
+                jv_entry = self.pool.get('account.move')
+
+                j_vals = {'name': '/',
+                          'journal_id': 6,  ## Cash Journal
+                          'date': fields.date.today(),
+                          'period_id': period_id,
+                          'ref': discount_object.bill_no,
+                          'line_id': line_ids
+
+                          }
+
+                # import pdb
+                # pdb.set_trace()
+                saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
+
+                if saved_jv_id > 0:
+                    if saved_jv_id > 0:
+                        journal_id = saved_jv_id
+                        try:
+                            jv_entry.button_validate(cr, uid, [saved_jv_id], context)
+                        except:
+                            import pdb
+                            pdb.set_trace()
 
             # end confirm button code
 
@@ -164,6 +294,21 @@ class discount_line(osv.osv):
         'percent_amount': fields.integer("Amount(%)"),
         'discount_id': fields.many2one("discount","discount Id")
     }
+
+    def onchange_category(self, cr, uid, ids, name, context=None):
+        tests = {'values': {}}
+        # code for delivery date
+
+        dep_object = self.pool.get('discount.category').browse(cr, uid, name, context=None)
+        account_id=dep_object.account_id
+        if account_id.id is False:
+            account_id=self.pool.get('account.account').browse(cr, uid, 7798, context=None)
+
+        abc = {'accounts': account_id}
+        tests['value'] = abc
+        # import pdb
+        # pdb.set_trace()
+        return tests
 
     # def onchange_type(self,cr,uid,ids,type,context=None):
     #     values={}

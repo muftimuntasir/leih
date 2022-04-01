@@ -73,6 +73,7 @@
                                     <field name="type"/>
                                     <field name="card_no"/>
                                     <field name="bank_name"/>
+                                    <field name="money_receipt_id"/>
                                 </tree>
                             </field>
                           </page>

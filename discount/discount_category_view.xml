@@ -12,6 +12,7 @@
                     <group>
                         <field name="name"/>
                         <field name="parent"/>
+                        <field name="account_id"/>
                     </group>
                 </sheet>
             </form>
@@ -41,6 +42,7 @@
 
                         <field name="name"/>
                         <field name="parent"/>
+                        <field name="account_id"/>
             </tree>
             </field>
         </record>

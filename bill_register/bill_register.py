@@ -59,6 +59,8 @@ class bill_register(osv.osv):
         # pdb.set_trace()
         return delivery_date
 
+    def _default_payment_type(self):
+        return self.env['payment.type'].search([('name', '=', 'Cash')], limit=1).id
 
     _columns = {
 
@@ -97,11 +99,30 @@ class bill_register(osv.osv):
             [('pending', 'Pending'), ('confirmed', 'Confirmed'), ('cancelled', 'Cancelled')],
             'Status', default='pending', readonly=True),
         'old_journal': fields.boolean("Old Journal"),
+        # new attributes for payment type
+        'payment_type': fields.many2one("payment.type", "Payment Type", default=_default_payment_type),
+        'service_charge': fields.float("Service Charge"),
+        'to_be_paid': fields.float("To be Paid"),
+        'account_number': fields.char("Account Number")
+
     }
     _defaults = {
         'diagonostic_bill': False,
         'user_id': lambda obj, cr, uid, context: uid,
     }
+
+    @api.onchange("payment_type")
+    def onchnage_payment_type(self):
+        if self.payment_type.active==True:
+            interest=self.payment_type.service_charge
+            if interest>0:
+                service_charge=(self.paid*interest)/100
+                self.service_charge=service_charge
+                self.to_be_paid=self.paid+service_charge
+            else:
+                self.to_be_paid=self.paid
+                self.service_charge=0
+        return "X"
 
     @api.multi
     def amount_to_text(self, amount, currency='Bdt'):
@@ -114,6 +135,38 @@ class bill_register(osv.osv):
 
         # final_text = new_text.replace("Cent", "Paisa")
         return final_text
+
+    @api.multi
+    def advance_paid(self,name):
+        mr = self.env['leih.money.receipt'].search([('bill_id', '=', name)])
+        advance = 0
+        paid = 0
+        if len(mr)>2:
+            for i in range(len(mr)-1):
+                advance=advance+mr[i].amount
+            paid=mr[len(mr)-1].amount
+        # mr_ids=self.pool.get('leih.money.receipt').search([('bill_id', '=', name)], context=context)
+
+            lists={
+                'advance':advance,
+                'paid':paid
+            }
+        elif len(mr)==2:
+            advance = advance + mr[0].amount
+            paid = paid + mr[1].amount
+            lists={
+                'advance':advance,
+                'paid':paid
+            }
+        elif len(mr)<2:
+            advance = advance + mr[0].amount
+            lists={
+                'advance':advance,
+                'paid':0
+            }
+
+        # final_text = new_text.replace("Cent", "Paisa")
+        return lists
 
     #if same item exist in line
     # @api.multi
@@ -371,6 +424,10 @@ class bill_register(osv.osv):
                                 cr.execute('update leih_money_receipt set name=%s,diagonostic_bill=%s where id=%s',
                                            (mr_name, diagonostic_bill, mr_id))
                                 cr.commit()
+                                bill_payment_obj = self.pool.get('bill.register.payment.line')
+                                service_dict = {'date': stored_obj.date, 'amount': paid_amount, 'type': stored_obj.payment_type.name, 'bill_register_payment_line_id': stored,
+                                                'money_receipt_id': mr_id}
+                                bill_payment_id = bill_payment_obj.create(cr, uid, vals=service_dict, context=context)
                     except:
                         import pdb
                         pdb.set_trace()
@@ -435,7 +492,7 @@ class bill_register(osv.osv):
 
         ##### Cancel Journal And Unlink/ Delete all journals
 
-        cr.execute("select  id as jounral_id from account_move where ref = (select name from bill_register where id=%s limit 1)",(ids))
+        cr.execute("select id as jounral_id from account_move where ref = (select name from bill_register where id=%s limit 1)",(ids))
         joural_ids = cr.fetchall()
         context=context
 
@@ -773,7 +830,7 @@ class bill_register(osv.osv):
     def onchange_paid(self):
         self.due = self.grand_total - self.paid
         if self.payment_type:
-            if self.payment_type.service_charge>0:
+            if self.payment_type.name=='Visa Card':
                 interest = self.payment_type.service_charge
                 service_charge = (self.paid * interest) / 100
                 self.service_charge = service_charge
@@ -890,8 +947,6 @@ class test_information(osv.osv):
         'total_amount': fields.integer("Total Amount"),
         'assign_doctors': fields.many2one('doctors.profile', 'Doctor'),
         'commission_paid': fields.boolean("Commission Paid"),
-
-
     }
 
     def onchange_test(self,cr,uid,ids,name,context=None):
@@ -942,7 +997,7 @@ class admission_payment_line(osv.osv):
 
     _columns = {
         'bill_register_payment_line_id': fields.many2one('bill.register', 'bill register payment'),
-        'date':fields.datetime("Date"),
+        'date':fields.date("Date"),
         'amount':fields.float('Amount'),
         'type':fields.char("Type"),
         'card_no':fields.char('Card Number'),

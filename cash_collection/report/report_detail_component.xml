@@ -36,7 +36,6 @@
                                                 <td><span t-esc="move_a[0]"/></td>
                                                 <t t-set="total_opd" t-value="total_opd+move_a[0]"/>
                                                 <t t-set="total_opd_patient" t-value="total_opd_patient+move_a[1]"/>
-
                                             </tr>
                                             </table>
                         <table class="table table-condensed">

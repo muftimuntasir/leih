@@ -24,6 +24,13 @@
 
         <xpath expr="//tbody//tr//td[2]" position="replace">
 	    </xpath>
+           <xpath expr="//tbody//tr//td[2]" position="replace">
+               <td class="text-right">
+                 <span t-field="order_line.product_qty"/> pcs
+                   <span t-field="order_line.product_uom" groups="product.group_uom"/> pcs
+               </td>
+	    </xpath>
+
 
        <xpath expr="(//p)[position()=last()]" position="after">
            <br/>

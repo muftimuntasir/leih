@@ -30,6 +30,8 @@ class leih_admission(osv.osv):
                     # import pdb
                     # pdb.set_trace()
         return Percentance_calculation
+    def _default_payment_type(self):
+         return self.env['payment.type'].search([('name', '=', 'Cash')], limit=1).id
 
 
     _columns = {
@@ -71,12 +73,29 @@ class leih_admission(osv.osv):
             'Status',default='pending', readonly=True,
         ),
         'emergency_covert_time':fields.datetime("Admission Convert time"),
-        'old_journal':fields.boolean("Old Journal")
+        'old_journal':fields.boolean("Old Journal"),
+        # payment type attributes
+        'payment_type': fields.many2one("payment.type", "Payment Type", default=_default_payment_type),
+        'service_charge': fields.float("Service Charge"),
+        'to_be_paid': fields.float("To be Paid"),
+        'account_number': fields.char("Account Number")
     }
 
     _defaults = {
         'user_id': lambda obj, cr, uid, context: uid,
     }
+    @api.onchange("payment_type")
+    def onchnage_payment_type(self):
+        if self.payment_type.active==True:
+            interest=self.payment_type.service_charge
+            if interest>0:
+                service_charge=(self.paid*interest)/100
+                self.service_charge=service_charge
+                self.to_be_paid=self.paid+service_charge
+            else:
+                self.to_be_paid=self.paid
+                self.service_charge=0
+        return "X"
 
     @api.multi
     def amount_to_text(self, amount, currency='Bdt'):
@@ -89,6 +108,40 @@ class leih_admission(osv.osv):
 
         # final_text = new_text.replace("Cent", "Paisa")
         return final_text
+
+
+    @api.multi
+    def advance_paid(self,name):
+        mr = self.env['leih.money.receipt'].search([('admission_id', '=', name)])
+        advance = 0
+        paid = 0
+        if len(mr)>2:
+            for i in range(len(mr)-1):
+                advance=advance+mr[i].amount
+            paid=mr[len(mr)-1].amount
+        # mr_ids=self.pool.get('leih.money.receipt').search([('bill_id', '=', name)], context=context)
+
+            lists={
+                'advance':advance,
+                'paid':paid
+            }
+        elif len(mr)==2:
+            advance = advance + mr[0].amount
+            paid = paid + mr[1].amount
+            lists={
+                'advance':advance,
+                'paid':paid
+            }
+        elif len(mr)<2:
+            advance = advance + mr[0].amount
+            lists={
+                'advance':advance,
+                'paid':0
+            }
+
+        # final_text = new_text.replace("Cent", "Paisa")
+        return lists
+
 
     def onchange_total(self,cr,uid,ids,name,context=None):
         tests = {'values': {}}
@@ -361,6 +414,12 @@ class leih_admission(osv.osv):
                             mr_name = 'MR#' + str(mr_id)
                             cr.execute('update leih_money_receipt set name=%s where id=%s', (mr_name, mr_id))
                             cr.commit()
+                            admission_payment_obj = self.pool.get('admission.payment.line')
+                            service_dict = {'date': stored_obj.date, 'amount': stored_obj.paid,
+                                            'type': stored_obj.payment_type.name,
+                                            'admission_payment_line_id': stored_obj.id,
+                                            'money_receipt_id': mr_id}
+                            bill_payment_id = admission_payment_obj.create(cr, uid, vals=service_dict, context=context)
                 except:
                     import pdb
                     pdb.set_trace()
@@ -734,7 +793,7 @@ class leih_admission(osv.osv):
     def onchange_paid(self):
         self.due = self.grand_total - self.paid
         if self.payment_type:
-            if self.payment_type.service_charge>0:
+            if self.payment_type.name=='Visa Card':
                 interest = self.payment_type.service_charge
                 service_charge = (self.paid * interest) / 100
                 self.service_charge = service_charge
@@ -864,6 +923,7 @@ class admission_payment_line(osv.osv):
         'amount':fields.float('amount'),
         'type':fields.char('Type'),
         'card_no':fields.char('Card Number'),
-        'bank_name':fields.char('Bank Name')
+        'bank_name':fields.char('Bank Name'),
+        'money_receipt_id': fields.many2one('leih.money.receipt', 'Money Receipt ID'),
 
     }

@@ -14,6 +14,7 @@
 
                 <sheet>
                     <group>
+                        <field name="date"/>
                         <field name="bill_no" on_change="onchange_bill(bill_no, context)"/>
                         <field name="admission_id" on_change="onchange_admission(admission_id, context)"/>
                         <field name="patient_name"/>
@@ -25,7 +26,7 @@
 
                             <field name="discount_line_id" mode="tree">
                                 <tree string="Select Referance Value" editable="top">
-                                    <field name="category"/>
+                                    <field name="category" on_change="onchange_category(category, context)"/>
                                     <field name="ref"/>
                                     <field name="accounts"/>
                                     <field name="fixed_amount"/>

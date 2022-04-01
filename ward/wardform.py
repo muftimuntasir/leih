@@ -19,3 +19,26 @@ class ward(osv.osv):
 
 
     }
+
+
+
+# class purchase_order_line(osv.osv):
+#     _inherit='purchase.order.line'
+#
+#     def _last_purchase_date(self, cr, uid, ids, field_name, arg, context=None):
+#         import pdb
+#         pdb.set_trace()
+#
+#
+#         Percentance_calculation[record.id] = date.today()
+#
+#         return Percentance_calculation
+#
+#     def _last_purchase_qty(self,cr, uid, ids, field_name, arg, context=None):
+#         return True
+#
+#     _columns = {
+#         'last_purchase_date': fields.date(compute=_last_purchase_date, string='Last Purchase Date'),
+#         'last_purchase_qty': fields.function(_last_purchase_qty, string='Last Purchase Date')
+#     }
+#

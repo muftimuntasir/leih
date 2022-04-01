@@ -124,12 +124,12 @@
                                     <t t-foreach="request.env['leih.money.receipt'].search([('bill_id', '=', o.name)])" t-as="obj">
                                                              <div>
 
-                                                                 <span t-if="obj.p_type=='advance'">Advance: <t t-esc="obj.amount" /></span>
+                                                                 <span t-if="obj.p_type=='advance'">Advance: <t t-esc="obj.amount"/></span>
                                                                  <div class="row">
-                                                                     <div class="col-xs-5">
+                                                                     <div class="col-xs-6">
                                                                          <span t-if="obj.p_type=='due_payment'"><t t-esc="obj.date"/></span>
                                                                      </div>
-                                                                     <div class="col-xs-7">
+                                                                     <div class="col-xs-6">
                                                                  <span t-if="obj.p_type=='due_payment'"> : <t t-esc="obj.amount"/></span>
                                                                          </div>
                                                                      </div>
@@ -156,10 +156,42 @@
                                     <strong>Grand Total:</strong>
                                     <span t-field="o.grand_total"/>
                                 </div>
-                                 <div align="center" style="mergin-right:25px;">
-                                    <strong>Paid Amount:</strong>
-                                    <span t-field="o.paid"/>
+
+<!--                                <t t-foreach="request.env['leih.money.receipt'].search([('bill_id', '=', o.name)])" t-as="obj">-->
+<!--                                                             <div align="center" style="mergin-right:25px;">-->
+<!--                                                                 <t t-if="obj.p_type=='advance'"><strong>Advance:</strong>-->
+<!--                                                                 <span t-field="obj.amount"/>-->
+<!--                                                                 </t>-->
+<!--                                                             </div>-->
+<!--                                                                 <t t-if="obj.p_type=='due_payment'">-->
+
+<!--                                                                     <div align="center" style="mergin-right:25px;">-->
+<!--                                                                             <strong><t t-esc="obj.date"/>:</strong>-->
+<!--                                                                          <span t-field="obj.amount"/>-->
+<!--                                                                     </div>-->
+<!--                                                                </t>-->
+<!--                                </t>-->
+
+
+                                <t t-if="o.advance_paid(o.name)['paid']==0">
+                                <div align="center" style="mergin-right:25px;">
+                                    <strong>Paid:</strong>
+                                   <span t-esc="o.advance_paid(o.name)['advance']"/>
                                 </div>
+                                </t>
+                                <t t-if="o.advance_paid(o.name)['paid']>0">
+                                <div align="center" style="mergin-right:25px;">
+                                    <strong>Advance:</strong>
+                                   <span t-esc="o.advance_paid(o.name)['advance']"/>
+                                </div>
+                                </t>
+
+                                <t t-if="o.advance_paid(o.name)['paid']>0">
+                                 <div align="center" style="mergin-right:25px;">
+                                    <strong>Paid:</strong> <span t-esc="o.advance_paid(o.name)['paid']"/>
+                                     </div>
+                                </t>
+
                                  <div align="center" style="mergin-right:25px;">
                                     <strong>Due Amount:</strong>
                                     <span t-field="o.due"/>
@@ -170,12 +202,8 @@
                             <strong>In Words(Grand Total):</strong>
                             <span t-esc="o.amount_to_text(o.grand_total, 'BDT')"/>
 
+
                             <p>Created By:  <span t-esc="o.user_id.name"/></p>
-
-
-
-
-
 
 
                         </div>

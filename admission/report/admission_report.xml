@@ -154,10 +154,30 @@
                                     <strong>Grand Total:</strong>
                                     <span t-field="o.grand_total"/>
                                 </div>
-                                 <div align="center" style="mergin-right:15px;">
-                                    <strong>Paid Amount:</strong>
-                                    <span t-field="o.paid"/>
+<!--                                    new section for advance and paid-->
+                                    <t t-if="o.advance_paid(o.name)['paid']==0">
+                                <div align="center" style="mergin-right:25px;">
+                                    <strong>Paid:</strong>
+                                   <span t-esc="o.advance_paid(o.name)['advance']"/>
                                 </div>
+                                </t>
+                                <t t-if="o.advance_paid(o.name)['paid']>0">
+                                <div align="center" style="mergin-right:25px;">
+                                    <strong>Advance:</strong>
+                                   <span t-esc="o.advance_paid(o.name)['advance']"/>
+                                </div>
+                                </t>
+
+                                <t t-if="o.advance_paid(o.name)['paid']>0">
+                                 <div align="center" style="mergin-right:25px;">
+                                    <strong>Paid:</strong> <span t-esc="o.advance_paid(o.name)['paid']"/>
+                                     </div>
+                                </t>
+<!--                                    end-->
+<!--                                 <div align="center" style="mergin-right:15px;">-->
+<!--                                    <strong>Paid Amount:</strong>-->
+<!--                                    <span t-field="o.paid"/>-->
+<!--                                </div>-->
                                  <div align="center" style="mergin-right:15px;">
                                     <strong>Due:</strong>
                                     <span t-field="o.due"/>

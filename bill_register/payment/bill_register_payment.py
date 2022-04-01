@@ -2,6 +2,7 @@ from openerp.osv import osv, fields
 from openerp import SUPERUSER_ID, api
 from openerp.tools.translate import _
 from datetime import datetime
+from datetime import date, time, timedelta, datetime
 
 
 
@@ -12,8 +13,6 @@ class bill_register_payment(osv.osv):
 
 
     def button_add_payment_action(self,cr,uid,ids,context=None):
-
-
         payment_obj=self.browse(cr,uid,ids,context=None)
         bill_id=payment_obj.bill_id.id
         bill_register_id=payment_obj.bill_id.name
@@ -169,7 +168,7 @@ class bill_register_payment(osv.osv):
     _columns = {
         'name':fields.char("Cash Collection ID", readonly=True),
         'bill_id': fields.many2one('bill.register', 'Bill ID', readoly=True),
-        'date': fields.date('Date'),
+        'date': fields.date(string='Your string', default=datetime.today()),
         'amount': fields.float('Receive Amount', required=True),
         'payment_type': fields.many2one('payment.type','Payment Type',default=_default_payment_type),
         'service_charge': fields.float("Service Charge"),

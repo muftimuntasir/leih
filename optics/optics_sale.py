@@ -22,6 +22,9 @@ class optics_sale(osv.osv):
                     Percentance_calculation[record.id] = sum
         return Percentance_calculation
 
+    def _default_payment_type(self):
+         return self.env['payment.type'].search([('name', '=', 'Cash')], limit=1).id
+
 
     _columns = {
         # 'patient_id': fields.char("Patient ID"),
@@ -71,14 +74,30 @@ class optics_sale(osv.osv):
         'date': fields.datetime("Date", readonly=True, default=lambda self: fields.datetime.now()),
         'state': fields.selection(
             [('pending', 'Pending'), ('confirmed', 'Confirmed'), ('cancelled', 'Cancelled')],
-            'Status', default='pending', readonly=True)
+            'Status', default='pending', readonly=True),
+        # payment type attributes
+        'payment_type': fields.many2one("payment.type", "Payment Type", default=_default_payment_type),
+        'service_charge': fields.float("Service Charge"),
+        'to_be_paid': fields.float("To be Paid"),
+        'account_number': fields.char("Account Number")
     }
 
     _defaults = {
         'quantity': 1
     }
 
-
+    @api.onchange("payment_type")
+    def onchnage_payment_type(self):
+        if self.payment_type.active==True:
+            interest=self.payment_type.service_charge
+            if interest>0:
+                service_charge=(self.paid*interest)/100
+                self.service_charge=service_charge
+                self.to_be_paid=self.paid+service_charge
+            else:
+                self.to_be_paid=self.paid
+                self.service_charge=0
+        return "X"
 
     def onchange_quantity(self, cr, uid, ids, quantity,frame_id, context=None):
         tests = {'values': {}}
@@ -474,7 +493,7 @@ class optics_sale(osv.osv):
     def onchange_paid(self):
         self.due = self.total - self.paid
         if self.payment_type:
-            if self.payment_type.service_charge>0:
+            if self.payment_type.name=='Visa Card':
                 interest = self.payment_type.service_charge
                 service_charge = (self.paid * interest) / 100
                 self.service_charge = service_charge
@@ -581,12 +600,6 @@ class optics_lens_information(osv.osv):
 
     def onchange_lens(self, cr, uid, ids, name, context=None):
         tests = {'values': {}}
-        # dep_object = self.pool.get('product.product').browse(cr, uid, name, context=None)
-        # abc = {'price': dep_object.sell_price,'qty':1, 'total_amount': dep_object.sell_price,
-        #        'optics_sale_id.paid': dep_object.sell_price}
-        # tests['value'] = abc
-        #
-
         return tests
 
     def onchange_price(self, cr, uid, ids, qty, price, context=None):

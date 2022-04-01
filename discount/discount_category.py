@@ -11,6 +11,7 @@ class discount_category(osv.osv):
     _columns = {
 
         'name': fields.char("Discount Type"),
-        'parent':fields.many2one('discount.category','Parent Category')
+        'parent':fields.many2one('discount.category','Parent Category'),
+        'account_id':fields.many2one('account.account','Accounts')
 
     }
