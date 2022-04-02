@@ -158,12 +158,20 @@ class bill_register(osv.osv):
                 'advance':advance,
                 'paid':paid
             }
-        elif len(mr)<2:
+        elif len(mr)==1:
             advance = advance + mr[0].amount
             lists={
                 'advance':advance,
                 'paid':0
             }
+        elif len(mr)<1:
+            lists={
+                'advance':0,
+                'paid':0
+            }
+
+
+
 
         # final_text = new_text.replace("Cent", "Paisa")
         return lists
@@ -199,7 +207,7 @@ class bill_register(osv.osv):
             percent_amount=(paid_amount*100)/grand_total
         if grand_total==0:
             percent_amount=0
-        if percent_amount>35 or grand_total==0:
+        if percent_amount>=25 or grand_total==0:
 
             stored = int(ids[0])
 
