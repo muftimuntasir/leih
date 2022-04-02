@@ -138,40 +138,42 @@ class bill_register(osv.osv):
 
     @api.multi
     def advance_paid(self,name):
-        mr = self.env['leih.money.receipt'].search([('bill_id', '=', name)])
-        advance = 0
-        paid = 0
-        if len(mr)>2:
-            for i in range(len(mr)-1):
-                advance=advance+mr[i].amount
-            paid=mr[len(mr)-1].amount
-        # mr_ids=self.pool.get('leih.money.receipt').search([('bill_id', '=', name)], context=context)
+        bill_obj = self.env['bill.register'].search([('name', '=', name)])
+        if bill_obj.state!='confirmed':
+            raise osv.except_osv(_('Warning!'),
+                                 _('Confirm your bill first.'))
+        elif bill_obj.state=='confirmed':
+            mr = self.env['leih.money.receipt'].search([('bill_id', '=', name)])
+            advance = 0
+            paid = 0
+            if len(mr)>2:
+                for i in range(len(mr)-1):
+                    advance=advance+mr[i].amount
+                paid=mr[len(mr)-1].amount
+            # mr_ids=self.pool.get('leih.money.receipt').search([('bill_id', '=', name)], context=context)
 
-            lists={
-                'advance':advance,
-                'paid':paid
-            }
-        elif len(mr)==2:
-            advance = advance + mr[0].amount
-            paid = paid + mr[1].amount
-            lists={
-                'advance':advance,
-                'paid':paid
-            }
-        elif len(mr)==1:
-            advance = advance + mr[0].amount
-            lists={
-                'advance':advance,
-                'paid':0
-            }
-        elif len(mr)<1:
-            lists={
-                'advance':0,
-                'paid':0
-            }
-
-
-
+                lists={
+                    'advance':advance,
+                    'paid':paid
+                }
+            elif len(mr)==2:
+                advance = advance + mr[0].amount
+                paid = paid + mr[1].amount
+                lists={
+                    'advance':advance,
+                    'paid':paid
+                }
+            elif len(mr)==1:
+                advance = advance + mr[0].amount
+                lists={
+                    'advance':advance,
+                    'paid':0
+                }
+            elif len(mr)<1:
+                lists={
+                    'advance':0,
+                    'paid':0
+                }
 
         # final_text = new_text.replace("Cent", "Paisa")
         return lists
