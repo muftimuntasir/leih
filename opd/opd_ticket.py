@@ -14,6 +14,6 @@ class bill_register(osv.osv):
         'name':fields.char("Name"),
         'department':fields.many2one("diagnosis.department","Department"),
         'fee': fields.float("Fee"),
-        'accounts_id':fields.many2one('account.account',"Account ID")
+        'accounts_id':fields.many2one('account.account',"Account ID",required=True)
     }
 
