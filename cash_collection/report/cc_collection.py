@@ -75,7 +75,7 @@ class collcetion_details(report_sxw.rml_parse):
 
             ## OPD Data Query
             opd_q = "select sum(total) as total_b, create_uid from opd_ticket " \
-                    "where (create_date <='%s') and (create_date >='%s') group by create_uid"
+                    "where state='confirmed' and (create_date <='%s') and (create_date >='%s') group by create_uid"
 
             self.cr.execute(opd_q % (end_date, st_dat))
 
