@@ -191,12 +191,11 @@ class opd_ticket(osv.osv):
                         import pdb
                         pdb.set_trace()
 
-
                ###ENd of Journal
+            return stored
 
 
 
-        return stored
 
     @api.onchange('opd_ticket_line_id')
     def onchange_total(self):

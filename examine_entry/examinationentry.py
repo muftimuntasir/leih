@@ -83,7 +83,7 @@ class testentryparamaerte(osv.osv):
     _name = 'examination.entry.line'
     _columns = {
 
-        'name': fields.char("Name",ondelete='cascade',required=True),
+        'name': fields.char("Name",ondelete='cascade'),
         'examinationentry_id': fields.many2one('examination.entry', "Test Entry"),
         'reference_value': fields.char("Reference Value"),
         'bold':fields.boolean('Bold'),
