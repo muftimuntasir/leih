@@ -13,18 +13,17 @@ membership products (schemes).
     'author': 'BLF Team',
     'depends': ['sale'],
     'data': [
-  
         'security/leih_security.xml',
-        'security/ir.model.access.csv',
-        'wizard/cc_collection_view.xml',
-        'wizard/detail_component_view.xml',
-        'wizard/optics_daily_collection_view.xml',
-
         'diagnosis_room/diagnosis_room_view.xml',
         'Department/department_view.xml',
         'Doctors/doctors_view.xml',
         'Patients/patients_view.xml',
         'Diagnosis/diagonosis_view.xml',
+        'security/ir.model.access.csv',
+        'wizard/cc_collection_view.xml',
+        'wizard/detail_component_view.xml',
+        'wizard/optics_daily_collection_view.xml',
+
         'Group/diagnosisgroup_view.xml',
         'examine_entry/examinationentry_view.xml',
         'bill_register/bill_register_view.xml',
@@ -133,10 +132,6 @@ membership products (schemes).
         'ward/inherit_purchase.xml',
         'ward/report_purchasestock.xml',
         'payment_type/payment_type_view.xml',
-        # 'accounting_report/book_report_view.xml',
-        # 'accounting_report/report/cash_book_report.xml',
-        # 'accounting_report/report/report_cash_book.xml',
-
     ],
     'demo': [],
     'installable': True,

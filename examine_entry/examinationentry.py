@@ -46,26 +46,29 @@ class examination_entry(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
 
-        sample=vals['sample_req']
-        sample_type=vals.get('sample_type')
-        idss= vals['examination_entry_line']
+        if vals.get('sample_req'):
+            sample=vals['sample_req']
+        if vals.get('sample_type'):
+            sample_type=vals.get('sample_type')
+        if vals.get('examination_entry_line'):
+            idss= vals['examination_entry_line']
 
         # import pdb
         # pdb.set_trace()
-        if sample==True:
-            if sample_type:
-                return super(examination_entry, self).create(cr, uid, vals, context=context)
-            else:
-                raise osv.except_osv(_('Warning!'), _('Sample type must defined.'))
-
-
-
-        # if vals['manual']==True and idss or sample:
-        #     raise osv.except_osv(_('Warning!'), _('test name shouldnt exist.'))
-        # elif vals['manual']==False and not idss:
-        #     for names in examination_entry_line
-        else:
-            return super(examination_entry, self).create(cr, uid, vals, context=context)
+        # if sample==True:
+        #     if sample_type:
+        #         return super(examination_entry, self).create(cr, uid, vals, context=context)
+        #     else:
+        #         raise osv.except_osv(_('Warning!'), _('Sample type must defined.'))
+        #
+        #
+        #
+        # # if vals['manual']==True and idss or sample:
+        # #     raise osv.except_osv(_('Warning!'), _('test name shouldnt exist.'))
+        # # elif vals['manual']==False and not idss:
+        # #     for names in examination_entry_line
+        # else:
+        return super(examination_entry, self).create(cr, uid, vals, context=context)
 
 
         # import pdb
