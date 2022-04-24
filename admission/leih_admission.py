@@ -132,8 +132,14 @@ class leih_admission(osv.osv):
                 'advance':advance,
                 'paid':paid
             }
-        elif len(mr)<2:
+        elif len(mr)==1:
             advance = advance + mr[0].amount
+            lists={
+                'advance':advance,
+                'paid':0
+            }
+        elif len(mr)==0:
+            advance = advance
             lists={
                 'advance':advance,
                 'paid':0
