@@ -14,6 +14,7 @@
                         <field name="name"/>
                         <field name="department"/>
                         <field name="designation"/>
+                        <field name="degree"/>
                         <field name="commission_rate"/>
                         <field name="type"/>
                         <field name="status"/>
