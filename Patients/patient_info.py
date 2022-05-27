@@ -14,7 +14,7 @@ class patient_info(osv.osv):
         res = []
         for elmt in self.browse(cr, uid, ids, context=context):
             name = elmt.name
-            name = name + ' ' + str(elmt.patient_id)
+            name = name + ' ' + str(elmt.patient_id) if elmt.patient_id is not False else '---'
             res.append((elmt.id, name))
         return res
 
