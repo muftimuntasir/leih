@@ -15,7 +15,7 @@ class admission_payment(osv.osv):
 
         payment_obj=self.browse(cr,uid,ids,context=None)
         admission_id=payment_obj.admission_id.id
-        # admission_id=payment_obj.admission_id.name
+        leih_admission_id=payment_obj.admission_id.name
         eve_mee_obj = self.pool.get('admission.payment.line')
         pay_date=payment_obj.date
         pay_amount = payment_obj.amount
@@ -51,7 +51,7 @@ class admission_payment(osv.osv):
                 'analytic_account_id': False,
                 'tax_code_id': False,
                 'tax_amount': 0,
-                'name': admission_id,
+                'name': leih_admission_id,
                 'currency_id': False,
                 'credit': 0,
                 'date_maturity': False,
@@ -67,7 +67,7 @@ class admission_payment(osv.osv):
                 'analytic_account_id': False,
                 'tax_code_id': False,
                 'tax_amount': 0,
-                'name': admission_id,
+                'name': leih_admission_id,
                 'currency_id': False,
                 'credit': pay_amount,
                 'date_maturity': False,
@@ -84,7 +84,7 @@ class admission_payment(osv.osv):
                 'analytic_account_id': False,
                 'tax_code_id': False,
                 'tax_amount': 0,
-                'name': admission_id,
+                'name': leih_admission_id,
                 'currency_id': False,
                 'credit': 0,
                 'date_maturity': False,
@@ -100,7 +100,7 @@ class admission_payment(osv.osv):
                 'analytic_account_id': False,
                 'tax_code_id': False,
                 'tax_amount': 0,
-                'name': admission_id,
+                'name': leih_admission_id,
                 'currency_id': False,
                 'credit': pay_amount,
                 'date_maturity': False,
@@ -114,7 +114,7 @@ class admission_payment(osv.osv):
                     'analytic_account_id': False,
                     'tax_code_id': False,
                     'tax_amount': 0,
-                    'name': admission_id,
+                    'name': leih_admission_id,
                     'currency_id': False,
                     'credit': service_charge,
                     'date_maturity': False,
@@ -131,7 +131,7 @@ class admission_payment(osv.osv):
                   'journal_id': 2,  ## Sales Journal
                   'date': fields.date.today(),
                   'period_id': period_id,
-                  'ref': admission_id,
+                  'ref': leih_admission_id,
                   'line_id': line_ids
 
                   }
