@@ -90,6 +90,7 @@ class inventory_product_entry(osv.osv):
 
             jv_entry = self.pool.get('account.move')
 
+
             saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
             if saved_jv_id > 0:
                 journal_id = saved_jv_id
@@ -196,6 +197,7 @@ class inventory_product_entry(osv.osv):
                 return context.get('period_id')
             periods = self.pool.get('account.period').find(cr, uid, context=context)
             period_id = periods and periods[0] or False
+
 
             if context is None:
                 context = {}
