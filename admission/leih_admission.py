@@ -4,7 +4,7 @@ from openerp import api
 from openerp import SUPERUSER_ID, api
 from datetime import date, time
 from openerp.tools.amount_to_text_en import amount_to_text
-PACKAGE_FIELDS=('name','price')
+# PACKAGE_FIELDS=('name','price')
 
 class leih_admission(osv.osv):
     _name = "leih.admission"
@@ -154,8 +154,6 @@ class leih_admission(osv.osv):
         dep_object = self.pool.get('leih.tests').browse(cr, uid, name, context=None)
         abc = {'total': dep_object.rate}
         tests['value'] = abc
-        # import pdb
-        # pdb.set_trace()
         return tests
 
     # def print_bill_register(self, cr, uid, ids, context=None):
@@ -173,8 +171,8 @@ class leih_admission(osv.osv):
         tests['value']=abc
         return tests
 
-    def _package_fields(self, cr, uid, context=None):
-        return list(PACKAGE_FIELDS)
+    # def _package_fields(self, cr, uid, context=None):
+    #     return list(PACKAGE_FIELDS)
 
     # def onchange_mobile(self,cr,uid,ids,mobile,context=None):
     #     tests={'values':{}}
@@ -195,6 +193,7 @@ class leih_admission(osv.osv):
         total_amount = 0.0
         abc={'leih_admission_line_id':[]}
         package_object=self.pool.get('examine.package').browse(cr,uid,package_name,context=None)
+        abc['other_discount'] = package_object.total_without_discount -package_object.total
 
         for item in package_object.examine_package_line_id:
             items=item.name.id
@@ -202,7 +201,8 @@ class leih_admission(osv.osv):
             total_amount = total_amount + item.total_amount
 
 
-            abc['leih_admission_line_id'].append([0, False, {'name':item.name.id,'total_amount':item.total_amount}])
+
+            abc['leih_admission_line_id'].append([0, False, {'name':item.name.id,'total_amount':item.total_amount,'price':item.price,'flat_discount':item.discount}])
         values['value']=abc
 
         return values
@@ -651,8 +651,9 @@ class leih_admission(osv.osv):
                 for item in journal_id:
                     bill_journal_id.append(item[0])
 
-                query="delete from bill_journal_relation where id in %s"
-                cr.execute(query,(tuple(bill_journal_id),))
+                if len(bill_journal_id>0):
+                    query="delete from bill_journal_relation where id in %s"
+                    cr.execute(query,(tuple(bill_journal_id),))
 
 
 
@@ -830,6 +831,8 @@ class leih_admission(osv.osv):
     def onchange_other_discount(self):
         other_discount = self.other_discount
         total = self.total_without_discount
+        gd = total - other_discount
+        line_total = 0
         if total > 0:
             discount_distribution = other_discount / total
             for item in self.leih_admission_line_id:
@@ -837,6 +840,14 @@ class leih_admission(osv.osv):
                 item.flat_discount = round(item.price * discount_distribution)
                 item.total_discount = item.flat_discount + item.discount_percent
                 item.total_amount = item.price - item.total_discount
+                line_total = line_total + item.total_amount
+            if line_total < gd:
+                item.total_amount = item.total_amount + (gd - line_total)
+                item.flat_discount = item.flat_discount - (gd - line_total)
+                item.total_discount = item.flat_discount + item.discount_percent
+            if gd < line_total:
+                item.total_amount = item.total_amount - (line_total - gd)
+                item.flat_discount = item.flat_discount + (line_total - gd)
         return 'Nothing'
 
 
