@@ -651,7 +651,7 @@ class leih_admission(osv.osv):
                 for item in journal_id:
                     bill_journal_id.append(item[0])
 
-                if len(bill_journal_id>0):
+                if len(bill_journal_id)>0:
                     query="delete from bill_journal_relation where id in %s"
                     cr.execute(query,(tuple(bill_journal_id),))
 
