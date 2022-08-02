@@ -41,6 +41,7 @@
 
                             <group>
                                 <field name="total"/>
+                                <field name="with_doctor_total"/>
                             </group>
 
                         </page>
@@ -89,6 +90,7 @@
                 <field name="age"/>
                 <field name="sex"/>
                 <field name="total"/>
+                <field name="with_doctor_total"/>
                 <field name="state"/>
 
             </tree>

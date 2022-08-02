@@ -53,9 +53,16 @@
                                     <div class="col-xs-10">
                                         <span t-esc="o.address"/>
                                     </div>
+                                       <t t-if="o.with_doctor_total>0">
+                                           <div class="col-xs-2">
+                                        <span t-esc="o.with_doctor_total"/>
+                                    </div>
+                                       </t>
+                                        <t t-if="o.with_doctor_total==0">
                                     <div class="col-xs-2">
                                         <span t-esc="o.total"/>
                                     </div>
+                                        </t>
                                 </div>
                              <div class="row">
 

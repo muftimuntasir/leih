@@ -17,6 +17,7 @@
                         <field name="department"/>
                         <field name="fee"/>
                         <field name="accounts_id"/>
+                        <field name="total_cash"/>
 
 
                     </group>
@@ -52,6 +53,7 @@
                         <field name="department"/>
                         <field name="fee"/>
                         <field name="accounts_id"/>
+                        <field name="total_cash"/>
             </tree>
             </field>
         </record>

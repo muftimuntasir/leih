@@ -21,8 +21,6 @@ class opd_ticket(osv.osv):
 
             for item in total_list:
                 sum=item+sum
-
-
                 for record in self.browse(cr, uid, ids, context=context):
                     Percentance_calculation[record.id] = sum
                     # import pdb
@@ -49,7 +47,8 @@ class opd_ticket(osv.osv):
         'state': fields.selection(
             [('confirmed', 'Confirmed'), ('cancelled', 'Cancelled')],
             'Status', default='confirmed', readonly=True),
-        'total': fields.float(string="Total")
+        'total': fields.float(string="Total"),
+        'with_doctor_total': fields.float(string="with_doctor_total"),
     }
     _defaults = {
         'user_id': lambda obj, cr, uid, context: uid,
@@ -200,9 +199,12 @@ class opd_ticket(osv.osv):
     @api.onchange('opd_ticket_line_id')
     def onchange_total(self):
         total=0
+        with_doctor_total=0
         for item in self.opd_ticket_line_id:
             total=total+item.total_amount
+            with_doctor_total=with_doctor_total+item.name.total_cash
         self.total=total
+        self.with_doctor_total=with_doctor_total
         return 'O'
 
 
