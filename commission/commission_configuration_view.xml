@@ -30,6 +30,7 @@
                                 <field name="max_default_discount"/>
                                 <field name="deduct_from_discount"/>
                                 <field name="department_ids"/>
+                                <field name="calculation_base_price"/>
 
 
                             </group>
@@ -45,6 +46,7 @@
                                         <field name="department_id"/>
                                         <field name="test_id"/>
                                         <field name="applicable"/>
+                                        <field name="base_price_applicable"/>
                                         <field name="fixed_amount"/>
                                         <field name="variance_amount"/>
                                         <field name="test_price"/>

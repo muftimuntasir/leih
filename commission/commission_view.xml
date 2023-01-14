@@ -37,6 +37,7 @@
                                 <field name="total_payable_amount"/>
                                 <field name="total_bill"/>
                                 <field name="total_tests" />
+                                <field name="state" />
                             </group>
 
                         </group>
@@ -48,6 +49,7 @@
                                 <field name="commission_line_ids" mode="tree">
                                     <tree string="Commission Products" editable="top">
                                         <field name="department_id"/>
+                                        <field name="bill_line_id"/>
                                         <field name="name"/>
                                         <field name="discount_amount"/>
                                         <field name="test_amount"/>

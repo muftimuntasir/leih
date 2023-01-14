@@ -1,3 +1,5 @@
+import pdb
+
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from datetime import date, time
@@ -24,6 +26,7 @@ class commissionconfiguration(osv.osv):
         'max_default_discount': fields.float('Max Discount Rate (%)'),
         'deduct_from_discount': fields.boolean("Deduct Excess Discount From Commission"),
         'add_few_departments': fields.boolean("Add by Department"),
+        'calculation_base_price': fields.boolean("Calculation on Base Price"),
         'department_ids':fields.many2one('diagnosis.department','Department List'),
 
         'commission_configuration_line_ids':fields.one2many("commission.configuration.line",'commission_configuration_line_ids',"Commission Lines"),
@@ -109,7 +112,6 @@ class commissionconfiguration(osv.osv):
                         'test_price': items.test_price,
                         'est_commission_amount': est_comm,
                         'max_commission_amount': items.max_commission_amount
-
                     })
 
 
@@ -117,7 +119,6 @@ class commissionconfiguration(osv.osv):
                 est_amnt=round((comm_rate*items.get('rate')),2)
                 configure_line.append(
                     {
-
                         'department_id': items.get('department'),
                         'test_id': items.get('id'),
                         'applicable':True ,
@@ -136,25 +137,42 @@ class commissionconfiguration(osv.osv):
         return "xXxXxXxXxX"
 
 
+    @api.onchange('calculation_base_price')
+    def base_price_applicable_in_line(self):
+        if self.calculation_base_price==True:
+            if self.department_ids:
+                if self.commission_configuration_line_ids:
 
+                    for items in self.commission_configuration_line_ids:
+                        if self.department_ids.id==items.department_id.id:
+                            items.base_price_applicable=True
+
+        elif self.calculation_base_price == False:
+            if self.department_ids:
+                if self.commission_configuration_line_ids:
+
+                    for items in self.commission_configuration_line_ids:
+                        if self.department_ids.id == items.department_id.id:
+                            items.base_price_applicable = False
+
+            return 'CC'
     def confirm_configuration(self, cr, uid, ids, context=None):
-
-        cr.execute("update commission_configuration set state='done' where id=%s", (ids))
-        cr.commit()
-
         config_data = self.browse(cr, uid, ids, context=context)
         doc_id = config_data.doctor_id.id
+
+        existing_config_query = "select id from commission_configuration where doctor_id=%s and state='done'"
+        cr.execute(existing_config_query, ([doc_id]))
+        config_id = cr.dictfetchall()
+        if len(config_id)>0:
+            raise osv.except_osv(_('Error!'),_("There is a commission configuration associated with the doctor"))
+        else:
+            cr.execute("update commission_configuration set state='done' where id=%s", (ids))
+            # cr.execute("update doctors_profile set cc_id=%s where id=%s", ([doc_id, ids[0]]))
+            cr.commit()
 
         if config_data.state == 'done':
             raise osv.except_osv(_('Already Confirmed!'),
                                  _('Already Confirmed'))
-
-
-        cr.execute("update doctors_profile set cc_id=%s where id=%s", ([doc_id,ids[0]]))
-        cr.commit()
-
-
-
 
         return True
 
@@ -182,6 +200,7 @@ class commissionconfigurationline(osv.osv):
         'commission_configuration_line_ids': fields.many2one('commission.configuration', 'Commission Configuration ID'),
         'department_id':fields.many2one('diagnosis.department','Department'),
         'test_id':fields.many2one('examination.entry','Test Name'),
+        'base_price_applicable':fields.boolean('Base Price Applicable'),
         'applicable':fields.boolean('Applicable'),
         'fixed_amount': fields.float('Fixed Amount'),
         'variance_amount': fields.float('Amount (%)'),
