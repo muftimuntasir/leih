@@ -12,6 +12,7 @@
                     <group>
 
                         <field name="name"/>
+                        <field name="referral_id"/>
                         <field name="department"/>
                         <field name="designation"/>
                         <field name="degree"/>
@@ -19,6 +20,7 @@
                         <field name="type"/>
                         <field name="status"/>
                         <field name="others"/>
+                        <field name="is_referral"/>
 
                     </group>
                     <notebook>

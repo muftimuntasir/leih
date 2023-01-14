@@ -19,7 +19,10 @@ class doctors_profile(osv.osv):
         'commission':fields.many2one("commission",'ref_doctors',"Commission"),
 
         'commission_rate':fields.float("Commission Rate (%) "),
-        'last_commission_calculation_date':fields.date("Last Commission Calculation Date")
+        'last_commission_calculation_date':fields.date("Last Commission Calculation Date"),
+        # added for commission
+        'referral_id': fields.many2one("doctors.profile", "Referral ID"),
+        'is_referral': fields.boolean("Is Referral?"),
         # 'nid':fields.integer("NID")
 
 
