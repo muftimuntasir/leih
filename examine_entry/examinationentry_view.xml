@@ -15,6 +15,7 @@
 <!--                        <field name="group" on_change="onchange_group(group, context)"/>-->
                         <field name="department"/>
                         <field name="rate"/>
+                        <field name="base_rate"/>
                         <field name="required_time"/>
                         <field name="sample_req"/>
                         <field name="individual"/>
