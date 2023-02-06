@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report
+                id="action_report_general_admission"
+                model="leih.admission"
+                string="Print General Admission"
+                report_type="qweb-pdf"
+                name="leih.report_general_admission"
+                file="leih.general_admission_report"
+                menu="True"
+
+        />
+
+
+
+       </data>
+</openerp>

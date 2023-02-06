@@ -19,6 +19,7 @@
                 <sheet>
 
                     <group>
+                        <group>
 
                         <field name="date"/>
 
@@ -35,6 +36,20 @@
                         <field name="package_name" on_change="onchange_package(package_name,context)"/>
                         <field name="emergency"/>
                         <field name="release_note" readonly="1"/>
+                            </group>
+                        <group>
+                        <field name="father_name"/>
+                        <field name="mother_name"/>
+                        <field name="religion"/>
+                        <field name="blood_group"/>
+                        <field name="reffered_to_hospital"/>
+                        <field name="occupation"/>
+                        <field name="business_address"/>
+                        <field name="admitting_doctor"/>
+                        <field name="bed"/>
+                        <field name="received_by"/>
+                        <field name="clinic_diagnosis"/>
+                        </group>
 
                     </group>
                     <notebook>
@@ -60,6 +75,8 @@
                                 <tree string="Select Referance Value" editable="top">
 
                                     <field name="name"/>
+                                    <field name="address"/>
+                                    <field name="relationship"/>
                                     <field name="contact"/>
                                 </tree>
                             </field>

@@ -78,7 +78,21 @@ class leih_admission(osv.osv):
         'payment_type': fields.many2one("payment.type", "Payment Type", default=_default_payment_type),
         'service_charge': fields.float("Service Charge"),
         'to_be_paid': fields.float("To be Paid"),
-        'account_number': fields.char("Account Number")
+        'account_number': fields.char("Account Number"),
+        #added for general
+        'father_name':fields.char("Father's Name"),
+        'mother_name':fields.char("Mother's Name"),
+        'religion':fields.selection([('islam', 'Islam'), ('hindu', 'Hinduism'),('buddhism','Buddhism'),('christianity','Christianity')], 'Religion'),
+        'blood_group': fields.char('Blood Group'),
+        'reffered_to_hospital': fields.char('Refferred to this hospital by'),
+        'occupation':fields.char('Occupation'),
+        'business_address':fields.char('Business Address'),
+        'admitting_doctor':fields.char('Admitting Doctor'),
+        #hospital use only
+        'bed':fields.char('Bed'),
+        'received_by':fields.char('Received/Registered By'),
+        'clinic_diagnosis':fields.char('Clinical Diagnosis'),
+
     }
 
     _defaults = {

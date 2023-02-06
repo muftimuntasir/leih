@@ -91,6 +91,8 @@ membership products (schemes).
         'admission/payment/admission_payment_view.xml',
         'admission/report/admission_report_menu.xml',
         'admission/report/admission_report.xml',
+        'admission/report/general_admission_report_menu.xml',
+        'admission/report/general_admission_report.xml',
         'money_receipt/money_receipt_view.xml',
         'bill_register/payment/bill_register_payment_view.xml',
         'cash_collection/cash_collection_view.xml',

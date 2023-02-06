@@ -9,9 +9,10 @@ class patient_guarantor(osv.osv):
 
 
     _columns = {
-
         'name': fields.char("Guarantor Name"),
+        'address': fields.char('Address'),
+        'relationship': fields.char('Relationship'),
         'contact': fields.char("Contact"),
-        'admission_id':fields.many2one('leih.admission','parent')
-
+        'email': fields.char("Email"),
+        'admission_id': fields.many2one('legh.admission', 'parent'),
     }
