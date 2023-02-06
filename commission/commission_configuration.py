@@ -98,8 +98,10 @@ class commissionconfiguration(osv.osv):
             # pdb.set_trace()
 
 
+            already_exist_item=[]
             if self.commission_configuration_line_ids:
                 for items in self.commission_configuration_line_ids:
+                    already_exist_item.append(items.test_id.id)
                     est_comm = round((comm_rate*items.test_price),2)
 
                     configure_line.append({
@@ -115,22 +117,24 @@ class commissionconfiguration(osv.osv):
                     })
 
 
+
             for items in all_data:
                 est_amnt=round((comm_rate*items.get('rate')),2)
-                configure_line.append(
-                    {
-                        'department_id': items.get('department'),
-                        'test_id': items.get('id'),
-                        'applicable':True ,
-                        'fixed_amount': 0,
-                        'variance_amount':0 ,
-                        'test_price': items.get('rate'),
-                        'est_commission_amount': est_amnt,
-                        'max_commission_amount': 0
+                if items.get('id') not in already_exist_item:
+                    configure_line.append(
+                        {
+                            'department_id': items.get('department'),
+                            'test_id': items.get('id'),
+                            'applicable':True ,
+                            'fixed_amount': 0,
+                            'variance_amount':0 ,
+                            'test_price': items.get('rate'),
+                            'est_commission_amount': est_amnt,
+                            'max_commission_amount': 0
 
-                    }
-                )
-            self.commission_configuration_line_ids=configure_line
+                        }
+                    )
+                self.commission_configuration_line_ids=configure_line
 
 
 
@@ -210,6 +214,10 @@ class commissionconfigurationline(osv.osv):
 
 
     }
+
+
+
+
 
 
 class doctors_profile(osv.osv):

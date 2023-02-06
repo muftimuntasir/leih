@@ -209,7 +209,7 @@ class bill_register(osv.osv):
             percent_amount=(paid_amount*100)/grand_total
         if grand_total==0:
             percent_amount=0
-        if percent_amount>=25 or grand_total==0:
+        if percent_amount>=0 or grand_total==0:
 
             stored = int(ids[0])
 
@@ -664,12 +664,13 @@ class bill_register(osv.osv):
                 raise osv.except_osv(_('Warning!'),
                                      _("Check paid and grand total!"))
 
-
+        updated= False
         if vals.get('bill_register_line_id') or uid == 1:
             cr.execute("select id as journal_ids from account_move where ref = (select name from bill_register where id=%s limit 1)",(ids))
             journal_ids = cr.fetchall()
             context=context
             updated = super(bill_register, self).write(cr, uid, ids, vals, context=context)
+
             itm = [itm[0] for itm in journal_ids]
             # import pdb
             # pdb.set_trace()
@@ -808,7 +809,9 @@ class bill_register(osv.osv):
                     return updated
                     ### Ends the journal Entry Here
             else:
-                updated = super(bill_register, self).write(cr, uid, ids, vals, context=context)
+                if updated is not True:
+
+                    updated = super(bill_register, self).write(cr, uid, ids, vals, context=context)
                 # raise osv.except_osv(_('Warning!'),
                 #                      _("You cannot Edit the bill"))
                 return updated

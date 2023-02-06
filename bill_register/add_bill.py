@@ -27,14 +27,14 @@ class add_bill(osv.osv):
         query = "select total,grand_total,paid,after_discount,other_discount,due from leih_admission where id=%s"
         cr.execute(query, ([admission_id]))
         all_data = cr.dictfetchall()
-
+        after_discount=0.00
         for item in all_data:
             total=item.get('total')
             grand_total = item.get('grand_total')
             paid_amount = item.get('paid')
             due_amount = item.get('due')
-            after_discount = item.get('after_discount')
-            other_discount = item.get('other_discount')
+            after_discount = item.get('after_discount') if item.get('after_discount') else 0.00
+            other_discount = item.get('other_discount') if item.get('other_discount') else 0.00
 
 
         # import pdb

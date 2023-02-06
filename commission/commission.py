@@ -118,169 +118,168 @@ class commission(osv.osv):
             doctor_ids.append(commissioner_id)
 
             commission_configuration_id = self.env['commission.configuration'].search([('doctor_id', '=', commissioner_id)])
-            if commission_configuration_id.calculation_base_price != True:
 
-                ## Get all Commission Configuration List
+            ## Get all Commission Configuration List
 
-                comm_query = "select commission_configuration_line.test_id,commission_configuration_line.fixed_amount,commission_configuration_line.test_price," \
-                             "commission_configuration_line.applicable,commission_configuration_line.base_price_applicable,commission_configuration_line.variance_amount,commission_configuration_line.est_commission_amount," \
-                             "commission_configuration_line.department_id,commission_configuration_line.max_commission_amount from commission_configuration,commission_configuration_line" \
-                             " where commission_configuration.state='done' and commission_configuration.id= commission_configuration_line.commission_configuration_line_ids and commission_configuration_line.applicable = True and commission_configuration.doctor_id=%s"
-                self._cr.execute(comm_query, ([commissioner_id]))
+            comm_query = "select commission_configuration_line.test_id,commission_configuration_line.fixed_amount,commission_configuration_line.test_price," \
+                         "commission_configuration_line.applicable,commission_configuration_line.base_price_applicable,commission_configuration_line.variance_amount,commission_configuration_line.est_commission_amount," \
+                         "commission_configuration_line.department_id,commission_configuration_line.max_commission_amount from commission_configuration,commission_configuration_line" \
+                         " where commission_configuration.state='done' and commission_configuration.id= commission_configuration_line.commission_configuration_line_ids and commission_configuration_line.applicable = True and commission_configuration.doctor_id=%s"
+            self._cr.execute(comm_query, ([commissioner_id]))
 
-                comm_configuration_data = self._cr.dictfetchall()
+            comm_configuration_data = self._cr.dictfetchall()
 
-                configured_test_ids = [items.get('test_id') for items in comm_configuration_data]
+            configured_test_ids = [items.get('test_id') for items in comm_configuration_data]
 
-                #for fetching last commission date
-                last_confirmed_date="select cal_end_date from commission where ref_doctors=%s and state='done'"
-                self._cr.execute(last_confirmed_date, ([self.ref_doctors.id]))
+            #for fetching last commission date
+            last_confirmed_date="select cal_end_date from commission where ref_doctors=%s and state='done'"
+            self._cr.execute(last_confirmed_date, ([self.ref_doctors.id]))
 
-                last_commission_data = self._cr.dictfetchall()
-                if len(last_commission_data)>0:
-                    last_confirmed_date=last_commission_data[len(last_commission_data)-1]['cal_end_date']
-                else:
-                    last_confirmed_date=st_date
+            last_commission_data = self._cr.dictfetchall()
+            if len(last_commission_data)>0:
+                last_confirmed_date=last_commission_data[len(last_commission_data)-1]['cal_end_date']
+            else:
+                last_confirmed_date=st_date
 
-                #end
+            #end
 
-                query = "select bill_register_line.name,bill_register_line.total_amount,bill_register_line.discount_percent,bill_register.ref_doctors " \
-                        "from bill_register_line,bill_register where bill_register_line.bill_register_id=bill_register.id and " \
-                        "(bill_register_line.commission_paid = FALSE or bill_register_line.commission_paid is NULL) and bill_register.ref_doctors IN %s and" \
-                        " bill_register_line.name in %s and bill_register.date >=%s and bill_register.date <=%s and bill_register.state='confirmed'"
+            query = "select bill_register_line.name,bill_register_line.total_amount,bill_register_line.discount_percent,bill_register.ref_doctors " \
+                    "from bill_register_line,bill_register where bill_register_line.bill_register_id=bill_register.id and " \
+                    "(bill_register_line.commission_paid = FALSE or bill_register_line.commission_paid is NULL) and bill_register.ref_doctors IN %s and" \
+                    " bill_register_line.name in %s and bill_register.date >=%s and bill_register.date <=%s and bill_register.state='confirmed'"
 
-                if len(configured_test_ids) > 0:
+            if len(configured_test_ids) > 0:
 
-                    self._cr.execute(query, (tuple(doctor_ids), tuple(configured_test_ids), last_confirmed_date, end_date))
+                self._cr.execute(query, (tuple(doctor_ids), tuple(configured_test_ids), last_confirmed_date, end_date))
 
-                    all_data = self._cr.dictfetchall()
-                else:
-                    all_data = []
+                all_data = self._cr.dictfetchall()
+            else:
+                all_data = []
 
-                order_payment_line = list()
+            order_payment_line = list()
 
-                total_amount = 0
-                total_billing_amount = 0
-                total_test_count = 0
+            total_amount = 0
+            total_billing_amount = 0
+            total_test_count = 0
 
-                for bill_items in all_data:
+            for bill_items in all_data:
 
-                    for c_items in comm_configuration_data:
-                        if c_items.get('test_id') == bill_items.get('name') and c_items.get('applicable') == True and c_items.get('base_price_applicable')!=True:
-                            total_test_count = total_test_count + 1
+                for c_items in comm_configuration_data:
+                    if c_items.get('test_id') == bill_items.get('name') and c_items.get('applicable') == True and c_items.get('base_price_applicable')!=True:
+                        total_test_count = total_test_count + 1
 
-                            max_cap_amnt = c_items.get('max_commission_amount')
-                            fixed_amnt = c_items.get('fixed_amount')
-                            var_amnt = c_items.get('variance_amount')
-                            billed_amont = bill_items.get('total_amount')
-                            total_billing_amount = total_billing_amount + billed_amont
+                        max_cap_amnt = c_items.get('max_commission_amount')
+                        fixed_amnt = c_items.get('fixed_amount')
+                        var_amnt = c_items.get('variance_amount')
+                        billed_amont = bill_items.get('total_amount')
+                        total_billing_amount = total_billing_amount + billed_amont
 
-                            cal_pay_amnt = 0
+                        cal_pay_amnt = 0
 
+                        if var_amnt > 0.00:
+                            cal_pay_amnt = round((billed_amont * (var_amnt)), 2)
+
+                        if fixed_amnt > 0.00:
+                            cal_pay_amnt = round(fixed_amnt, 2)
+
+                        if max_cap_amnt > 0.00:
+
+                            if cal_pay_amnt > max_cap_amnt:
+                                cal_pay_amnt = round(max_cap_amnt, 2)
+
+                        order_payment_line.append({
+
+                            'department_id': c_items.get('department_id'),
+                            'name': bill_items.get('name'),
+                            'discount_amount': bill_items.get('discount_percent'),
+                            'test_amount': billed_amont,
+                            'mou_payable_comm_var': var_amnt,
+                            'mou_payable_comm_fixed': fixed_amnt,
+                            'mou_payable_comm_max_cap': max_cap_amnt,
+                            'payable_amount': cal_pay_amnt,
+
+                        })
+                        break
+
+                    if c_items.get('test_id') == bill_items.get('name') and c_items.get('base_price_applicable') == True:
+                        total_test_count = total_test_count + 1
+
+                        examine_obj=self.env['examination.entry'].search([('id','=',c_items.get('test_id'))])
+                        if examine_obj:
+                            base_rate=examine_obj.base_rate
+                        else:
+                            base_rate=0
+
+                        max_cap_amnt = c_items.get('max_commission_amount')
+                        fixed_amnt = c_items.get('fixed_amount')
+                        var_amnt = c_items.get('variance_amount')
+                        billed_amont = bill_items.get('total_amount')
+                        total_billing_amount = total_billing_amount + billed_amont
+
+                        cal_pay_amnt = 0
+                        if base_rate>0:
+                            cal_pay_amnt=round((billed_amont-base_rate),2)
+                        else:
                             if var_amnt > 0.00:
                                 cal_pay_amnt = round((billed_amont * (var_amnt)), 2)
 
                             if fixed_amnt > 0.00:
                                 cal_pay_amnt = round(fixed_amnt, 2)
 
-                            if max_cap_amnt > 0.00:
+                        if max_cap_amnt > 0.00:
 
-                                if cal_pay_amnt > max_cap_amnt:
-                                    cal_pay_amnt = round(max_cap_amnt, 2)
+                            if cal_pay_amnt > max_cap_amnt:
+                                cal_pay_amnt = round(max_cap_amnt, 2)
 
-                            order_payment_line.append({
+                        order_payment_line.append({
 
-                                'department_id': c_items.get('department_id'),
-                                'name': bill_items.get('name'),
-                                'discount_amount': bill_items.get('discount_percent'),
-                                'test_amount': billed_amont,
-                                'mou_payable_comm_var': var_amnt,
-                                'mou_payable_comm_fixed': fixed_amnt,
-                                'mou_payable_comm_max_cap': max_cap_amnt,
-                                'payable_amount': cal_pay_amnt,
+                            'department_id': c_items.get('department_id'),
+                            'name': bill_items.get('name'),
+                            'discount_amount': bill_items.get('discount_percent'),
+                            'test_amount': billed_amont,
+                            'mou_payable_comm_var': var_amnt,
+                            'mou_payable_comm_fixed': fixed_amnt,
+                            'mou_payable_comm_max_cap': max_cap_amnt,
+                            'payable_amount': cal_pay_amnt,
 
-                            })
-                            break
+                        })
+                        break
 
-                        if c_items.get('test_id') == bill_items.get('name') and c_items.get('base_price_applicable') == True:
-                            total_test_count = total_test_count + 1
-
-                            examine_obj=self.env['examination.entry'].search([('id','=',c_items.get('test_id'))])
-                            if examine_obj:
-                                base_rate=examine_obj.base_rate
-                            else:
-                                base_rate=0
-
-                            max_cap_amnt = c_items.get('max_commission_amount')
-                            fixed_amnt = c_items.get('fixed_amount')
-                            var_amnt = c_items.get('variance_amount')
-                            billed_amont = bill_items.get('total_amount')
-                            total_billing_amount = total_billing_amount + billed_amont
-
-                            cal_pay_amnt = 0
-                            if base_rate>0:
-                                cal_pay_amnt=round((billed_amont-base_rate),2)
-                            else:
-                                if var_amnt > 0.00:
-                                    cal_pay_amnt = round((billed_amont * (var_amnt)), 2)
-
-                                if fixed_amnt > 0.00:
-                                    cal_pay_amnt = round(fixed_amnt, 2)
-
-                            if max_cap_amnt > 0.00:
-
-                                if cal_pay_amnt > max_cap_amnt:
-                                    cal_pay_amnt = round(max_cap_amnt, 2)
-
-                            order_payment_line.append({
-
-                                'department_id': c_items.get('department_id'),
-                                'name': bill_items.get('name'),
-                                'discount_amount': bill_items.get('discount_percent'),
-                                'test_amount': billed_amont,
-                                'mou_payable_comm_var': var_amnt,
-                                'mou_payable_comm_fixed': fixed_amnt,
-                                'mou_payable_comm_max_cap': max_cap_amnt,
-                                'payable_amount': cal_pay_amnt,
-
-                            })
-                            break
-
-            #if base_prce calculation is true
-            # if commission_configuration_id.calculation_base_price==True:
-            #     query = "select bill_register_line.name,bill_register_line.total_amount,bill_register_line.discount_percent,bill_register.ref_doctors " \
-            #             "from bill_register_line,bill_register where bill_register_line.bill_register_id=bill_register.id and " \
-            #             "(bill_register_line.commission_paid = FALSE or bill_register_line.commission_paid is NULL) and bill_register.ref_doctors IN %s " \
-            #             " and bill_register.date >=%s and bill_register.date <=%s"
-            #
-            #     all_data = []
-            #     self._cr.execute(query, (tuple(doctor_ids), st_date, end_date))
-            #     all_data = self._cr.dictfetchall()
-            #
-            #     order_payment_line = list()
-            #     total_amount = 0
-            #     total_billing_amount = 0
-            #     total_test_count = 0
-            #     for bill_items in all_data:
-            #         total_amount_on_test=bill_items.get('total_amount')
-            #         test_id=self.env['examination.entry'].search([('id','=',bill_items.get('name'))])
-            #         base_price=test_id.base_rate
-            #         payable_amount_on_test=total_amount_on_test-base_price
-            #         total_billing_amount = total_billing_amount + total_amount_on_test
-            #         total_amount+=total_amount_on_test-payable_amount_on_test
-            #         department_id=test_id.department
-            #         order_payment_line.append({
-            #
-            #             'department_id':department_id,
-            #             'name': bill_items.get('name'),
-            #             'discount_amount': bill_items.get('discount_percent'),
-            #             'test_amount': total_amount_on_test,
-            #             'mou_payable_comm_var': 0,
-            #             'mou_payable_comm_fixed': 0,
-            #             'mou_payable_comm_max_cap': 0,
-            #             'payable_amount': payable_amount_on_test,
-            #
-            #         })
+        #if base_prce calculation is true
+        # if commission_configuration_id.calculation_base_price==True:
+        #     query = "select bill_register_line.name,bill_register_line.total_amount,bill_register_line.discount_percent,bill_register.ref_doctors " \
+        #             "from bill_register_line,bill_register where bill_register_line.bill_register_id=bill_register.id and " \
+        #             "(bill_register_line.commission_paid = FALSE or bill_register_line.commission_paid is NULL) and bill_register.ref_doctors IN %s " \
+        #             " and bill_register.date >=%s and bill_register.date <=%s"
+        #
+        #     all_data = []
+        #     self._cr.execute(query, (tuple(doctor_ids), st_date, end_date))
+        #     all_data = self._cr.dictfetchall()
+        #
+        #     order_payment_line = list()
+        #     total_amount = 0
+        #     total_billing_amount = 0
+        #     total_test_count = 0
+        #     for bill_items in all_data:
+        #         total_amount_on_test=bill_items.get('total_amount')
+        #         test_id=self.env['examination.entry'].search([('id','=',bill_items.get('name'))])
+        #         base_price=test_id.base_rate
+        #         payable_amount_on_test=total_amount_on_test-base_price
+        #         total_billing_amount = total_billing_amount + total_amount_on_test
+        #         total_amount+=total_amount_on_test-payable_amount_on_test
+        #         department_id=test_id.department
+        #         order_payment_line.append({
+        #
+        #             'department_id':department_id,
+        #             'name': bill_items.get('name'),
+        #             'discount_amount': bill_items.get('discount_percent'),
+        #             'test_amount': total_amount_on_test,
+        #             'mou_payable_comm_var': 0,
+        #             'mou_payable_comm_fixed': 0,
+        #             'mou_payable_comm_max_cap': 0,
+        #             'payable_amount': payable_amount_on_test,
+        #
+        #         })
 
 
 
