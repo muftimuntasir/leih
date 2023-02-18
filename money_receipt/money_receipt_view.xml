@@ -16,6 +16,7 @@
                                 <field name="date"/>
                                 <field name="bill_id"/>
                                 <field name="admission_id"/>
+                                <field name="general_admission_id"/>
                                 <field name="optics_sale_id"/>
                                 <field name="amount"/>
                                 <field name="type"/>
@@ -67,6 +68,7 @@
                                 <field name="name"/>
                                 <field name="bill_id"/>
                                 <field name="admission_id"/>
+                                <field name="general_admission_id"/>
                                 <field name="optics_sale_id"/>
                                 <field name="amount"/>
                                 <field name="type"/>
@@ -76,7 +78,7 @@
             </field>
         </record>
 
-        <menuitem id="mr_menu" name="Money Receipt" parent="leih_billing_menu" action="money_receipt_new_action" groups="leih.group_billing_menu_money_receipt"/>
+        <menuitem id="mr_menu" name="Money Receipt" parent="leih_billing_menu" action="money_receipt_new_action" groups="leih.group_billing_menu_money_receipt,leih.group_general_admission_menu_pending"/>
 
     </data>
 </openerp>

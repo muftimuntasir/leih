@@ -24,6 +24,14 @@
                             </div>
 
                             <div class="row">
+                                <t t-if="o.general_admission_id">
+
+                                <div class="col-md-6 pull-left">
+                                <h4>
+                                    <b>Admission ID:</b> <span t-field="o.general_admission_id"/>
+                                </h4>
+                            </div>
+                                </t>
                             <div class="col-md-6 pull-right">
                                 <h3>
                                     <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px"/>

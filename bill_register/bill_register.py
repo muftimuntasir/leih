@@ -75,7 +75,6 @@ class bill_register(osv.osv):
         'referral':fields.char("Referral"),
         'diagonostic_bill':fields.boolean("Diagonstic Bill"),
         'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
-        'delivery_date': fields.function(_delivery_dates,string="Delivery Date",type='date',store=True),
         'bill_register_line_id': fields.one2many('bill.register.line', 'bill_register_id', 'Item Entry',required=True),
         'bill_register_payment_line_id': fields.one2many("bill.register.payment.line", "bill_register_payment_line_id","Bill Register Payment"),
         'bill_journal_relation_id': fields.one2many("bill.journal.relation", "bill_journal_relation_id","Journal"),
@@ -947,6 +946,7 @@ class test_information(osv.osv):
         'name': fields.many2one("examination.entry","Item Name",ondelete='cascade'),
         'bill_register_id': fields.many2one('bill.register', "Information"),
         'department':fields.char("Department"),
+        'product_qty':fields.float('Quantity'),
         'delivery_date':fields.date("Delivery Date"),
         'date': fields.datetime("Date", readonly=True, default=lambda self: fields.datetime.now()),
         # 'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency",
@@ -971,11 +971,15 @@ class test_information(osv.osv):
         delivery_date=date.today() + timedelta(days=delivery_required_days)
         # import pdb
         # pdb.set_trace()
-        abc = {'department':dep_object.department.name,'price': dep_object.rate,'total_amount':dep_object.rate,'bill_register_id.paid':dep_object.rate,'delivery_date':delivery_date}
+        abc = {'department':dep_object.department.name,'product_qty':1,'price': dep_object.rate,'total_amount':dep_object.rate,'bill_register_id.paid':dep_object.rate,'delivery_date':delivery_date}
         tests['value'] = abc
         # import pdb
         # pdb.set_trace()
         return tests
+
+    @api.onchange('product_qty')
+    def onchange_qty(self):
+        self.total_amount=self.price*self.product_qty
 
     def onchange_discount(self,cr,uid,ids,price,discount,context=None):
         tests = {'values': {}}
@@ -1025,6 +1029,8 @@ class bill_journal_relations(osv.osv):
     _columns = {
         'bill_journal_relation_id': fields.many2one('bill.register', 'bill register payment'),
         'admission_journal_relation_id': fields.many2one('leih.admission', 'Admission Journal'),
+        'general_admission_journal_relation_id': fields.many2one('hospital.admission', 'General Admission Journal'),
+        # 'hospital_admission_journal_relation_id': fields.many2one('hospital.leih.admission', 'Admission Journal'),
         'journal_id': fields.integer("Journal Id"),
     }
 

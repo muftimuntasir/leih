@@ -67,6 +67,25 @@
         </field>
         </record>
 
+
+
+<!--        inherit admission form-->
+        <record id="leih_general_admission_inherit_payment" model="ir.ui.view">
+        <field name="name">Leih Admission</field>
+        <field name="model">hospital.admission</field>
+        <field name="inherit_id" ref="leih.general_admission_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='total_without_discount']" position="before">
+                <field name="payment_type"/>
+            </xpath>
+            <xpath expr="//field[@name='paid']" position="after">
+                <field name="service_charge"/>
+                <field name="to_be_paid"/>
+                <field name="account_number"/>
+            </xpath>
+        </field>
+        </record>
+
         <record id="leih_optics_inherit_payment" model="ir.ui.view">
         <field name="name">optics.sale</field>
         <field name="model">optics.sale</field>

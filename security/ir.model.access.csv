@@ -43,7 +43,7 @@ access_billing_menu_optics_sale_payment,optics.sale.payment,model_optics_sale_pa
 
 
 
-access_billing_menu_money_receipt,leih.money.receipt,model_leih_money_receipt,group_billing_menu_bill_register,1,1,1,0
+access_billing_menu_money_receipt,leih.money.receipt,model_leih_money_receipt,group_billing_menu_bill_register,1,0,1,0
 
 access_billing_menu_discount_category,discount.category,model_discount_category,group_billing_menu_discount_category,1,1,1,0
 
@@ -73,6 +73,24 @@ access_leih_admission_line_pending,leih.admission.line,model_leih_admission_line
 access_patient_guarantor_pending,patient.guarantor,model_patient_guarantor,group_admission_menu_pending,1,1,1,1
 access_admission_payment_line_pending,admission.payment.line,model_admission_payment_line,group_admission_menu_pending,1,1,1,1
 access_bill_register_admission_line_pending,bill.register.admission.line,model_bill_register_admission_line,group_admission_menu_pending,1,1,1,1
+
+
+
+
+access_leih_general_admission_pending,hospital.admission,model_hospital_admission,group_general_admission_menu_pending,1,1,1,0
+access_leih_general_admission_line_pending,hospital.admission.line,model_hospital_admission_line,group_general_admission_menu_pending,1,1,1,1
+access_patient_general_guarantor_pending,hospital.patient.guarantor,model_hospital_patient_guarantor,group_general_admission_menu_pending,1,1,1,1
+access_general_admission_payment_line_pending,hospital.admission.payment.line,model_admission_payment_line,group_general_admission_menu_pending,1,1,1,1
+access_general_admission_payment,hospital.admission.payment,model_hospital_admission_payment,group_general_admission_menu_pending,1,1,1,1
+access_doctor_profile,doctor.profile.admission.line,model_doctor_profile_admission_line,group_general_admission_menu_pending,1,1,1,1
+access_hospital_bed,hospital.bed.line,model_hospital_bed_line,group_general_admission_menu_pending,1,1,1,1
+access_hospital_bill,hospital.bill.line,model_hospital_bill_line,group_general_admission_menu_pending,1,1,1,1
+access_hospital_medicine,hospital.medicine.line,model_hospital_medicine_line,group_general_admission_menu_pending,1,1,1,1
+access_bill_journal,bill.journal.relation,model_bill_journal_relation,group_general_admission_menu_pending,1,1,1,1
+access_general_admission_payment_s,general.admission.payment.line,model_general_admission_payment_line,group_general_admission_menu_pending,1,1,1,1
+access_general_admission_payment_l,general.admission.payment.line,model_general_admission_payment_line,group_general_admission_menu_pending,1,1,1,1
+access_money_receipt,leih.money.receipt,model_leih_money_receipt,group_general_admission_menu_pending,1,0,1,0
+
 
 access_leih_admission_activated,leih.admission,model_leih_admission,group_admission_menu_activated,1,0,1,0
 access_leih_admission_line_activated,leih.admission.line,model_leih_admission_line,group_admission_menu_activated,1,1,1,1
@@ -191,7 +209,8 @@ access_examine_package_line,examine.package.line,model_examine_package_line,grou
 access_opd_ticket_entry,opd.ticket.entry,model_opd_ticket_entry,group_expense_menu_cancel,1,1,1,0
 
 
-
+access_hospital_medicine,hospital.medicine,model_hospital_medicine,base.group_user,1,1,1,1
+access_hospital_medicine_line,hospital.medicine.line,model_hospital_medicine_line,base.group_user,1,1,1,1
 
 
 

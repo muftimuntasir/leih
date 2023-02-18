@@ -14,8 +14,11 @@ class patient_info(osv.osv):
         res = []
         for elmt in self.browse(cr, uid, ids, context=context):
             name = elmt.name
-            name = name + ' ' + str(elmt.patient_id) if elmt.patient_id is not False else '---'
-            res.append((elmt.id, name))
+            try:
+                name = name + ' ' + str(elmt.patient_id) if elmt.patient_id is not False else '---'
+                res.append((elmt.id, name))
+            except ValueError:
+                pass
         return res
 
     # def name_search(self, name, args=None, operator='ilike', limit=100):

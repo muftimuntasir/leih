@@ -17,12 +17,16 @@ class doctors_profile(osv.osv):
         'bill_info':fields.one2many("bill.register",'ref_doctors',"Bill Register"),
         'admission_info':fields.many2one("leih.admission",'ref_doctors',"Admission Info"),
         'commission':fields.many2one("commission",'ref_doctors',"Commission"),
+        'ipd_visit':fields.float("IPD Visit Fee"),
 
         'commission_rate':fields.float("Commission Rate (%) "),
         'last_commission_calculation_date':fields.date("Last Commission Calculation Date"),
         # added for commission
         'referral_id': fields.many2one("doctors.profile", "Referral ID"),
-        'is_referral': fields.boolean("Is Referral?"),
+        'is_referral': fields.boolean("Is Referral?")
+        # 'doctor_visit_qty': fields.char("Visit Times"),
+        # 'visit_fee': fields.char("Visit Fee"),
+        # 'total_amount': fields.char("Total Amount")
         # 'nid':fields.integer("NID")
 
 

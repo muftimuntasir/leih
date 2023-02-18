@@ -93,6 +93,7 @@ membership products (schemes).
         'admission/report/admission_report.xml',
         'admission/report/general_admission_report_menu.xml',
         'admission/report/general_admission_report.xml',
+        'admission/payment_config/admission_payment_view.xml',
         'money_receipt/money_receipt_view.xml',
         'bill_register/payment/bill_register_payment_view.xml',
         'cash_collection/cash_collection_view.xml',
@@ -113,7 +114,6 @@ membership products (schemes).
         'commission/commission_payment_view.xml',
         'appointment/appointment_booking_view.xml',
         'appointment/appointment_booking_paid_view.xml',
-        'admission/payment_config/admission_payment_view.xml',
         'appointment/appointment_booking_view.xml',
         'appointment/appointment_payment/appointment_payment_view.xml',
         'appointment/appointment_report/appointment_report_menu.xml',
@@ -133,7 +133,40 @@ membership products (schemes).
         'bill_register/bill_register_line_view.xml',
         'ward/inherit_purchase.xml',
         'ward/report_purchasestock.xml',
+
+            # hospital general---------------------------------------------------
+
+        'hospital_admission/hospital_leih_admission_view.xml',
+        'hospital_admission/hospital_leih_admission_activated_view.xml',
+        'hospital_admission/hospital_leih_admission_released_view.xml',
+        'hospital_admission/hospital_leih_admission_cancelled_view.xml',
+        'hospital_admission/hospital_leih_emergency_view.xml',
+        'hospital_admission/hospital_leih_emergency_activated_view.xml',
+        'hospital_admission/hospital_leih_emergency_released_view.xml',
+        'hospital_admission/hospital_guarantor/hospital_patient_guarantor_view.xml',
+        'hospital_admission/hospital_release/hospital_admission_release_view.xml',
+        'hospital_admission/hospital_payment/hospital_admission_payment_view.xml',
+        'hospital_admission/hospital_payment_config/hospital_admission_payment_configuration_view.xml',
+
+
+        'hospital_admission/hospital_report/hospital_admission_report_menu.xml',
+        'hospital_admission/hospital_report/hospital_admission_report.xml',
+        'hospital_admission/hospital_report/hospital_detail_admission_report.xml',
+        'hospital_admission/hospital_report/hospital_general_admission_report_menu.xml',
+        'hospital_admission/hospital_report/hospital_general_admission_report.xml',
+
+
+        'hospital_admission/hospital_bed/hospital_bed_view.xml',
+        'hospital_admission/hospital_medicine/hospital_medicine_view.xml',
+        'hospital_admission/bill_register_view.xml',
         'payment_type/payment_type_view.xml',
+        'money_receipt/report/money_receipt_menu.xml',
+        'money_receipt/report/report_money_receipt.xml',
+        # 'hospital_admission/hospital_bill_investigation/hospital_bill_investigation_view.xml',
+
+
+
+
     ],
     'demo': [],
     'installable': True,

@@ -27,3 +27,8 @@ import inventory
 import advance_cash
 # import accounting_report
 
+
+
+# hospital general---------------------------------------------------
+# import hospital_admission
+from . import hospital_admission
