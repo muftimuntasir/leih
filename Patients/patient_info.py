@@ -19,7 +19,6 @@ class patient_info(osv.osv):
                 res.append((elmt.id, name))
             except ValueError:
                 pass
-            res.append((elmt.id, name))
         return res
 
     # def name_search(self, name, args=None, operator='ilike', limit=100):
