@@ -92,6 +92,8 @@ access_general_admission_payment_l,general.admission.payment.line,model_general_
 access_money_receipt,leih.money.receipt,model_leih_money_receipt,group_general_admission_menu_pending,1,0,1,0
 
 
+
+
 access_leih_admission_activated,leih.admission,model_leih_admission,group_admission_menu_activated,1,0,1,0
 access_leih_admission_line_activated,leih.admission.line,model_leih_admission_line,group_admission_menu_activated,1,1,1,1
 access_patient_guarantor_activated,patient.guarantor,model_patient_guarantor,group_admission_menu_activated,1,1,1,1
@@ -202,6 +204,7 @@ access_diagnosis_group,diagnosis.group,model_diagnosis_group,group_expense_menu_
 access_examination_entry,examination.entry,model_examination_entry,group_billing_menu_bill_register,1,1,1,0
 access_examination_entry_line,examination.entry.line,model_examination_entry_line,group_billing_menu_bill_register,1,1,1,1
 access_examination_merge_line,examination.merge.line,model_examination_merge_line,group_billing_menu_bill_register,1,1,1,1
+access_hospital_admission,hospital.admission,model_hospital_admission,group_billing_menu_bill_register,1,0,1,0
 
 access_examine_package,examine.package,model_examine_package,group_laundry_linen_menu_send_to,1,1,1,0
 access_examine_package_line,examine.package.line,model_examine_package_line,group_laundry_linen_menu_send_to,1,1,1,1
