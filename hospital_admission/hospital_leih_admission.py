@@ -75,6 +75,7 @@ class leih_hospital_admission(osv.osv):
         'doctors_discounts': fields.float("Discount(%)"),
         'after_discount': fields.float("Discount Amount"),
         'other_discount': fields.float("Other Discount"),
+        'discount_remarks': fields.char("Discount Remarks"),
         'grand_total': fields.float("Grand Total"),
         'investigation_total':fields.float('Investigation Total'),
         'investigation_paid':fields.float('Investigation Paid'),

@@ -156,10 +156,10 @@
                     </notebook>
 
                     <group>
-
                          <field name="total_without_discount"/>
                         <field name="doctors_discounts"/>
                         <field name="other_discount"/>
+                        <field name="discount_remarks"/>
                         <field name="total"/>
                         <field name="investigation_total"/>
                         <field name="investigation_paid"/>
@@ -167,6 +167,7 @@
                         <field name="paid"/>
                         <field name="due"/>
                     </group>
+
                 </sheet>
             </form>
 
