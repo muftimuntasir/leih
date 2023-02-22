@@ -3,7 +3,7 @@
     <data>
 
         <record model="ir.ui.view" id="leih_general_emergency_graph_view">
-                <field name="name">E Grapmergencyh</field>
+                <field name="name">Emergency</field>
                 <field name="model">hospital.admission</field>
                 <field name="arch" type="xml">
                     <graph string="">

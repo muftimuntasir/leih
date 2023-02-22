@@ -48,7 +48,7 @@
 
 
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
-        <menuitem name="Hospital Activated Admission" id="hospital_admission_activated_menu_mainform" parent="hospital_leih_admission_menu" action="admission_general_activated_action" groups="leih.group_admission_menu_activated,leih.group_billing_menu_bill_register_edit,leih.group_general_admission_menu_pending"/>
+        <menuitem name="Hospital Activated Admission" id="hospital_admission_activated_menu_mainform" parent="hospital_leih_admission_menu" action="admission_general_activated_action" groups="leih.group_admission_menu_activated,leih.group_billing_menu_bill_register_edit,group_general_admission_menu_pending"/>
 
 
     </data>
