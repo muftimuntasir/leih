@@ -1,7 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 
 access_hospital_ward,ward.managment,model_ward_managment,group_hospital_menu_ward,1,1,1,0
-
+,
 access_hospital_pending_cash_coll,cash.collection,model_cash_collection,group_hospital_menu_pending_cash_coll,1,1,1,0
 access_hospital_pending_cash_coll_line,cash.collection.line,model_cash_collection_line,group_hospital_menu_pending_cash_coll,1,1,1,1
 
@@ -160,6 +160,8 @@ access_patient_guarantor_emergency_released,patient.guarantor,model_patient_guar
 access_admission_payment_line_emergency_released,admission.payment.line,model_admission_payment_line,group_emergency_menu_released,1,1,1,1
 access_bill_register_admission_line_emergency_released,bill.register.admission.line,model_bill_register_admission_line,group_emergency_menu_released,1,1,1,1
 
+
+
 access_report,diagnosis.sticker,model_diagnosis_sticker,group_report_reception_menu_report,1,1,1,0
 access_report_line,diagnosis.sticker.line,model_diagnosis_sticker_line,group_report_reception_menu_report,1,1,1,1
 
@@ -217,4 +219,4 @@ access_hospital_medicine_line,hospital.medicine.line,model_hospital_medicine_lin
 
 
 
-
+,

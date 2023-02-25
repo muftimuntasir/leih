@@ -93,7 +93,7 @@ class patient_info(osv.osv):
 
         'mobile': fields.char("Mobile No"),
         'patient_id': fields.char("Patient Id", readonly=True),
-        'name':fields.char("Name"),
+        'name':fields.char("Name", required=True),
         'age':fields.char('Age'),
         'address':fields.char('Address',required=True),
         'sex': fields.selection([('male', 'Male'), ('female', 'Female'),('others','Others')], string='Sex', default='male'),

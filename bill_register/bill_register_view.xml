@@ -29,7 +29,7 @@
                         <field name="sex"/>
                         <field name="address"/>
                         <field name="mobile"/>
-                        <field name="ref_doctors"/>
+                        <field name="ref_doctors" placeholder="Select Doctor Name" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
                         <field name="referral"/>
                     </group>
                     <notebook>

@@ -23,7 +23,7 @@
                         <field name="age"/>
                         <field name="sex"/>
                         <field name="mobile"/>
-                        <field name="ref_doctors"/>
+                        <field name="ref_doctors" placeholder="Select Doctor Name" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
 
                     </group>
                     <notebook>

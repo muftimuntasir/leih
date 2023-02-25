@@ -30,5 +30,4 @@ import advance_cash
 
 
 # hospital general---------------------------------------------------
-# import hospital_admission
-from . import hospital_admission
+import hospital_admission

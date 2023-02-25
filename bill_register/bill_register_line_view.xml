@@ -9,18 +9,13 @@
             <form string="Investigation">
 
                 <sheet>
-
-
-
-
-                                    <field name="name"/>
-                                    <field name="department"/>
-                                    <field name="price"/>
-                                    <field name="discount"/>
-                                    <field name="total_discount"/>
-                                    <field name="total_amount"/>
-                                    <field name="assign_doctors"/>
-
+                    <field name="name"/>
+                    <field name="department"/>
+                    <field name="price"/>
+                    <field name="discount"/>
+                    <field name="total_discount"/>
+                    <field name="total_amount"/>
+                    <field name="assign_doctors"/>
                 </sheet>
             </form>
 
@@ -54,17 +49,15 @@
             <field name="name">leih</field>
             <field name="model">bill.register.line</field>
             <field name="arch" type="xml">
-            <tree string="Alu List">
+                <tree string="Alu List">
 
-                                    <field name="name"/>
-                                    <field name="department"/>
-                                    <field name="price"/>
-                                    <field name="discount"/>
-                                    <field name="total_discount"/>
-                                    <field name="total_amount"/>
-
-
-            </tree>
+                    <field name="name"/>
+                    <field name="department"/>
+                    <field name="price"/>
+                    <field name="discount"/>
+                    <field name="total_discount"/>
+                    <field name="total_amount"/>
+                </tree>
             </field>
         </record>
 
