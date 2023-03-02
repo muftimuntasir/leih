@@ -56,7 +56,7 @@
                             <field name="leih_admission_line_id" mode="tree">
                                 <tree string="Select Referance Value" editable="bottom">
 
-                                    <field name="name" on_change="onchange_test(name, context)"/>
+                                    <field name="name" on_change="onchange_test(name, context)" options="{'no_quick_create': True, 'no_create_edit' : True}"/>
                                     <field name="department"/>
                                     <field name="product_qty"/>
                                     <field name="price"/>
