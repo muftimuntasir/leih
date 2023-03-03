@@ -18,6 +18,7 @@ class collcetion_details(report_sxw.rml_parse):
         optic_info = {}
         bill_info = {}
         opd_info = {}
+        general_info = {}
 
         result = []
         if self.uid == 1:
@@ -46,7 +47,7 @@ class collcetion_details(report_sxw.rml_parse):
                 bill_info[items[1]] = items[0]
             # calculating general admission
             self.cr.execute(general_bill % (end_date, st_dat))
-            participant_ids = []
+            # participant_ids = []
             general_info = {}
             for items in self.cr.fetchall():
                 if items[1] is not participant_ids:
@@ -109,7 +110,7 @@ class collcetion_details(report_sxw.rml_parse):
             general_bill = "select sum(amount) as totla_collection, create_uid from leih_money_receipt where general_admission_id is not Null " \
                            "and state='confirm' and (create_date <= '%s') and (create_date >= '%s') group by create_uid"
             self.cr.execute(general_bill % (end_date, st_dat))
-            participant_ids = []
+            # participant_ids = []
             general_info = {}
             for items in self.cr.fetchall():
                 if items[1] is not participant_ids:
@@ -196,7 +197,7 @@ class collcetion_details(report_sxw.rml_parse):
                 bill_info[items[1]] = items[0]
 
             self.cr.execute(general_bill % (end_date, st_dat, user_id))
-            participant_ids = []
+            # participant_ids = []
             general_info = {}
             for items in self.cr.fetchall():
                 if items[1] is not participant_ids:
@@ -247,47 +248,7 @@ class collcetion_details(report_sxw.rml_parse):
 
                 ## Optics Ends Here
 
-        # ## It sis For BIll Data Collction
-        # self.cr.execute(bill_q % (end_date,st_dat,user_id))
-        # participant_ids = []
-        # bill_info = {}
-        # for items in self.cr.fetchall():
-        #     if items[1] is not participant_ids:
-        #         participant_ids.append(items[1])
-        #     bill_info[items[1]]=items[0]
-        #
-        # self.cr.execute(bill_others % (end_date,st_dat,user_id))
-        # bill_other_info = {}
-        # for items in self.cr.fetchall():
-        #     if items[1] is not participant_ids:
-        #         participant_ids.append(items[1])
-        #     bill_other_info[items[1]]=items[0]
-        #
-        #
-        # ## Bill Collction Ends Here
-        #
-        # ## It sis For Addmission Data Collction
-        #
-        # self.cr.execute(add_q % (end_date, st_dat,user_id))
-        #
-        # adm_info = {}
-        # for items in self.cr.fetchall():
-        #     if items[1] is not participant_ids:
-        #         participant_ids.append(items[1])
-        #     adm_info[items[1]] = items[0]
-        #
-        # ## Addmission Collction Ends Here
-        #
-        # ## It sis For Addmission Data Collction
-        # self.cr.execute(optic_q % (end_date,st_dat,user_id))
-        #
-        # optic_info = {}
-        # for items in self.cr.fetchall():
-        #     if items[1] is not participant_ids:
-        #         participant_ids.append(items[1])
-        #     optic_info[items[1]] = items[0]
 
-        ## Addmission Collction Ends Here
 
         participant_ids = list(set(participant_ids))
 
