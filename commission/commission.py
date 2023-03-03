@@ -105,12 +105,6 @@ class commission(osv.osv):
             except:
                 commission_rate = 0
 
-
-            # import pdb
-            # pdb.set_trace()
-
-            ## Ends Here
-
             query="select id from doctors_profile where referral_id=%s and status='active'"
             self._cr.execute(query, ([commissioner_id]))
             doctors_ids= self._cr.dictfetchall()
