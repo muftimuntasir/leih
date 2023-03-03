@@ -11,14 +11,13 @@
                     <button string="Cancel" type="object" name="opd_cancel" groups="leih.group_bill_register_button_cancel"/>
                 </header>
                 <sheet>
-
-                    <group>
+                     <group>
 
 <!--                        <field name="patient_id"/>-->
 <!--                        <field name="name"/>-->
                         <field name="date"/>
                         <field name="patient_id"/>
-                        <field name="patient_name" on_change="onchange_patient(patient_name, context)"/>
+                        <field name="patient_name" on_change="onchange_patient(patient_name, context)" options="{'no_create_edit' : True}"/>
                         <field name="address"/>
                         <field name="age"/>
                         <field name="sex"/>
