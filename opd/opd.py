@@ -187,9 +187,9 @@ class opd_ticket(osv.osv):
 
                         jv_entry.button_validate(cr, uid, [saved_jv_id], context)
                     except:
-                        import pdb
-                        pdb.set_trace()
-
+                        cr.execute("delete from opd_ticket where id=%s", ([stored]))
+                        cr.commit()
+                        raise Exception("Check the item, missmatched total!")
                ###ENd of Journal
             return stored
 

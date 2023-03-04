@@ -23,6 +23,7 @@
                             <group>
                                 <field name="id" invisible="1"/>
                                 <field name="doctor_id"/>
+                                <field name="broker_id"/>
                                 <field name="start_date"/>
                                 <field name="end_date"/>
                                 <field name="overall_commission_rate"/>

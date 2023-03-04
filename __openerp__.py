@@ -17,6 +17,12 @@ membership products (schemes).
         'diagnosis_room/diagnosis_room_view.xml',
         'Department/department_view.xml',
         'Doctors/doctors_view.xml',
+
+
+        'Doctors/broker_info_view.xml',
+
+
+
         'Patients/patients_view.xml',
         'Diagnosis/diagonosis_view.xml',
         'security/ir.model.access.csv',

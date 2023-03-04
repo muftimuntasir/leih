@@ -18,7 +18,8 @@ class commissionconfiguration(osv.osv):
     _columns = {
 
         'name': fields.char("Name"),
-        'doctor_id': fields.many2one('doctors.profile', 'Doctor/Broker Name'),
+        'doctor_id': fields.many2one('doctors.profile', 'Doctor/SR Name'),
+        'broker_id': fields.many2one('brokers.info', 'Broker Name'),
         'start_date':fields.date('MOU Start Date'),
         'end_date':fields.date('MOU End Date'),
         'overall_commission_rate': fields.float('Overall Commission Rate (%)'),
