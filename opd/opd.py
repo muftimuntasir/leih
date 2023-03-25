@@ -321,7 +321,7 @@ class test_information(osv.osv):
 
     _columns = {
 
-        'name': fields.many2one("opd.ticket.entry","Item Name",ondelete='cascade'),
+        'name': fields.many2one("opd.ticket.entry","Item Name", ondelete='cascade'),
         'opd_ticket_id': fields.many2one('opd.ticket', "Information"),
         'price': fields.integer("Price"),
         'department':fields.char('Department'),

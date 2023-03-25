@@ -14,6 +14,8 @@ class brokers_info(osv.osv):
         'commission_rate': fields.float("Commission Rate (%) "),
         'last_commission_calculation_date': fields.date("Last Commission Calculation Date"),
         'bill_info': fields.one2many("bill.register", 'referral', "Bill Register"),
+        'doctor_ids': fields.many2many('doctors.profile', 'referral_relation', 'broker_id', 'doctor_id', "Broker Name"),
+
         # 'admission_info': fields.many2one("leih.admission", 'reffered_to_hospital', "Admission Info"),
         # 'commission': fields.many2one("commission", 'referral', "Commission"),
     }
@@ -26,3 +28,17 @@ class brokers_info(osv.osv):
             cr.execute('update brokers_info set broker_id=%s where id=%s', (name_text, record))
             cr.commit()
         return record
+
+    #
+    # def name_get(self, cr, uid, ids, context=None):
+    #     if not ids:
+    #         return []
+    #     res = []
+    #     for elmt in self.browse(cr, uid, ids, context=context):
+    #         broker_name = elmt.broker_name
+    #         try:
+    #             broker_name = broker_name + ' ' + str(elmt.broker_id) if elmt.broker_id is not False else '---'
+    #             res.append((elmt.id, broker_name))
+    #         except ValueError:
+    #             pass
+    #     return res

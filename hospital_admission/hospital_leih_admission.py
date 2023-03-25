@@ -1,6 +1,6 @@
-from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp import api
+from openerp import api, exceptions, models
+from openerp.osv import osv, fields
 from openerp import SUPERUSER_ID, api
 from datetime import date, time
 from openerp.tools.amount_to_text_en import amount_to_text
@@ -181,35 +181,76 @@ class leih_hospital_admission(osv.osv):
         # final_text = new_text.replace("Cent", "Paisa")
         return lists
 
+    # def calculate_bill(self, cr, uid, ids, context=None):
+    #     bill_dict=[]
+    #     bill_ids = self.pool.get("bill.register").search(cr,uid,[('general_admission_id', '=', ids[0]),('state','=','confirmed')],context=None)
+    #     bill_obj = self.pool.get('bill.register').browse(cr, uid, bill_ids, context=None)
+    #     hospital_admission_line_obj = self.pool.get('hospital.bill.line')
+    #     hospital_admission_obj = self.browse(cr, uid, ids[0], context=context)
+    #     investigation_paid=0
+    #     investigation_total = 0
+    #     for obj in bill_obj:
+    #         if obj.is_applied_to_admission != True:
+    #             investigation_paid=investigation_paid+obj.paid
+    #             values = {}
+    #             for item in obj.bill_register_line_id:
+    #                 values={
+    #                     'item_name':item.name.id,
+    #                     'product_qty':1,
+    #                     'price':item.price,
+    #                     'discount':item.discount,
+    #                     'total_discount':item.total_discount,
+    #                     'total_amount':item.total_amount,
+    #                     'bill_created_date':item.create_date,
+    #                     'hospital_admission_id':ids[0]
+    #                 }
+    #                 bill_ids = hospital_admission_line_obj.create(cr, uid, vals=values, context=context)
+    #                 hospital_admission_obj.onchange_admission_line()
+    #                 investigation_total=investigation_total+item.total_amount
+    #             obj.is_applied_to_admission = True
+    #     hospital_admission_obj.investigation_total=hospital_admission_obj.investigation_total+investigation_total
+    #     hospital_admission_obj.investigation_paid=hospital_admission_obj.investigation_paid+investigation_paid
+    #     hospital_admission_obj.onchange_paid()
+    #
+    #     return bill_ids
+
+
     def calculate_bill(self, cr, uid, ids, context=None):
-        bill_dict=[]
-        bill_ids = self.pool.get("bill.register").search(cr,uid,[('general_admission_id', '=', ids[0]),('state','=','confirmed')],context=None)
+        bill_dict = []
+        bill_ids = self.pool.get("bill.register").search(cr, uid, [('general_admission_id', '=', ids[0]),
+                                                                   ('state', '=', 'confirmed')], context=None)
         bill_obj = self.pool.get('bill.register').browse(cr, uid, bill_ids, context=None)
         hospital_admission_line_obj = self.pool.get('hospital.bill.line')
         hospital_admission_obj = self.browse(cr, uid, ids[0], context=context)
-        investigation_paid=0
+        investigation_paid = 0
         investigation_total = 0
         for obj in bill_obj:
             if obj.is_applied_to_admission != True:
-                investigation_paid=investigation_paid+obj.paid
+                investigation_paid = investigation_paid + obj.paid
                 values = {}
                 for item in obj.bill_register_line_id:
-                    values={
-                        'item_name':item.name.id,
-                        'product_qty':1,
-                        'price':item.price,
-                        'discount':item.discount,
-                        'total_discount':item.total_discount,
-                        'total_amount':item.total_amount,
-                        'bill_created_date':item.create_date,
-                        'hospital_admission_id':ids[0]
-                    }
-                    bill_ids = hospital_admission_line_obj.create(cr, uid, vals=values, context=context)
-                    hospital_admission_obj.onchange_admission_line()
-                    investigation_total=investigation_total+item.total_amount
+                    existing_item = hospital_admission_line_obj.search(cr, uid, [('item_name', '=', item.name.id), (
+                    'bill_created_date', '=', item.create_date), ('hospital_admission_id', '=', ids[0])],
+                                                                       context=context)
+                    if not existing_item:
+                        values = {
+                            'item_name': item.name.id,
+                            'product_qty': 1,
+                            'price': item.price,
+                            'discount': item.discount,
+                            'total_discount': item.total_discount,
+                            'total_amount': item.total_amount,
+                            'bill_created_date': item.create_date,
+                            'hospital_admission_id': ids[0]
+                        }
+                        bill_ids = hospital_admission_line_obj.create(cr, uid, vals=values, context=context)
+                        hospital_admission_obj.onchange_admission_line()
+                        investigation_total = investigation_total + item.total_amount
+                    else:
+                        bill_ids = existing_item[0]
                 obj.is_applied_to_admission = True
-        hospital_admission_obj.investigation_total=hospital_admission_obj.investigation_total+investigation_total
-        hospital_admission_obj.investigation_paid=hospital_admission_obj.investigation_paid+investigation_paid
+        hospital_admission_obj.investigation_total = hospital_admission_obj.investigation_total + investigation_total
+        hospital_admission_obj.investigation_paid = hospital_admission_obj.investigation_paid + investigation_paid
         hospital_admission_obj.onchange_paid()
 
         return bill_ids
@@ -270,12 +311,24 @@ class leih_hospital_admission(osv.osv):
         values['value']=abc
         return values
 
+    # This Function is used for the Released Admission
+    def btn_final_settlement(self, cr, uid, ids, context=None):
+        for record in self.browse(cr, uid, ids, context=context):
+            if record.state == 'activated' or record.state == 'released':
+                if record.due > 0:
+                    raise osv.except_osv("Error", "Please Pay the Due Bill")
+                if not record.release_note:
+                    raise osv.except_osv("Error", "Please give the description about the release note field")
+                if record.state == 'activated':
+                    self.write(cr, uid, [record.id], {'state': 'released'}, context=context)
+            else:
+                raise osv.except_osv("Error", "Please confirm the admission before releasing it.")
+        return True
 
     def hospital_change_status(self, cr, uid, ids, context=None):
         stored_obj = self.browse(cr, uid, [ids[0]], context=context)
-        ## Bill Status Will Change
-
-        if stored_obj.state == 'activated':
+        ## Bill Status Will Change: ------------------
+        if stored_obj.state == 'activated' or stored_obj.state == 'released':
             raise osv.except_osv(_('Warning!'),
                                  _('Already this Bill is Confirmed.'))
         try:
@@ -624,7 +677,7 @@ class leih_hospital_admission(osv.osv):
         total_without_discount = 0
         for item in self.leih_admission_line_id:
             sumalltest=sumalltest+item.total_amount
-            total_without_discount = total_without_discount + item.price
+            total_without_discount = total_without_discount +(item.price*item.product_qty)
         for item in self.hospital_bed_line_id:
             sumalltest = sumalltest + item.total_amount
             total_without_discount = total_without_discount + item.total_amount
@@ -634,10 +687,6 @@ class leih_hospital_admission(osv.osv):
         for item in self.hospital_doctor_line_id:
             sumalltest=sumalltest+item.total_amount
             total_without_discount = total_without_discount + item.total_amount
-
-
-
-
 
         self.total=sumalltest
         after_dis = (sumalltest* (self.doctors_discounts/100))
@@ -664,10 +713,8 @@ class leih_hospital_admission(osv.osv):
     @api.onchange('doctors_discounts')
     def onchange_doc_discount(self):
         discount = self.doctors_discounts
-
-
         for item in self.leih_admission_line_id:
-            item.discount_percent=round((item.price*discount)/100)
+            item.discount_percent=round((item.price*item.product_qty*discount)/100)
             item.discount=discount
             item.total_discount = item.flat_discount + item.discount_percent
             item.total_amount = (item.price - item.total_discount)*item.product_qty
@@ -686,24 +733,27 @@ class leih_hospital_admission(osv.osv):
         other_discount = self.other_discount
         total = self.total_without_discount
         gd = total - other_discount
-        line_total = 0
-        if total > 0:
-            discount_distribution = other_discount / total
-            for item in self.leih_admission_line_id:
-                item.flat_discount = 0
-                item.flat_discount = round(item.price * discount_distribution)
-                item.total_discount = item.flat_discount + item.discount_percent
-                item.total_amount = item.price - item.total_discount
-                line_total = line_total + item.total_amount
-            if line_total < gd:
-                item.total_amount = item.total_amount + (gd - line_total)
-                item.flat_discount = item.flat_discount - (gd - line_total)
-                item.total_discount = item.flat_discount + item.discount_percent
-            if gd < line_total:
-                item.total_amount = item.total_amount - (line_total - gd)
-                item.flat_discount = item.flat_discount + (line_total - gd)
+        self.total=self.grand_total=gd
+        self.due = self.grand_total - self.paid
         return 'Nothing'
 
+    # @api.onchange('other_discount')
+    # def onchange_other_discount(self):
+    #     other_discount = self.other_discount
+    #     total = self.total_without_discount - other_discount
+    #     line_total = 0
+    #     for item in self.leih_admission_line_id:
+    #         item.flat_discount = 0
+    #         item.total_discount = item.discount_percent
+    #         item.total_amount = item.price - item.total_discount
+    #         line_total += item.total_amount
+    #     if line_total < total:
+    #         item.total_amount += total - line_total
+    #         item.total_discount -= total - line_total
+    #     elif line_total > total:
+    #         item.total_amount -= line_total - total
+    #         item.total_discount += line_total - total
+    #     return 'Nothing'
 
 
         # self.grand_total = self.total - self.after_discount - self.other_discount

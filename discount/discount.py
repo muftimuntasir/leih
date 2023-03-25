@@ -25,7 +25,46 @@ class discount(osv.osv):
             ('cancel', 'Cancelled')],'State',default='pending',readonly=True),
         'discount_line_id': fields.one2many("discount.line",'discount_id','Discount Line',required=True),
     }
-
+# #----------------------------------------------------------------------------------------------------------------------------------------
+#     from odoo import models, fields, api
+#
+#     class DiscountReport(models.AbstractModel):
+#         _name = 'report.discount.report_discount'
+#
+#         @api.model
+#         def _get_report_values(self, docids, data=None):
+#             date_from = data['form']['date_from']
+#             date_to = data['form']['date_to']
+#             admission_id = data['form']['admission_id']
+#             bill_no = data['form']['bill_no']
+#
+#             discounts = self.env['discount'].search([
+#                 ('date', '>=', date_from),
+#                 ('date', '<=', date_to),
+#                 ('admission_id', '=', admission_id),
+#                 ('bill_no', '=', bill_no),
+#                 ('state', '=', 'approve'),
+#             ])
+#
+#             report_data = []
+#             total_amount = 0.0
+#             for discount in discounts:
+#                 total_amount += discount.amount
+#                 report_data.append({
+#                     'bill_id': discount.bill_no.id,
+#                     'admission_id': discount.admission_id.id,
+#                     'created_by': discount.create_uid.name,
+#                     'amount': discount.amount,
+#                 })
+#
+#             return {
+#                 'doc_ids': docids,
+#                 'doc_model': 'discount',
+#                 'data': data,
+#                 'discounts': report_data,
+#                 'total_amount': total_amount,
+#             }
+# #----------------------------------------------------------------------------------------------------------------------------------------
     def approve_discount(self,cr,uid,ids,context=None):
         discount_object = self.browse(cr, uid, ids, context=None)
         if discount_object.state=='approve':

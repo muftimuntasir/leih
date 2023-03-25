@@ -11,6 +11,7 @@
 
                     <group>
 
+                        <field name="doctor_id"/>
                         <field name="name"/>
                         <field name="referral_id"/>
                         <field name="department"/>
@@ -22,6 +23,7 @@
                         <field name="status"/>
                         <field name="others"/>
                         <field name="is_referral"/>
+                        <field name="broker_ids" widget="many2many_tags"/>
 
                     </group>
                     <notebook>
