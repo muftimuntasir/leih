@@ -80,7 +80,7 @@ class leih_hospital_admission(osv.osv):
         'investigation_total':fields.float('Investigation Total'),
         'investigation_paid':fields.float('Investigation Paid'),
         'advance':fields.float("Advance"),
-        'paid': fields.float("Paid",readonly=True),
+        'paid': fields.float("Paid"),
         'due': fields.float("Due"),
         'type': fields.selection([('cash', 'Cash'), ('bank', 'Bank')], 'Payment Type'),
         'card_no': fields.char('Card No.'),
