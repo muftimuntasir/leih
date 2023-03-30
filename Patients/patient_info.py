@@ -172,5 +172,7 @@ class patient_info(osv.osv):
             recs = self.search([('patient_id', operator, name)] + args, limit=limit)
         if not recs:
             recs = self.search([('name', operator, name)] + args, limit=limit)
+        if not recs:
+            recs = self.search([('mobile', operator,name)] + args, limit=limit)
 
         return recs.name_get()

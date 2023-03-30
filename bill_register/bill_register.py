@@ -115,7 +115,7 @@ class bill_register(osv.osv):
         if self.ref_doctors:
             referral_domain = [('status', '=', 'active'), ('doctor_ids', 'in', self.ref_doctors.id)]
         else:
-            referral_domain = [('Status', '=', 'active')]
+            referral_domain = [('status', '=', 'active')]
         return {'domain': {'referral': referral_domain}}
 
     @api.onchange("payment_type")
