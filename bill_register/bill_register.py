@@ -110,13 +110,13 @@ class bill_register(osv.osv):
     }
 
     # broker name filter based on doctor name
-    @api.onchange('ref_doctors')
-    def onchange_referred_by(self):
-        if self.ref_doctors:
-            referral_domain = [('status', '=', 'active'), ('doctor_ids', 'in', self.ref_doctors.id)]
-        else:
-            referral_domain = [('status', '=', 'active')]
-        return {'domain': {'referral': referral_domain}}
+    # @api.onchange('ref_doctors')
+    # def onchange_referred_by(self):
+    #     if self.ref_doctors:
+    #         referral_domain = [('status', '=', 'active'), ('doctor_ids', 'in', self.ref_doctors.id)]
+    #     else:
+    #         referral_domain = [('status', '=', 'active')]
+    #     return {'domain': {'referral': referral_domain}}
 
     @api.onchange("payment_type")
     def onchnage_payment_type(self):
