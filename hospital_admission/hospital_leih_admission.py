@@ -41,7 +41,7 @@ class leih_hospital_admission(osv.osv):
         'name':fields.char("Name"),
         'mobile': fields.char(string="Mobile",store=False),
         'patient_id': fields.char(related='patient_name.patient_id',string="Patient Id"),
-        'patient_name': fields.many2one('patient.info', "Patient Name"),
+        'patient_name': fields.many2one('patient.info', "Patient Name", required=True),
         'address': fields.char("Address",store=False),
         'age': fields.char("Age",store=False),
         'sex':fields.char("Sex",store=False),
@@ -103,7 +103,8 @@ class leih_hospital_admission(osv.osv):
         'mother_name':fields.char("Mother's Name"),
         'religion':fields.selection([('islam', 'Islam'), ('hindu', 'Hinduism'),('buddhism','Buddhism'),('christianity','Christianity')], 'Religion'),
         'blood_group': fields.char('Blood Group'),
-        'reffered_to_hospital': fields.char('Refferred to this hospital by'),
+        # 'reffered_to_hospital': fields.char('Refferred to this hospital by'),
+        'reffered_to_hospital': fields.many2one('brokers.info', 'Refferred to this hospital by'),
         'occupation':fields.char('Occupation'),
         'business_address':fields.char('Business Address'),
         'admitting_doctor':fields.char('Admitting Doctor'),
@@ -404,32 +405,7 @@ class leih_hospital_admission(osv.osv):
         }
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
 
-    # def btn_final_settlement(self, cr, uid, ids, context=None):
-    #     if not ids: return []
-    #
-    #     dummy, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'leih', 'admission_release_view')
-    #     #
-    #     inv = self.browse(cr, uid, ids[0], context=context)
-    #     total=inv.total
-    #     # import pdb
-    #     # pdb.set_trace()
-    #     return {
-    #         'name':_("Pay Invoice"),
-    #         'view_mode': 'form',
-    #         'view_id': view_id,
-    #         'view_type': 'form',
-    #         'res_model': 'admission.release',
-    #         'type': 'ir.actions.act_window',
-    #         'nodestroy': True,
-    #         'target': 'new',
-    #         'domain': '[]',
-    #         'context': {
-    #             'default_total':total,
-    #             'default_admission_id': ids[0]
-    #
-    #         }
-    #     }
-    #     raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
+
 
 
     def btn_pay(self, cr, uid, ids, context=None):
@@ -463,6 +439,7 @@ class leih_hospital_admission(osv.osv):
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
 
 
+#-------------------------------------------------------------------------------------------------------------------------
     def add_discount(self,cr,uid,ids,context=None):
         # import pdb
         # pdb.set_trace()
