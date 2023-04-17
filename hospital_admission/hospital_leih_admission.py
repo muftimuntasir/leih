@@ -45,7 +45,7 @@ class leih_hospital_admission(osv.osv):
         'address': fields.char("Address",store=False),
         'age': fields.char("Age",store=False),
         'sex':fields.char("Sex",store=False),
-        'ref_doctors': fields.many2one('doctors.profile','Reffered by'),
+        'ref_doctors': fields.many2one('doctors.profile','Reffered by (Doctor)'),
         'operation_date': fields.date("Operation Date"),
         'release_note': fields.text("Release Note"),
         'package_name': fields.many2one("examine.package", string="Package"),

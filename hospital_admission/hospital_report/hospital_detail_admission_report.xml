@@ -67,9 +67,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-4">
-                                <strong>Reffered By:</strong>
+                            <div class="col-xs-6">
+                                <strong>Referred By Doctor:</strong>
                                 <span t-field="o.ref_doctors"/>
+                            </div>
+                            <div class="col-xs-6">
+                                <strong>Referral:</strong>
+                                <span t-field="o.reffered_to_hospital"/>
                             </div>
                         </div>
 
