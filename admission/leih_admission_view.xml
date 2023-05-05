@@ -118,6 +118,7 @@
                          <field name="total_without_discount"/>
                         <field name="doctors_discounts"/>
                         <field name="other_discount"/>
+                        <field name="discount_remarks"/>
                         <field name="total"/>
                         <field name="grand_total"/>
                         <field name="paid"/>

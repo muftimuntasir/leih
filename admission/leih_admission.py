@@ -92,6 +92,7 @@ class leih_admission(osv.osv):
         'bed':fields.char('Bed'),
         'received_by':fields.char('Received/Registered By'),
         'clinic_diagnosis':fields.char('Clinical Diagnosis'),
+        'discount_remarks':fields.char('Discount Remarks'),
 
     }
 

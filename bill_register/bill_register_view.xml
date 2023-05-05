@@ -79,6 +79,7 @@
                                 <field name="total_without_discount"/>
                                 <field name="doctors_discounts"/>
                                 <field name="other_discount"/>
+                                <field name="discount_remarks"/>
                                 <field name="total"/>
 <!--                                <button name="button_dummy" string="(update)" type="object" class="oe_edit_only oe_link"/>-->
 

@@ -101,7 +101,8 @@ class bill_register(osv.osv):
         'payment_type': fields.many2one("payment.type", "Payment Type", default=_default_payment_type),
         'service_charge': fields.float("Service Charge"),
         'to_be_paid': fields.float("To be Paid"),
-        'account_number': fields.char("Account Number")
+        'account_number': fields.char("Account Number"),
+        'discount_remarks': fields.char("Discount Remarks")
 
     }
     _defaults = {
