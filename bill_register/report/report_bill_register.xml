@@ -25,12 +25,11 @@
 
                             <div class="row">
                                 <t t-if="o.general_admission_id">
-
-                                <div class="col-md-6 pull-left">
-                                <h4>
-                                    <b>Admission ID:</b> <span t-field="o.general_admission_id"/>
-                                </h4>
-                            </div>
+                                    <div class="col-md-6 pull-left">
+                                        <h4>
+                                            <b>Admission ID:</b> <span t-field="o.general_admission_id"/>
+                                        </h4>
+                                    </div>
                                 </t>
                             <div class="col-md-6 pull-right">
                                 <h3>
@@ -207,8 +206,16 @@
                                 </div>
                             </div>
 
+                        <div>
                             <strong>In Words(Grand Total):</strong>
-                            <span t-esc="o.amount_to_text(o.grand_total, 'BDT')"/>
+                            <span t-esc="o.amount_to_text(o.grand_total, 'BDT')"/><br/>
+                            <strong>In Words(Paid):</strong>
+                            <span t-esc="o.amount_to_text(o.paid, 'BDT')"/><br/>
+                            <t t-if="o.due != 0.0">
+                                <strong>In Words(Due):</strong>
+                                <span t-esc="o.amount_to_text(o.due, 'BDT')"/>
+                            </t>
+                        </div>
 
 
                             <p>Created By:  <span t-esc="o.user_id.name"/></p>

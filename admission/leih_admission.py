@@ -84,10 +84,10 @@ class leih_admission(osv.osv):
         'mother_name':fields.char("Mother's Name"),
         'religion':fields.selection([('islam', 'Islam'), ('hindu', 'Hinduism'),('buddhism','Buddhism'),('christianity','Christianity')], 'Religion'),
         'blood_group': fields.char('Blood Group'),
-        'reffered_to_hospital': fields.char('Refferred to this hospital by'),
+        'reffered_to_hospital': fields.many2one('brokers.info', 'Referred to this hospital by'),
         'occupation':fields.char('Occupation'),
         'business_address':fields.char('Business Address'),
-        'admitting_doctor':fields.char('Admitting Doctor'),
+        'admitting_doctor':fields.many2one('doctors.profile','Admitting Doctor'),
         #hospital use only
         'bed':fields.char('Bed'),
         'received_by':fields.char('Received/Registered By'),

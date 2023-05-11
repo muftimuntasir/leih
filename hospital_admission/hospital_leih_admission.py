@@ -107,7 +107,7 @@ class leih_hospital_admission(osv.osv):
         'reffered_to_hospital': fields.many2one('brokers.info', 'Refferred to this hospital by'),
         'occupation':fields.char('Occupation'),
         'business_address':fields.char('Business Address'),
-        'admitting_doctor':fields.char('Admitting Doctor'),
+        'admitting_doctor':fields.many2one('doctors.profile','Admitting Doctor'),
         #hospital use only
         'bed':fields.char('Bed'),
         'received_by':fields.char('Received/Registered By'),
