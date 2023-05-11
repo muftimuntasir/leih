@@ -25,7 +25,7 @@
                                 <t t-if="o.operation_date">
                                 <div style="col-md-6 align:left">
                                     <h4>
-                                        <b>Operation Date: </b><span t-field="o.operation_date"/>
+                                        <b>Expected Operation Date: </b><span t-field="o.operation_date"/>
                                     </h4>
                                 </div>
                                 </t>
