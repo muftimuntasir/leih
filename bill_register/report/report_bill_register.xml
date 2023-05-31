@@ -18,9 +18,9 @@
                             <div class="oe_structure"/>
 
                             <div style="align:center">
-                                <h5>
-                                    Bill No: <span t-field="o.name"/>
-                                </h5>
+                                <h4>
+                                    <b>Bill No: </b><span t-field="o.name"/>
+                                </h4>
                             </div>
 
                             <div class="row">
@@ -53,46 +53,42 @@
 
                                  </div>
                              <div class="row">
-
-                                <div class="col-xs-5">
-                                    <b>Address:</b><span t-field="o.patient_name.address"/>
-
-                                </div>
+                                 <div class="col-xs-5">
+                                     <b>Address:</b><span t-field="o.patient_name.address"/>
+                                 </div>
                                  <div class="col-xs-3 text-left">
-                                    <b>Sex:</b> <span t-field="o.patient_name.sex"/>
-                                </div>
+                                     <b>Sex:</b> <span t-field="o.patient_name.sex"/>
+                                 </div>
                                  <div class="col-xs-4 text-left">
-                                    <b>Mobile:</b> <span t-field="o.mobile"/>
-
-                                </div>
-                                </div>
-                                <div class="row">
-
+                                     <b>Mobile:</b> <span t-field="o.mobile"/>
+                                 </div>
+                             </div>
+                            <div class="row">
                                 <div class="col-xs-6">
-                                    <b>Reffered By:</b><span t-field="o.ref_doctors"/>
-
+                                    <b>Referred By:</b><span t-field="o.ref_doctors"/>
                                 </div>
-
-                                    <t t-if="o.referral">
-
+                                <t t-if="o.referral">
                                     <div class="col-xs-6">
-                                    <b>Referral:</b><span t-field="o.referral"/>
-
-                                </div>
-                                    </t>
-                                </div>
-
-
+                                        <b>Referral:</b><span t-field="o.referral"/>
+                                    </div>
+                                </t>
+                            </div>
+                            <div class="row">
+                                <t t-if="o.discount_remarks">
+                                    <div class="col-xs-12">
+                                        <b>Discount Remarks: </b><span t-field="o.discount_remarks"/>
+                                    </div>
+                                </t>
+                            </div>
                             <hr/>
-
                             <table class="table table-condensed">
                                 <thead>
                                     <tr>
                                         <th>S.N.</th>
                                         <th>Item Name</th>
+                                        <th>Price</th>
                                         <th>Amount</th>
-                                        <th>Delivery Date</th>
-
+                                        <th>Delivery</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bill_register_tbody">
@@ -105,32 +101,29 @@
                                             </td>
                                             <td>
                                                 <span t-field="z.name"/>
-
                                             </td>
-
                                             <td>
                                                 <span t-field="z.price"/>
-
                                             </td>
                                             <td>
-                                                <span t-field="z.delivery_date"/>
-
+                                                <span t-field="z.total_amount"/>
                                             </td>
 
-
+<!--                                            <td>-->
+<!--                                                <span t-field="z.total_amount"/>-->
+<!--                                            </td>-->
+                                            <td>
+                                                <span t-field="z.delivery_date"/>
+                                            </td>
                                         </tr>
-
                                     </t>
-
                                 </tbody>
-
                             </table>
                             <div class="row">
                                 <div class="col-xs-5">
                                     <p style="align:center"><strong>Payment Details</strong></p>
                                     <t t-foreach="request.env['leih.money.receipt'].search([('bill_id', '=', o.name)])" t-as="obj">
                                                              <div>
-
                                                                  <span t-if="obj.p_type=='advance'">Advance: <t t-esc="obj.amount"/></span>
                                                                  <div class="row">
                                                                      <div class="col-xs-6">
@@ -141,10 +134,8 @@
                                                                          </div>
                                                                      </div>
                                 </div>
-
                         </t>
                                 </div>
-
                             <div class="col-xs-7 pull-left">
                             <div align="center" style="mergin-right:25px;">
                                     <strong>Sub Total:</strong>
@@ -207,19 +198,10 @@
                             </div>
 
                         <div>
-                            <strong>In Words(Grand Total):</strong>
-                            <span t-esc="o.amount_to_text(o.grand_total, 'BDT')"/><br/>
-                            <strong>In Words(Paid):</strong>
+                            <strong>Paid(In Words): </strong>
                             <span t-esc="o.amount_to_text(o.paid, 'BDT')"/><br/>
-                            <t t-if="o.due != 0.0">
-                                <strong>In Words(Due):</strong>
-                                <span t-esc="o.amount_to_text(o.due, 'BDT')"/>
-                            </t>
                         </div>
-
-
                             <p>Created By:  <span t-esc="o.user_id.name"/></p>
-
 
                         </div>
                     </t>
