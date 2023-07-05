@@ -44,8 +44,8 @@
                         <t t-foreach="request.env['stock.move'].search([('product_id', '=', order_line.product_id.id),('location_id','=',8)], limit=1)" t-as="obj" >
 <!--                            <t t-if="obj.location_id.usage=='supplier'">-->
 <!--                                <t t-foreach="o.order_line" t-as="order_line"></t>-->
-                         <t t-set="date" t-value="obj.date"/>
-                         <t t-set="qty" t-value="obj.product_uom_qty"/>
+                             <t t-set="date" t-value="obj.date"/>
+                            <t t-set="qty" t-value="obj.product_uom_qty"/>
 <!--                            <t t-if="obj.date is not False">-->
 <!--                            <td><span t-field="obj.date"/></td>-->
 <!--                            <td><span t-field="obj.product_uom_qty"/></td>-->
@@ -70,6 +70,7 @@
                 </tbody>
             </table>
 
+                <br/><br/>
             <p t-field="o.notes"/>
             <span>Regards,</span>
             <span t-field="user.signature"/>

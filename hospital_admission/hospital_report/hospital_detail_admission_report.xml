@@ -23,59 +23,59 @@
                         </div>
 
                         <div class="oe_structure"/>
-                        <div class="row">
-                            <div style="col-md-6 align:left">
-                                <h2>
-                                    <b>Admission ID: </b><span t-field="o.name"/>
-                                </h2>
-                            </div>
+                            <div class="row">
+                                <div style="col-md-6 align:left">
+                                    <h2>
+                                        <b>Admission ID: </b><span t-field="o.name"/>
+                                    </h2>
+                                </div>
 
 
-                            <div class="col-md-6 pull-right">
-                                <h3>
-                                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px"/>
-                                </h3>
+                                <div class="col-md-6 pull-right">
+                                    <h3>
+                                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px"/>
+                                    </h3>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-xs-5">
-                                <b>Patient ID:</b>
-                                <span t-field="o.patient_name.patient_id"/>
+                            <div class="row">
+                                <div class="col-xs-5">
+                                    <b>Patient ID:</b>
+                                    <span t-field="o.patient_name.patient_id"/>
+                                </div>
+                                <div class="col-xs-5">
+                                    <b>Name: </b> <span t-field="o.patient_name.name"/>
+    <!--                                    <p t-field="o.patient_name"/>-->
+                                </div>
+                                <div class="col-xs-2">
+                                    <b>Age:</b>
+                                    <span t-field="o.age"/>
+                                </div>
                             </div>
-                            <div class="col-xs-5">
-                                <b>Name: </b> <span t-field="o.patient_name.name"/>
-<!--                                    <p t-field="o.patient_name"/>-->
+                            <div class="row">
+                                <div class="col-xs-5">
+                                    <strong>Address:</strong>
+                                    <span t-field="o.address"/>
+                                </div>
+                                    <div class="col-xs-3">
+                                    <strong>Sex:</strong>
+                                    <span t-field="o.sex"/>
+                                </div>
+                                <div class="col-xs-4">
+                                    <strong>Mobile:</strong>
+                                    <span t-field="o.mobile"/>
+                                </div>
                             </div>
-                            <div class="col-xs-2">
-                                <b>Age:</b>
-                                <span t-field="o.age"/>
+                            <div class="row">
+                                <div class="col-xs-6">
+                                    <strong>Referred By Doctor:</strong>
+                                    <span t-field="o.ref_doctors"/>
+                                </div>
+                                <div class="col-xs-6">
+                                    <strong>Referral:</strong>
+                                    <span t-field="o.reffered_to_hospital"/>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-5">
-                                <strong>Address:</strong>
-                                <span t-field="o.address"/>
-                            </div>
-                                <div class="col-xs-3">
-                                <strong>Sex:</strong>
-                                <span t-field="o.sex"/>
-                            </div>
-                            <div class="col-xs-4">
-                                <strong>Mobile:</strong>
-                                <span t-field="o.mobile"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-6">
-                                <strong>Referred By Doctor:</strong>
-                                <span t-field="o.ref_doctors"/>
-                            </div>
-                            <div class="col-xs-6">
-                                <strong>Referral:</strong>
-                                <span t-field="o.reffered_to_hospital"/>
-                            </div>
-                        </div>
 
                              <t t-set="i" t-value="1" />
                                 <t t-foreach="o.guarantor_line_id" t-as="z">
@@ -88,7 +88,7 @@
                                         <span t-field="z.contact"/>
                                     </div>
                                 </t>
-                        <hr/>
+                            <hr/>
 
                         <table class="table table-condensed">
                             <thead>

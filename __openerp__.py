@@ -160,7 +160,7 @@ membership products (schemes).
         'hospital_admission/hospital_report/hospital_detail_admission_report.xml',
         'hospital_admission/hospital_report/hospital_general_admission_report_menu.xml',
         'hospital_admission/hospital_report/hospital_general_admission_report.xml',
-
+        'hospital_admission/hospital_report/admission_release_print_view.xml',
 
         'hospital_admission/hospital_bed/hospital_bed_view.xml',
         'hospital_admission/hospital_medicine/hospital_medicine_view.xml',

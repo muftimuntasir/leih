@@ -47,6 +47,7 @@ class leih_hospital_admission(osv.osv):
         'sex':fields.char("Sex",store=False),
         'ref_doctors': fields.many2one('doctors.profile','Reffered by (Doctor)'),
         'operation_date': fields.date("Operation Date"),
+        'release_note_date': fields.datetime("Release Date"),
         'release_note': fields.text("Release Note"),
         'package_name': fields.many2one("examine.package", string="Package"),
 
@@ -101,6 +102,7 @@ class leih_hospital_admission(osv.osv):
         #added for general
         'father_name':fields.char("Father's Name"),
         'mother_name':fields.char("Mother's Name"),
+        'spouse_name':fields.char("Spouse Name"),
         'religion':fields.selection([('islam', 'Islam'), ('hindu', 'Hinduism'),('buddhism','Buddhism'),('christianity','Christianity')], 'Religion'),
         'blood_group': fields.char('Blood Group'),
         # 'reffered_to_hospital': fields.char('Refferred to this hospital by'),
