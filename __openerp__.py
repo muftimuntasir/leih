@@ -173,6 +173,7 @@ membership products (schemes).
 
         'pharmacy_sale_inherit/hospital_medicine_view.xml',
         'pharmacy_sale_inherit/pos_report_receipt_inherit.xml',
+        'purchase_order_inherit/purchase_order_form_inherit_view.xml',
 
 
 

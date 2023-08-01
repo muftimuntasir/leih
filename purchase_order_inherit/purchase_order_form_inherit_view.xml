@@ -1,0 +1,31 @@
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="leih_purchase_order_form_inherit">
+            <field name="name">purchase.order.form.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_ref']" position="after">
+
+                <field name="invoice_bill_no" placeholder="Invoice No."/>
+                <field name="chalan_no" placeholder="Chalan No."/>
+                 <field name="invoice_date" placeholder="Invoice Date"/>
+                <field name="chalan_date" placeholder="Chalan Date"/>
+
+                </xpath>
+
+            </field>
+        </record>
+<!--        <record model="ir.ui.view" id="pos_order_tree_inherit">-->
+<!--            <field name="name">pos.order.tree.inherit</field>-->
+<!--            <field name="model">pos.order</field>-->
+<!--            <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <xpath expr="//field[@name='partner_id']" position="after">-->
+<!--                    <field name="patient_name" placeholder="Patient Name"/>-->
+<!--                    <field name="general_admission_id" placeholder="Applicable for General Hospital"/>-->
+<!--                </xpath>-->
+<!--            </field>-->
+<!--        </record>-->
+    </data>
+</openerp>
