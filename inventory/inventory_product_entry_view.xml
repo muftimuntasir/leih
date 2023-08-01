@@ -16,12 +16,31 @@
                         <button string="Cancel" type="object" name="inventory_requsition_cancel" groups="base.group_user"/>
                     </header>
                 <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="date"/>
+                            <field name="reference_no"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="invoice_no"/>
+                        </group>
+                        <group>
+                            <field name="invoice_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="chalan_no"/>
+                        </group>
+                        <group>
+                            <field name="chalan_date"/>
+                        </group>
+                    </group>
 
                     <group>
-                        <field name="name"/>
-                        <field name="date"/>
-                        <field name="reference_no"/>
-                        <field name="invoice_no"/>
                         <field name="partner_id" domain="[('customer','=',True)]"/>
                         <field name="department"/>
                         <field name="warehouse_id"/>
