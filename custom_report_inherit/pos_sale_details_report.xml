@@ -1,0 +1,13 @@
+<openerp>
+    <data>
+        <template id="pos_sale_details_inherit" inherit_id="point_of_sale.report_detailsofsales">
+            <xpath expr="//h2[contains(text(), 'Details of Sales')]" position="before">
+                <div class="row" align="center" style="report_header_style">
+                    <h1 style="text-align: center;"><b>Lions Eye Institute &amp; Hospital</b></h1>
+                    <p style="text-align: center;"><b>Lions Tower</b> 3/c, Begum Rokeya Sarani, Agargaon, Dhaka-1207</p>
+                    <p style="text-align: center;">Hotline: +8801403555565, 0248121272, E-mail: blf@blfbd.org, www.blfbd.org</p>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</openerp>

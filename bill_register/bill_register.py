@@ -304,14 +304,14 @@ class bill_register(osv.osv):
                 periods = self.pool.get('account.period').find(cr, uid, context=context)
                 period_id = periods and periods[0] or False
                 # if method is cash
-                if stored_obj.payment_type.name == 'Cash':
+                if stored_obj.payment_type:
                     has_been_paid = stored_obj.paid
                     ar_amount = stored_obj.due
-                    account_id = 6
-                elif stored_obj.payment_type.name == 'Visa Card':
-                    has_been_paid = stored_obj.to_be_paid
-                    ar_amount = stored_obj.due
                     account_id = stored_obj.payment_type.account.id
+                # elif stored_obj.payment_type.name == 'Visa Card':
+                #     has_been_paid = stored_obj.to_be_paid
+                #     ar_amount = stored_obj.due
+                #     account_id = stored_obj.payment_type.account.id
 
                 if ar_amount > 0:
                     line_ids.append((0, 0, {

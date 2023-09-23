@@ -304,7 +304,6 @@ class collcetion_details(report_sxw.rml_parse):
         return txt
 
     def __init__(self, cr, uid, name, context):
-
         super(collcetion_details, self).__init__(cr, uid, name, context=context)
 
         self.localcontext.update({

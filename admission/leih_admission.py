@@ -783,6 +783,7 @@ class leih_admission(osv.osv):
                         except:
                             import pdb
                             pdb.set_trace()
+                            # pass
                     return updated
                     ### Ends the journal Entry Here
             else:

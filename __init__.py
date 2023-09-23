@@ -25,8 +25,10 @@ import optics
 import wizard
 import inventory
 import advance_cash
+from . import custom_report_inherit
 from . import pharmacy_sale_inherit
 from . import purchase_order_inherit
+
 # import accounting_report
 
 

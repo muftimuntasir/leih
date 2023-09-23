@@ -668,7 +668,7 @@ class leih_hospital_admission(osv.osv):
             total_without_discount = total_without_discount + item.total_amount
 
         self.total=sumalltest
-        after_dis = (sumalltest* (self.doctors_discounts/100))
+        after_dis = (sumalltest * (self.doctors_discounts/100))
         self.after_discount = 0
 
         self.grand_total = sumalltest

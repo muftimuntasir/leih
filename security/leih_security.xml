@@ -64,6 +64,11 @@
                     <field name="category_id" ref="module_category_billing"/>
                     <field name="users" eval="[(4, ref('base.user_root'))]"/>
                 </record>
+                <record id="group_hospital_menu_advance_cash" model="res.groups">
+                    <field name="name">ADDVC- Advance Cash</field>
+                    <field name="category_id" ref="module_category_billing"/>
+                    <field name="users" eval="[(4, ref('base.user_root'))]"/>
+                </record>
                 <record id="group_billing_menu_money_receipt" model="res.groups">
                     <field name="name">Menu2- Money receipt</field>
                     <field name="category_id" ref="module_category_billing"/>
@@ -169,7 +174,7 @@
                     <field name="users" eval="[(4, ref('base.user_root'))]"/>
                 </record>
 
-                        <record id="group_admission_menu_edit" model="res.groups">
+                <record id="group_admission_menu_edit" model="res.groups">
                     <field name="name">Menu2- Activated Admission</field>
                     <field name="category_id" ref="module_category_billing_edit"/>
                     <field name="users" eval="[(4, ref('base.user_root'))]"/>

@@ -1,0 +1,19 @@
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="leih_journal_move_custom_form_inherit">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='period_id']" position="after">
+                <field name="invoice_bill_no" placeholder="Invoice No."/>
+                <field name="chalan_no" placeholder="Chalan No."/>
+<!--                 <field name="invoice_date" placeholder="Invoice Date"/>-->
+<!--                <field name="chalan_date" placeholder="Chalan Date"/>-->
+
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</openerp>
