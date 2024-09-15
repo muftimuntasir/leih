@@ -146,7 +146,7 @@ class optics_sale(osv.osv):
                     'note': "",
                     'invoice_state': 'none',
                 }, context=context)
-                self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
+                # self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
                 location_id = 25  # Source Location from where stock will reduce
                 destination_id = 9  ## Customer location
                 move_list = []
