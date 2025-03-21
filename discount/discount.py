@@ -236,7 +236,7 @@ class discount(osv.osv):
                           'journal_id': 6,  ## Cash Journal
                           'date': fields.date.today(),
                           'period_id': period_id,
-                          'ref': discount_object.bill_no,
+                          'ref': discount_object.admission_id,
                           'line_id': line_ids
 
                           }

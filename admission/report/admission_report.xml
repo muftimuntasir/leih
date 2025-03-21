@@ -68,7 +68,7 @@
                             <div class="row">
                                 <div class="col-xs-6">
                                     <strong>Reffered By:</strong>
-                                    <span t-field="o.ref_doctors"/>
+                                    <span t-field="o.ref_doctors"/><![CDATA[&nbsp;]]><span style="font-size:10px !important" t-field="o.ref_doctors.degree"/>
                                 </div>
                                 <t t-if="o.reffered_to_hospital">
                                     <div class="col-xs-6">
