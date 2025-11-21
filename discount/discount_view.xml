@@ -76,7 +76,7 @@
                         <field name="patient_name"/>
                         <field name="mobile"/>
                         <field name="amount"/>
-                        <field name="total_discount"/>
+                        <field name="total_discount" sum="total"/>
                         <field name="state"/>
 
 

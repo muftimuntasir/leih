@@ -3,3 +3,4 @@ import guarantor
 import release
 import payment
 import payment_config
+import release_wizard

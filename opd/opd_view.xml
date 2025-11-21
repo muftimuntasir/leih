@@ -88,7 +88,7 @@
                 <field name="mobile"/>
                 <field name="age"/>
                 <field name="sex"/>
-                <field name="total"/>
+                <field name="total" sum="total"/>
                 <field name="with_doctor_total"/>
                 <field name="state"/>
 

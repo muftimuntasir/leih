@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- WIZARD VIEW -->
+        <record id="view_leih_admission_release_wizard" model="ir.ui.view">
+            <field name="name">leih.admission.release.wizard.form</field>
+            <field name="model">leih.admission.release.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Mark as Released">
+                    <group>
+                        <label string="Are you sure you want to mark the selected admissions as Released?" colspan="4"/>
+                        <field name="note" nolabel="1"/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm_release" string="Confirm" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- ACT WINDOW -->
+        <record id="action_leih_admission_release_wiz" model="ir.actions.act_window">
+            <field name="name">Mark as Released</field>
+            <field name="res_model">leih.admission.release.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- BIND ACTION TO MODEL (MULTI SELECT) -->
+        <record id="ir_values_mark_release_multi" model="ir.values">
+            <field name="name">Mark as Released</field>
+            <field name="model">leih.admission</field>
+            <field name="key">action</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,%d' % ref('action_leih_admission_release_wiz')"/>
+        </record>
+
+    </data>
+</openerp>

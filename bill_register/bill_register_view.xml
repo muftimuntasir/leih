@@ -132,7 +132,7 @@
                     <field name="date"/>
                     <field name="patient_name"/>
                     <field name="mobile"/>
-                    <field name="grand_total"/>
+                    <field name="grand_total" sum="total"/>
                     <field name="paid"/>
                     <field name="due"/>
                     <field name="state"/>

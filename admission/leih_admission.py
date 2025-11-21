@@ -604,7 +604,7 @@ class leih_admission(osv.osv):
                 # 'invoice_type': inv.type,
                 # 'invoice_id': inv.id,
                 # 'default_type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment',
-                # 'type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment'
+                # 'type': inv.type in ('out_invoice','out_refund') and 'receipt' or 'payment'0
             }
         }
         raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
@@ -774,6 +774,14 @@ class leih_admission(osv.osv):
         updated = super(leih_admission, self).write(cr, uid, ids, vals, context=context)
         return updated
         ##
+
+
+    def action_mark_released(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+
+        self.write(cr, uid, ids, {'state': 'released'}, context=context)
+        return True
 
 
     @api.onchange('leih_admission_line_id')

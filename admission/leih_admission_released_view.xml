@@ -45,8 +45,62 @@
         </record>
 
 
+    <!-- <record id="server_action_mark_released" model="ir.actions.server">
+    <field name="name">Mark as Released</field>
+    <field name="model_id" ref="model_leih_admission"/>
+    <field name="state">code</field>
+    <field name="code">
+        env['leih.admission'].action_mark_released(context.get('active_ids'))
+    </field>
+    </record>
+
+
+<record id="multi_action_mark_released" model="ir.values">
+    <field name="model_id" ref="model_leih_admission"/>
+    <field name="name">Mark as Released</field>
+    <field name="key">action</field>
+    <field name="key2">client_action_multi</field>
+    <field name="value" eval="'ir.actions.server,%d' % server_action_mark_released"/>
+    <field name="model">leih.admission</field>
+</record> -->
+
+<record id="leih_admission_release" model="ir.ui.view">
+            <field name="name">mark As release</field>
+            <field name="model">leih.admission</field>
+            <field name="arch" type="xml">
+               <form string="Mark release">
+                    <group>
+                        <separator string="Are you sure you want to mark as release?"/>
+                        
+                    </group>
+                    
+                    <footer>
+                        <button name="action_mark_released" string="Merge orders" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+
+ <act_window id="action_leih_admission_release"
+    name="Mark as Released"
+    src_model="leih.admission"
+    res_model="leih.admission"
+    view_mode="form"
+    target="new"
+    multi="True"
+    context="{'action_type':'release'}">
+</act_window>
+
+
+
+
+
 <!--        <menuitem name="Doctors" id="leih_doctors_menu" parent="leih_menu"/>-->
-        <menuitem name="Released Admission" id="admission_released_menu_mainform" parent="leih_admission_menu" action="admission_released_action" groups="leih.group_admission_menu_released"/>
+        <menuitem name="Released Admission" id="admission_released_menu_mainform" parent="leih_admission_menu" action="admission_released_action" groups="base.group_erp_manager"/>
 
 
     </data>

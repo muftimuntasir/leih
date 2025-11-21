@@ -90,6 +90,7 @@ membership products (schemes).
         'admission/leih_admission_activated_view.xml',
         'admission/leih_admission_released_view.xml',
         'admission/leih_admission_cancelled_view.xml',
+        'admission/release_wizard_view.xml',
         'admission/release/admission_release_view.xml',
         'admission/leih_emergency_view.xml',
         'admission/leih_emergency_activated_view.xml',
@@ -176,6 +177,7 @@ membership products (schemes).
         'purchase_order_inherit/purchase_order_form_inherit_view.xml',
         'custom_report_inherit/journal_moves_form_inherit_views.xml',
         'custom_report_inherit/pos_sale_details_report.xml',
+        
 
 
 

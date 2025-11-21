@@ -88,6 +88,7 @@ class opd_ticket(osv.osv):
     def onchange_patient(self,cr,uid,ids,name,context=None):
         tests={}
         dep_object = self.pool.get('patient.info').browse(cr, uid, name, context=None)
+        # import pdb;pdb.set_trace()
         abc={'mobile':dep_object.mobile,'address':dep_object.address,'age':dep_object.age,'sex':dep_object.sex}
         tests['value']=abc
         return tests
@@ -219,7 +220,9 @@ class opd_ticket(osv.osv):
             if len(itm)>0:
                 uid=1
                 moves =self.pool.get('account.move').browse(cr, uid, itm, context=context)
-                xx=moves.button_cancel() ## Cancelling
+                xx=moves.button_cancel()
+                import pdb;pdb.set_trace()
+                ## Cancelling
                 moves.unlink()
 
                 stored_obj = self.browse(cr, uid, [ids[0]], context=context)

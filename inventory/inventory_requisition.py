@@ -144,8 +144,6 @@ class inventory_requisition(osv.osv):
                     'partner_id': False,
                 }))
 
-
-
             j_vals = {'name': '/',
                       'journal_id': 2,  ## Sales Journal
                       'date':fields.date.today(),
@@ -164,7 +162,6 @@ class inventory_requisition(osv.osv):
                 stock_picking_id,saved_jv_id, id)
             cr.execute(confirm_cash_collection_query)
             cr.commit()
-
         return True
 
     def create(self, cr, uid, vals, context=None):

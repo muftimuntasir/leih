@@ -56,7 +56,7 @@
                     <field name="price"/>
                     <field name="discount"/>
                     <field name="total_discount"/>
-                    <field name="total_amount"/>
+                    <field name="total_amount" sum="total"/>
                 </tree>
             </field>
         </record>

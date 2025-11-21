@@ -135,7 +135,7 @@
                         <field name="mobile"/>
                 <!--                        <field name="patient_id"/>-->
 
-                        <field name="total"/>
+                        <field name="total" sum="Total Amount"/>
                         <field name="paid"/>
                         <field name="due"/>
                         <field name="state"/>
