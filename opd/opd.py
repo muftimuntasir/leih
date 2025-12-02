@@ -221,7 +221,7 @@ class opd_ticket(osv.osv):
                 uid=1
                 moves =self.pool.get('account.move').browse(cr, uid, itm, context=context)
                 xx=moves.button_cancel()
-                import pdb;pdb.set_trace()
+                # import pdb;pdb.set_trace()
                 ## Cancelling
                 moves.unlink()
 

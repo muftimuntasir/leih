@@ -91,7 +91,7 @@ class patient_info(osv.osv):
 
     _columns = {
 
-        'mobile': fields.char("Mobile No"),
+        'mobile': fields.char("Mobile No", required=True),
         'patient_id': fields.char("Patient Id", readonly=True),
         'name':fields.char("Name", required=True),
         'age':fields.char('Age'),

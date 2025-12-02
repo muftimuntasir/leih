@@ -173,7 +173,7 @@ access_profile_doctors,doctors.profile,model_doctors_profile,group_profile_menu_
 
 access_brokers_info,brokers.info,model_brokers_info,base.group_user,1,1,1,1
 
-access_profile_patients,patient.info,model_patient_info,group_profile_menu_patients,1,1,1,0
+access_profile_patients,patient.info,model_patient_info,group_profile_menu_patients,1,0,1,0
 
 access_blood_bank_donor,blood.donar,model_blood_donar,group_blood_bank_menu_donor,1,1,1,0
 
