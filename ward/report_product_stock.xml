@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="report_productstock">
+    <t t-call="report.html_container">
+     <t t-foreach="docs" t-as="p">
+        <t t-call="report.external_layout">
+                <div class="page">
+
+                    <h2>Product Stock Report</h2>
+
+                    <table class="table table-condensed">
+                        <tbody>
+                            <tr>
+                                <th>Product</th>
+                                <td><span t-field="p.name"/></td>
+                            </tr>
+                            <tr>
+                                <th>Current Stock</th>
+                                <td>
+                                    <span t-field="p.qty_available"/>
+                                    <span t-field="p.uom_id"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Last Purchase Info -->
+                    <t t-set="last_move"
+                       t-value="request.env['stock.move'].search([
+                           ('product_id', 'in', p.product_variant_ids.ids),
+                           ('location_id.usage', '=', 'supplier'),
+                           ('state', '=', 'done')
+                       ], order='date desc', limit=1)"/>
+
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th colspan="2">Last Purchase Information</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th>Purchase Date</th>
+                                <td>
+                                    <t t-if="last_move">
+                                        <span t-esc="last_move.date"/>
+                                    </t>
+                                    <t t-else="">-</t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Purchased Quantity</th>
+                                <td>
+                                    <t t-if="last_move">
+                                        <span t-esc="last_move.product_uom_qty"/>
+                                        <span t-field="last_move.product_uom"/>
+                                    </t>
+                                    <t t-else="">-</t>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <br/>
+                    <span>Printed by:</span>
+                    <span t-field="user.name"/>
+
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+
+</data>
+</openerp>
+

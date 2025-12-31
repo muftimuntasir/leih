@@ -172,7 +172,7 @@ class optics_sale(osv.osv):
                         'product_uos': 1,
                         'picking_id': picking_id,
                         'picking_type_id': 13,
-                        'product_id': 187,  ## 187
+                        'product_id': 25892,  ## 187
                         'product_uos_qty': abs(1),
                         'product_uom_qty': abs(1),
                         'state': 'draft',

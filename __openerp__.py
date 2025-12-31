@@ -140,6 +140,7 @@ membership products (schemes).
         'bill_register/bill_register_line_view.xml',
         'ward/inherit_purchase.xml',
         'ward/report_purchasestock.xml',
+        'ward/report_product_stock.xml',
 
             # hospital general---------------------------------------------------
 

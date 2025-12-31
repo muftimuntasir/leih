@@ -12,6 +12,17 @@
             file="leih.report_purchasestock"
         />
 
+
+    <report
+    id="report_product_stock"
+    string="Print Product Stock"
+    model="product.template"
+    report_type="qweb-pdf"
+    name="leih.report_productstock"
+    file="leih.report_product_stock"
+/>
+
+
     <template id="contactusss_test" name="Contact Form" inherit_id="purchase.report_purchasequotation_document">
         <xpath expr="//h2" position="replace">
             <h2>Purchase Requisition <span t-field="o.name"/></h2>
