@@ -451,12 +451,12 @@ class bill_register(osv.osv):
         return tests
 
 
-        def onchange_patient(self, cr, uid, ids, name, context=None): 
-            tests = {}
-            dep_object = self.pool.get('patient.info').browse(cr, uid, name, context=None)
-            abc = {'mobile': dep_object.mobile, 'address': dep_object.address, 'age': dep_object.age, 'sex': dep_object.sex}
-            tests['value'] = abc
-            return tests
+    def onchange_patient(self, cr, uid, ids, name, context=None): 
+        tests = {}
+        dep_object = self.pool.get('patient.info').browse(cr, uid, name, context=None)
+        abc = {'mobile': dep_object.mobile, 'address': dep_object.address, 'age': dep_object.age, 'sex': dep_object.sex}
+        tests['value'] = abc
+        return tests
 
     # def onchange_patient(self, cr, uid, ids, name, context=None):
     #     res = {'value': {}}
