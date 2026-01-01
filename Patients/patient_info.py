@@ -97,9 +97,9 @@ class patient_info(osv.osv):
 
     _columns = {
 
-        'mobile': fields.char("Mobile No"),
+        'mobile': fields.char("Mobile No", required=True),
         'patient_id': fields.char("Patient Id", readonly=True),
-        'name':fields.char("Name"),
+        'name':fields.char("Name", required=True),
         # 'date_of_birth': fields.date("Date of Birth"),
         # 'birth_year': fields.char("Birth Year"),
         # 'manual_age': fields.integer("Manual Age"),
@@ -107,7 +107,7 @@ class patient_info(osv.osv):
         # # Auto calculated age
         'age':fields.char('Age'),
         # 'age': fields.function(_compute_age,string="Age",type='char',store=False),
-        'address':fields.char('Address'),
+        'address':fields.char('Address',required=True),
         'sex': fields.selection([('male', 'Male'), ('female', 'Female'),('others','Others')], string='Sex', default='male'),
         'bills':fields.one2many('bill.register','patient_name','Bill History',required=False),
         'testname':fields.function(_testname,string="Test Name",type='char'),
@@ -121,13 +121,40 @@ class patient_info(osv.osv):
     ]
 
     def create(self, cr, uid, vals, context=None):
- 
+        # mobile_number = None
+        # mobile_number = vals.get('mobile')
+        # if len(mobile_number) <11:
+        #     raise osv.except_osv(_('Error!'), _('Mobile number should minimum 11 digit'))
+        # if len(mobile_number)>11:
+        #     x=mobile_number.split()
+        #     number=x[0]
+        #     if((number[0]=='0' or number[1]=='0' or number[2]=='0' or number[3]=='0') and len(number)>11):
+        #         number=number[:-1]
+        #     back = len(number) - 11
+        #     if len(number)>11:
+        #         listnumber=[]
+        #         for item in range(len(number)-1,back-1,-1):
+        #             singlenumber=number[item]
+        #             listnumber.append(singlenumber)
+        #         reverse_number=''.join(listnumber)
+        #         final_number=reverse_number[::-1]
+        #         vals['mobile'] = final_number
+        #     else:
+        #         vals['mobile']=number
+
+            # import pdb
+            # pdb.set_trace()
+
+
+
+
+
         stored_id=super(patient_info, self).create(cr, uid, vals, context=context)
         if stored_id is not None:
             name_text = 'P-0' + str(stored_id)
             cr.execute('update patient_info set patient_id=%s where id=%s', (name_text, stored_id))
             cr.execute('update patient_info set state=%s where id=%s', ('created', stored_id))
-            # cr.commit()
+            cr.commit()
 
         return stored_id
 
