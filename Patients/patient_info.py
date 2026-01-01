@@ -71,25 +71,25 @@ class patient_info(osv.osv):
 
         return True
 
-    def _compute_age(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        today = date.today()
+    # def _compute_age(self, cr, uid, ids, field_name, arg, context=None):
+    #     res = {}
+    #     today = date.today()
 
-        for rec in self.browse(cr, uid, ids, context=context):
-            age = 0
+    #     for rec in self.browse(cr, uid, ids, context=context):
+    #         age = 0
 
-            if rec.date_of_birth:
-                try:
-                    dob = datetime.strptime(rec.date_of_birth, "%Y-%m-%d").date()
-                    age = today.year - dob.year - (
-                        (today.month, today.day) < (dob.month, dob.day)
-                    )
-                except:
-                    age = 0
+    #         if rec.date_of_birth:
+    #             try:
+    #                 dob = datetime.strptime(rec.date_of_birth, "%Y-%m-%d").date()
+    #                 age = today.year - dob.year - (
+    #                     (today.month, today.day) < (dob.month, dob.day)
+    #                 )
+    #             except:
+    #                 age = 0
 
-            res[rec.id] = str(age)
+    #         res[rec.id] = str(age)
 
-        return res
+    #     return res
 
 
 
@@ -100,12 +100,13 @@ class patient_info(osv.osv):
         'mobile': fields.char("Mobile No", required=True),
         'patient_id': fields.char("Patient Id", readonly=True),
         'name':fields.char("Name", required=True),
-        'date_of_birth': fields.date("Date of Birth"),
-        'birth_year': fields.char("Birth Year"),
-        'manual_age': fields.integer("Manual Age"),
+        # 'date_of_birth': fields.date("Date of Birth"),
+        # 'birth_year': fields.char("Birth Year"),
+        # 'manual_age': fields.integer("Manual Age"),
 
-        # Auto calculated age
-        'age': fields.function(_compute_age,string="Age",type='char',store=False),
+        # # Auto calculated age
+        'age':fields.char('Age'),
+        # 'age': fields.function(_compute_age,string="Age",type='char',store=False),
         'address':fields.char('Address',required=True),
         'sex': fields.selection([('male', 'Male'), ('female', 'Female'),('others','Others')], string='Sex', default='male'),
         'bills':fields.one2many('bill.register','patient_name','Bill History',required=False),

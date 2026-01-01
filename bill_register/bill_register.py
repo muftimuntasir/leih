@@ -450,25 +450,33 @@ class bill_register(osv.osv):
         tests['value'] = abc
         return tests
 
-    def onchange_patient(self, cr, uid, ids, name, context=None):
-        res = {'value': {}}
-        dep = self.pool.get('patient.info').browse(cr, uid, name, context=context)
 
-        # Calculate age dynamically from DOB
-        age = 0
-        if dep.date_of_birth:
-            from datetime import datetime, date
-            dob = datetime.strptime(dep.date_of_birth, "%Y-%m-%d").date()
-            today = date.today()
-            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+        def onchange_patient(self, cr, uid, ids, name, context=None): 
+            tests = {}
+            dep_object = self.pool.get('patient.info').browse(cr, uid, name, context=None)
+            abc = {'mobile': dep_object.mobile, 'address': dep_object.address, 'age': dep_object.age, 'sex': dep_object.sex}
+            tests['value'] = abc
+            return tests
 
-        res['value'] = {
-            'mobile': dep.mobile,
-            'address': dep.address,
-            'age': age, 
-            'sex': dep.sex,
-        }
-        return res
+    # def onchange_patient(self, cr, uid, ids, name, context=None):
+    #     res = {'value': {}}
+    #     dep = self.pool.get('patient.info').browse(cr, uid, name, context=context)
+
+    #     # Calculate age dynamically from DOB
+    #     age = 0
+    #     if dep.date_of_birth:
+    #         from datetime import datetime, date
+    #         dob = datetime.strptime(dep.date_of_birth, "%Y-%m-%d").date()
+    #         today = date.today()
+    #         age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+
+    #     res['value'] = {
+    #         'mobile': dep.mobile,
+    #         'address': dep.address,
+    #         'age': age, 
+    #         'sex': dep.sex,
+    #     }
+    #     return res
 
 
     def add_new_test(self, cr, uid, ids, context=None):
