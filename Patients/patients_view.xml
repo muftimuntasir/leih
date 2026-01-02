@@ -12,9 +12,6 @@
                     <group>
                         <field name="patient_id"/>
                         <field name="name"/>
-                        <!-- <field name="date_of_birth"/>
-                        <field name="birth_year"/>
-                        <field name="manual_age"/> -->
                         <field name="age"/>
                         <field name="sex"/>
                          <field name="mobile"/>
