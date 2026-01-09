@@ -94,7 +94,7 @@ class bill_register(osv.osv):
         'date': fields.datetime("Date", readonly=True, default=lambda self: fields.datetime.now()),
         'user_id': fields.many2one('res.users', 'Assigned to', select=True, track_visibility='onchange'),
         'state': fields.selection(
-            [('pending', 'Pending'), ('confirmed', 'Confirmed'), ('cancelled', 'Cancelled')],
+            [('pending', 'Pending'), ('confirmed', 'Confirmed'),('released', 'Released'),('cancelled', 'Cancelled')],
             'Status', default='pending', readonly=True),
         'old_journal': fields.boolean("Old Journal"),
         # new attributes for payment type
@@ -666,155 +666,256 @@ class bill_register(osv.osv):
             cr.commit()
         return stored
 
+    # write procedures:
+
+    def _get_bill_moves(self, cr, uid, bill, context=None):
+        cr.execute("SELECT id FROM account_move WHERE ref=%s ORDER BY id", (bill.name,))
+        return [x[0] for x in cr.fetchall()]
+
+    def _identify_sales_and_due_moves(self, cr, uid, move_ids, cash_account_id, context=None):
+        sales_move_id = None
+        due_move_id = None
+
+        for mid in move_ids:
+            cr.execute("""
+                SELECT COUNT(*) 
+                FROM account_move_line 
+                WHERE move_id=%s AND account_id NOT IN (%s,195)
+            """, (mid, cash_account_id))
+            cnt = cr.fetchone()[0]
+
+            if cnt > 0 and not sales_move_id:
+                sales_move_id = mid
+            elif cnt == 0 and not due_move_id:
+                due_move_id = mid
+
+        return sales_move_id, due_move_id
+
+    def _cancel_moves(self, cr, uid, move_ids, context=None):
+        move_obj = self.pool.get('account.move')
+        for mid in move_ids:
+            mv = move_obj.browse(cr, uid, mid, context=context)
+            if mv.state == 'posted':
+                mv.button_cancel()
+        return True
+
+    def _validate_moves(self, cr, uid, move_ids, context=None):
+        move_obj = self.pool.get('account.move')
+        for mid in move_ids:
+            move_obj.button_validate(cr, uid, [mid], context=context)
+        return True
+
+    def _remove_income_line(self, cr, uid, move_id, account_id, credit_amount, context=None):
+        cr.execute("""
+            DELETE FROM account_move_line
+            WHERE id = (
+                SELECT id FROM account_move_line
+                WHERE move_id=%s AND account_id=%s AND credit=%s
+                LIMIT 1
+            )
+        """, (move_id, account_id, credit_amount))
+
+    def _add_income_line(self, cr, uid, move_id, line_name, account_id, credit_amount, context=None):
+        ml_obj = self.pool.get('account.move.line')
+        ml_obj.create(cr, uid, {
+            'move_id': move_id,
+            'name': line_name,
+            'account_id': account_id,
+            'debit': 0.0,
+            'credit': credit_amount,
+        }, context=context)
+
+    def _update_cash_line(self, cr, uid, move_id, cash_account_id, amount, context=None):
+        cr.execute("""
+            UPDATE account_move_line
+            SET debit=%s, credit=0
+            WHERE move_id=%s AND account_id=%s
+        """, (amount, move_id, cash_account_id))
+
+    def _update_receivable_debit(self, cr, uid, move_id, amount, context=None):
+        cr.execute("""
+            UPDATE account_move_line
+            SET debit=%s, credit=0
+            WHERE move_id=%s AND account_id=195
+        """, (amount, move_id))
+
+    def _update_receivable_credit(self, cr, uid, move_id, amount, context=None):
+        cr.execute("""
+            UPDATE account_move_line
+            SET credit=%s, debit=0
+            WHERE move_id=%s AND account_id=195
+        """, (amount, move_id))
+
+    def _delete_receivable_line(self, cr, uid, move_id, context=None):
+        cr.execute("""
+            DELETE FROM account_move_line
+            WHERE move_id=%s AND account_id=195
+        """, (move_id,))
+
+    def _balance_sales_move_by_ar(self, cr, uid, sales_move_id, cash_account_id, context=None):
+        cr.execute("SELECT COALESCE(SUM(credit),0) FROM account_move_line WHERE move_id=%s", (sales_move_id,))
+        total_credit = cr.fetchone()[0]
+
+        cr.execute("""
+            SELECT COALESCE(SUM(debit),0)
+            FROM account_move_line
+            WHERE move_id=%s AND account_id=%s
+        """, (sales_move_id, cash_account_id))
+        cash_debit = cr.fetchone()[0]
+
+        new_ar_debit = total_credit - cash_debit
+        if new_ar_debit < 0:
+            new_ar_debit = 0
+
+        self._update_receivable_debit(cr, uid, sales_move_id, new_ar_debit, context=context)
+
+    def _balance_due_move_cash_and_ar(self, cr, uid, due_move_id, cash_account_id, context=None):
+        cr.execute("""
+            SELECT COALESCE(SUM(debit),0)
+            FROM account_move_line
+            WHERE move_id=%s AND account_id=%s
+        """, (due_move_id, cash_account_id))
+        due_cash = cr.fetchone()[0]
+        self._update_receivable_credit(cr, uid, due_move_id, due_cash, context=context)
+
+    def _remove_due_move(self, cr, uid, due_move_id, context=None):
+        move_obj = self.pool.get('account.move')
+
+        mv = move_obj.browse(cr, uid, due_move_id, context=context)
+        if mv.state == 'posted':
+            mv.button_cancel()
+
+        cr.execute("DELETE FROM bill_journal_relation WHERE journal_id=%s", (due_move_id,))
+        cr.execute("DELETE FROM account_move_line WHERE move_id=%s", (due_move_id,))
+        move_obj.unlink(cr, uid, [due_move_id], context=context)
+        return True
+
+    def _rebuild_income_lines(self, cr, uid, bill, sales_move_id, cash_account_id, context=None):
+        cr.execute("""
+            DELETE FROM account_move_line 
+            WHERE move_id=%s AND account_id NOT IN (%s,195)
+        """, (sales_move_id, cash_account_id))
+
+        for line in bill.bill_register_line_id:
+            income_acc = line.name.accounts_id.id if line.name.accounts_id else 611
+            self._add_income_line(cr, uid, sales_move_id, line.name.name, income_acc, line.total_amount, context=context)
+
+    def _apply_bill_line_commands(self, cr, uid, sales_move_id, vals, removed_line_info, context=None):
+        for old in removed_line_info:
+            self._remove_income_line(cr, uid, sales_move_id, old['account_id'], old['amount'], context=context)
+
+        for cmd in vals.get('bill_register_line_id', []):
+            if cmd[0] == 0:
+                new_vals = cmd[2]
+                exam = self.pool.get('examination.entry').browse(cr, uid, new_vals.get('name'), context=context)
+                income_acc = exam.accounts_id.id if exam.accounts_id else 611
+                income_amt = new_vals.get('total_amount', 0.0)
+                self._add_income_line(cr, uid, sales_move_id, exam.name, income_acc, income_amt, context=context)
+
+        return True
+
     def write(self, cr, uid, ids, vals, context=None):
-        if vals.get("due"):
-            if vals.get("due") < 0:
-                raise osv.except_osv(_('Warning!'),
-                                     _("Check paid and grand total!"))
+        if context is None:
+            context = {}
 
-        updated = False
-        if vals.get('bill_register_line_id') or uid == 1:
-            cr.execute(
-                "select id as journal_ids from account_move where ref = (select name from bill_register where id=%s limit 1)",
-                (ids))
-            journal_ids = cr.fetchall()
-            context = context
-            updated = super(bill_register, self).write(cr, uid, ids, vals, context=context)
+        if vals.get("due") and vals.get("due") < 0:
+            raise osv.except_osv(_('Warning!'), _("Check paid and grand total!"))
 
-            itm = [itm[0] for itm in journal_ids]
-            # import pdb
-            # pdb.set_trace()
+        trigger_fields = ('bill_register_line_id', 'paid', 'grand_total', 'due')
+        need_journal_update = any(f in vals for f in trigger_fields)
 
-            if len(itm) > 0:
+        removed_line_info = []
+        has_update_cmd = False
 
-                uid = 1
-                moves = self.pool.get('account.move').browse(cr, uid, itm, context=context)
-                xx = moves.button_cancel()  ## Cancelling
-                bill_journal_id = []
-                # cr.execute("delete from bill_journal_relation where id in (select id from bill_journal_relation where journal_id in %s)",(tuple(itm)))
-                user_q = "select id from bill_journal_relation where journal_id in %s"
-                # cr.execute("select id from bill_journal_relation where journal_id in %s",(tuple(itm)))
-                cr.execute(user_q, (tuple(itm),))
-                journal_id = cr.fetchall()
-                for item in journal_id:
-                    bill_journal_id.append(item[0])
+        if vals.get('bill_register_line_id'):
+            for cmd in vals['bill_register_line_id']:
+                if cmd[0] == 2:
+                    line_id = cmd[1]
+                    old_line = self.pool.get('bill.register.line').browse(cr, uid, line_id, context=context)
+                    if old_line and old_line.name:
+                        acc_id = old_line.name.accounts_id.id if old_line.name.accounts_id else 611
+                        removed_line_info.append({
+                            'line_id': line_id,
+                            'account_id': acc_id,
+                            'amount': old_line.total_amount,
+                        })
+                if cmd[0] == 1:
+                    has_update_cmd = True
 
-                query = "delete from bill_journal_relation where id in %s"
-                cr.execute(query, (tuple(bill_journal_id),))
+        res = super(bill_register, self).write(cr, uid, ids, vals, context=context)
 
-                # if len(itm)>1:
-                #     cr.execute("delete from bill_journal_relation where id = (select id from bill_journal_relation where journal_id=%s)", ([itm[0]]))
-                #     cr.execute("delete from bill_journal_relation where id = (select id from bill_journal_relation where journal_id=%s)", ([itm[1]]))
-                #     cr.commit()
-                # else:
-                #     cr.execute("delete from bill_journal_relation where id = (select id from bill_journal_relation where journal_id=%s)",(itm))
+        if not need_journal_update:
+            return res
 
-                # import pdb
-                # pdb.set_trace()
+        bill = self.browse(cr, uid, ids[0], context=context)
 
-                moves.unlink()
-                # journal entry will be here
+        cash_account_id = 6
+        if bill.payment_type and bill.payment_type.account:
+            cash_account_id = bill.payment_type.account.id
 
-                ### Journal ENtry will be here
+        move_ids = self._get_bill_moves(cr, uid, bill, context=context)
+        if not move_ids:
+            return res
 
-                stored_obj = self.browse(cr, uid, [ids[0]], context=context)
-                journal_object = self.pool.get("bill.journal.relation")
-                if stored_obj:
-                    line_ids = []
+        sales_move_id, due_move_id = self._identify_sales_and_due_moves(cr, uid, move_ids, cash_account_id, context=context)
+        if not sales_move_id:
+            return res
 
-                    if context is None: context = {}
-                    if context.get('period_id', False):
-                        return context.get('period_id')
-                    periods = self.pool.get('account.period').find(cr, uid, context=context)
-                    period_id = periods and periods[0] or False
-                    has_been_paid = stored_obj.paid
-                    ar_amount = stored_obj.due
+        self._cancel_moves(cr, uid, move_ids, context=context)
 
-                    if ar_amount > 0:
-                        line_ids.append((0, 0, {
-                            'analytic_account_id': False,
-                            'tax_code_id': False,
-                            'tax_amount': 0,
-                            'name': stored_obj.name,
-                            'currency_id': False,
-                            'credit': 0,
-                            'date_maturity': False,
-                            'account_id': 195,  ### Accounts Receivable ID
-                            'debit': ar_amount,
-                            'amount_currency': 0,
-                            'partner_id': False,
-                        }))
+        if has_update_cmd:
+            self._rebuild_income_lines(cr, uid, bill, sales_move_id, cash_account_id, context=context)
+        else:
+            self._apply_bill_line_commands(cr, uid, sales_move_id, vals, removed_line_info, context=context)
 
-                    if has_been_paid > 0:
-                        line_ids.append((0, 0, {
-                            'analytic_account_id': False,
-                            'tax_code_id': False,
-                            'tax_amount': 0,
-                            'name': stored_obj.name,
-                            'currency_id': False,
-                            'credit': 0,
-                            'date_maturity': False,
-                            'account_id': 6,  ### Cash ID
-                            'debit': has_been_paid,
-                            'amount_currency': 0,
-                            'partner_id': False,
-                        }))
+        # Special scenario (Option B):
+        # If there are two moves and due is now zero or less
+        # - Remove journal 2
+        # - Remove AR from journal 1
+        # - Set cash in journal 1 to bill.grand_total (or bill.paid if that is the desired logic)
+        if len(move_ids) > 1 and bill.due <= 0 and due_move_id:
+            self._remove_due_move(cr, uid, due_move_id, context=context)
+            self._delete_receivable_line(cr, uid, sales_move_id, context=context)
 
-                    for cc_obj in stored_obj.bill_register_line_id:
-                        ledger_id = 611
-                        try:
-                            ledger_id = cc_obj.name.accounts_id.id
-                        except:
-                            ledger_id = 611  ## Diagnostic Income Head , If we don't assign any Ledger
+            new_cash_amount = bill.grand_total
+            if new_cash_amount < 0:
+                new_cash_amount = 0
 
-                        if context is None:
-                            context = {}
+            self._update_cash_line(cr, uid, sales_move_id, cash_account_id, new_cash_amount, context=context)
 
-                        line_ids.append((0, 0, {
-                            'analytic_account_id': False,
-                            'tax_code_id': False,
-                            'tax_amount': 0,
-                            'name': cc_obj.name.name,
-                            'currency_id': False,
-                            'account_id': cc_obj.name.accounts_id.id,
-                            'credit': cc_obj.total_amount,
-                            'date_maturity': False,
-                            'debit': 0,
-                            'amount_currency': 0,
-                            'partner_id': False,
-                        }))
+            self.pool.get('account.move').button_validate(cr, uid, [sales_move_id], context=context)
+            return res
 
-                    jv_entry = self.pool.get('account.move')
+        # Normal logic for one journal
+        if len(move_ids) == 1:
+            self._update_cash_line(cr, uid, sales_move_id, cash_account_id, bill.paid, context=context)
+            self._update_receivable_debit(cr, uid, sales_move_id, bill.due, context=context)
 
-                    j_vals = {'name': '/',
-                              'journal_id': 2,  ## Sales Journal
-                              'date': stored_obj.date,
-                              'period_id': period_id,
-                              'ref': stored_obj.name,
-                              'line_id': line_ids
+        # Normal logic for two journals
+        else:
+            self._balance_sales_move_by_ar(cr, uid, sales_move_id, cash_account_id, context=context)
+            if due_move_id:
+                self._balance_due_move_cash_and_ar(cr, uid, due_move_id, cash_account_id, context=context)
 
-                              }
+        # Validate remaining moves
+        remaining_moves = []
+        for mid in move_ids:
+            if mid != due_move_id:
+                remaining_moves.append(mid)
 
-                    saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
-                    if saved_jv_id > 0:
-                        journal_id = saved_jv_id
-                        try:
-                            jv_entry.button_validate(cr, uid, [saved_jv_id], context)
-                            cr.execute("update bill_register set state='confirmed' where id=%s", (ids))
-                            cr.commit()
-                            journal_dict = {'journal_id': journal_id, 'bill_journal_relation_id': stored_obj.id}
-                            journal_object.create(cr, uid, vals=journal_dict, context=context)
-                        except:
-                            import pdb
-                            pdb.set_trace()
-                    return updated
-                    ### Ends the journal Entry Here
-            else:
-                if updated is not True:
-                    updated = super(bill_register, self).write(cr, uid, ids, vals, context=context)
-                # raise osv.except_osv(_('Warning!'),
-                #                      _("You cannot Edit the bill"))
-                return updated
+        self._validate_moves(cr, uid, remaining_moves, context=context)
+
+        return res
+
+
+
+# end 
+
+
+
+
+
+
 
     @api.onchange('bill_register_line_id')
     def onchange_test_bill(self):

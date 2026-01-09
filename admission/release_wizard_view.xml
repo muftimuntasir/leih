@@ -38,5 +38,43 @@
             <field name="value" eval="'ir.actions.act_window,%d' % ref('action_leih_admission_release_wiz')"/>
         </record>
 
+
+
+
+        <record id="view_leih_bill_release_wizard" model="ir.ui.view">
+            <field name="name">leih.bill.release.wizard.form</field>
+            <field name="model">leih.bill.release.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Mark as Released">
+                    <group>
+                        <label string="Are you sure you want to mark the selected bill as Released?" colspan="4"/>
+                        <field name="note" nolabel="1"/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm_release" string="Confirm" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- ACT WINDOW -->
+        <record id="action_leih_bill_release_wiz" model="ir.actions.act_window">
+            <field name="name">Mark as Released</field>
+            <field name="res_model">leih.bill.release.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- BIND ACTION TO MODEL (MULTI SELECT) -->
+        <record id="ir_values_mark_release_multi_bill" model="ir.values">
+            <field name="name">Mark as Released</field>
+            <field name="model">bill.register</field>
+            <field name="key">action</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,%d' % ref('action_leih_bill_release_wiz')"/>
+        </record>
+
     </data>
 </openerp>

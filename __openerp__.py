@@ -33,6 +33,7 @@ membership products (schemes).
         'Group/diagnosisgroup_view.xml',
         'examine_entry/examinationentry_view.xml',
         'bill_register/bill_register_view.xml',
+        'bill_register/bill_register_view_all.xml',
         'sample/sticker_view.xml',
         'examine_entry/sample_type_view.xml',
         'sample/pending_in_lab_view.xml',
