@@ -3,6 +3,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from datetime import date, time, datetime
 from openerp import api
+from openerp import SUPERUSER_ID
 
 
 class opd_ticket(osv.osv):
@@ -110,7 +111,7 @@ class opd_ticket(osv.osv):
 
             # 2) Generate OPD name and write it (NO commit)
             name_text = 'OPD-0%s' % ticket_id
-            super(opd_ticket, self).write(cr, uid, [ticket_id], {'name': name_text}, context=context)
+            super(opd_ticket, self).write(cr, SUPERUSER_ID, [ticket_id], {'name': name_text}, context=context)
 
             ticket = self.browse(cr, uid, ticket_id, context=context)
 
