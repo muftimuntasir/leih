@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from datetime import date, time, datetime
@@ -98,101 +99,121 @@ class opd_ticket(osv.osv):
 
 
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
+        context = context or {}
 
-        stored = super(opd_ticket, self).create(cr, uid, vals, context) # return ID int object
+        # Use a savepoint so any failure rolls back cleanly
+        try:
+            cr.execute("SAVEPOINT opd_ticket_create_sp")
 
-        if stored is not None:
+            # 1) Create OPD ticket first
+            ticket_id = super(opd_ticket, self).create(cr, uid, vals, context=context)
 
-            name_text = 'OPD-0' + str(stored)
-            cr.execute('update opd_ticket set name=%s where id=%s', (name_text, stored))
-            cr.commit()
-            stored_obj = self.browse(cr, uid,stored, context=context)
+            # 2) Generate OPD name and write it (NO commit)
+            name_text = 'OPD-0%s' % ticket_id
+            super(opd_ticket, self).write(cr, uid, [ticket_id], {'name': name_text}, context=context)
 
-            ###OPD JOurnal Start Here
-            if stored_obj:
+            ticket = self.browse(cr, uid, ticket_id, context=context)
 
-                line_ids = []
+            # Basic sanity
+            if not ticket:
+                raise osv.except_osv(_('Error'), _('OPD ticket could not be loaded after creation.'))
 
-                if context is None: context = {}
-                if context.get('period_id', False):
-                    return context.get('period_id')
-                periods = self.pool.get('account.period').find(cr, uid, context=context)
-                period_id = periods and periods[0] or False
-                has_been_paid = stored_obj.total
+            if not ticket.total:
+                # optional: allow zero? if not, error
+                # raise osv.except_osv(_('Error'), _('OPD total is zero. Cannot create journal entry.'))
+                pass
+
+            # 3) Prepare journal lines
+            line_ids = []
+
+            periods = self.pool.get('account.period').find(cr, uid, context=context)
+            period_id = periods and periods[0] or False
+            has_been_paid = ticket.total or 0.0
+
+            # Debit cash
+            line_ids.append((0, 0, {
+                'name': ticket.name,
+                'account_id': 6,          # Cash account id
+                'debit': has_been_paid,
+                'credit': 0.0,
+                'partner_id': False,
+                'analytic_account_id': False,
+                'tax_code_id': False,
+                'tax_amount': 0.0,
+                'currency_id': False,
+                'date_maturity': False,
+                'amount_currency': 0.0,
+            }))
+
+            # Credit income lines
+            for l in ticket.opd_ticket_line_id:
+                if not (l.name and l.name.accounts_id and l.name.accounts_id.id):
+                    raise osv.except_osv(
+                        _('Configuration Error'),
+                        _('Income account not set for item "%s". Please set accounts_id on opd.ticket.entry.')
+                        % (l.name and l.name.name or 'Unknown')
+                    )
 
                 line_ids.append((0, 0, {
+                    'name': l.name.name or ticket.name,
+                    'account_id': l.name.accounts_id.id,
+                    'debit': 0.0,
+                    'credit': float(l.total_amount or 0.0),
+                    'partner_id': False,
                     'analytic_account_id': False,
                     'tax_code_id': False,
-                    'tax_amount': 0,
-                    'name': stored_obj.name,
+                    'tax_amount': 0.0,
                     'currency_id': False,
-                    'credit': 0,
                     'date_maturity': False,
-                    'account_id': 6,  ### Cash ID
-                    'debit': has_been_paid,
-                    'amount_currency': 0,
-                    'partner_id': False,
+                    'amount_currency': 0.0,
                 }))
 
-                for cc_obj in stored_obj.opd_ticket_line_id:
-                    # import pdb
-                    # pdb.set_trace()
-                    total = 0
+            if len(line_ids) < 2:
+                raise osv.except_osv(
+                    _('Error'),
+                    _('No OPD lines found. Cannot create journal entry.')
+                )
 
-                    if cc_obj.name.name:
-                        # ledger_id = 611
-                        # try:
-                        #     ledger_id = cc_obj.name.accounts_id.id
-                        # except:
-                        #     ledger_id = 611  ## Diagnostic Income Head , If we don't assign any Ledger
+            # 4) Create account.move
+            move_obj = self.pool.get('account.move')
+            move_vals = {
+                'name': '/',
+                'journal_id': 2,          # Sales journal
+                'date': ticket.date,
+                'period_id': period_id,
+                'ref': ticket.name,
+                'line_id': line_ids,
+            }
 
-                        if context is None:
-                            context = {}
+            move_id = move_obj.create(cr, uid, move_vals, context=context)
 
-                        line_ids.append((0, 0, {
-                            'analytic_account_id': False,
-                            'tax_code_id': False,
-                            'tax_amount': 0,
-                            'name': cc_obj.name.name,
-                            'currency_id': False,
-                            'account_id': cc_obj.name.accounts_id.id,
-                            'credit': cc_obj.total_amount,
-                            'date_maturity': False,
-                            'debit': 0,
-                            'amount_currency': 0,
-                            'partner_id': False,
-                        }))
-                    # import pdb
-                    # pdb.set_trace()
+            # 5) Validate / post move
+            try:
+                move_obj.button_validate(cr, uid, [move_id], context=context)
+            except Exception as e:
+                # If validate fails, delete move and raise
+                try:
+                    move_obj.unlink(cr, uid, [move_id], context=context)
+                except:
+                    pass
+                raise osv.except_osv(
+                    _('Journal Error'),
+                    _('Journal entry could not be validated/posted.\n\nDetails: %s') % (unicode(e) if 'unicode' in globals() else str(e))
+                )
 
-                jv_entry = self.pool.get('account.move')
+            # 6) All good — release savepoint (optional)
+            cr.execute("RELEASE SAVEPOINT opd_ticket_create_sp")
+            return ticket_id
 
-                j_vals = {'name': '/',
-                          'journal_id': 2,  ## Sales Journal
-                          'date': stored_obj.date,
-                          'period_id': period_id,
-                          'ref': stored_obj.name,
-                          'line_id': line_ids
+        except Exception:
+            # Rollback everything related to this create (ticket + journal)
+            try:
+                cr.execute("ROLLBACK TO SAVEPOINT opd_ticket_create_sp")
+            except:
+                pass
+            # Re-raise so Odoo shows the error and does NOT create OPD
+            raise
 
-                          }
-
-                # import pdb
-                # pdb.set_trace()
-
-                saved_jv_id = jv_entry.create(cr, uid, j_vals, context=context)
-                if saved_jv_id > 0:
-                    journal_id = saved_jv_id
-                    try:
-
-                        jv_entry.button_validate(cr, uid, [saved_jv_id], context)
-                    except:
-                        cr.execute("delete from opd_ticket where id=%s", ([stored]))
-                        cr.commit()
-                        raise Exception("Check the item, missmatched total!")
-               ###ENd of Journal
-            return stored
 
 
 
