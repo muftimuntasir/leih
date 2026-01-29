@@ -573,6 +573,230 @@ class leih_admission(osv.osv):
     # Paste your write() here exactly as you already have it (without commits/debugger).
 
 
+    def _get_admission_moves(self, cr, uid, admission, context=None):
+        cr.execute("SELECT id FROM account_move WHERE ref=%s ORDER BY id", (admission.name,))
+        return [x[0] for x in cr.fetchall()]
+
+    def _identify_sales_and_due_moves(self, cr, uid, move_ids, cash_account_id, context=None):
+        sales_move_id = None
+        due_move_id = None
+
+        for mid in move_ids:
+            cr.execute("""
+                SELECT COUNT(*)
+                FROM account_move_line
+                WHERE move_id=%s AND account_id NOT IN (%s,195)
+            """, (mid, cash_account_id))
+            cnt = cr.fetchone()[0]
+
+            if cnt > 0 and not sales_move_id:
+                sales_move_id = mid
+            elif cnt == 0 and not due_move_id:
+                due_move_id = mid
+
+        return sales_move_id, due_move_id
+
+    def _cancel_moves(self, cr, uid, move_ids, context=None):
+        move_obj = self.pool.get('account.move')
+        for mid in move_ids:
+            mv = move_obj.browse(cr, uid, mid, context=context)
+            if mv.state == 'posted':
+                mv.button_cancel()
+        return True
+
+    def _validate_moves(self, cr, uid, move_ids, context=None):
+        move_obj = self.pool.get('account.move')
+        for mid in move_ids:
+            move_obj.button_validate(cr, uid, [mid], context=context)
+        return True
+
+    def _remove_income_line(self, cr, uid, move_id, account_id, credit_amount, context=None):
+        cr.execute("""
+            DELETE FROM account_move_line
+            WHERE id = (
+                SELECT id FROM account_move_line
+                WHERE move_id=%s AND account_id=%s AND credit=%s
+                LIMIT 1
+            )
+        """, (move_id, account_id, credit_amount))
+
+    def _add_income_line(self, cr, uid, move_id, line_name, account_id, credit_amount, context=None):
+        ml_obj = self.pool.get('account.move.line')
+        ml_obj.create(cr, uid, {
+            'move_id': move_id,
+            'name': line_name,
+            'account_id': account_id,
+            'debit': 0.0,
+            'credit': credit_amount,
+        }, context=context)
+
+    def _update_cash_line(self, cr, uid, move_id, cash_account_id, amount, context=None):
+        cr.execute("""
+            UPDATE account_move_line
+            SET debit=%s, credit=0
+            WHERE move_id=%s AND account_id=%s
+        """, (amount, move_id, cash_account_id))
+
+    def _update_receivable_debit(self, cr, uid, move_id, amount, context=None):
+        cr.execute("""
+            UPDATE account_move_line
+            SET debit=%s, credit=0
+            WHERE move_id=%s AND account_id=195
+        """, (amount, move_id))
+
+    def _update_receivable_credit(self, cr, uid, move_id, amount, context=None):
+        cr.execute("""
+            UPDATE account_move_line
+            SET credit=%s, debit=0
+            WHERE move_id=%s AND account_id=195
+        """, (amount, move_id))
+
+    def _delete_receivable_line(self, cr, uid, move_id, context=None):
+        cr.execute("""
+            DELETE FROM account_move_line
+            WHERE move_id=%s AND account_id=195
+        """, (move_id,))
+
+    def _remove_due_move(self, cr, uid, due_move_id, context=None):
+        move_obj = self.pool.get('account.move')
+
+        mv = move_obj.browse(cr, uid, due_move_id, context=context)
+        if mv.state == 'posted':
+            mv.button_cancel()
+
+        cr.execute("DELETE FROM bill_journal_relation WHERE journal_id=%s", (due_move_id,))
+        cr.execute("DELETE FROM account_move_line WHERE move_id=%s", (due_move_id,))
+        move_obj.unlink(cr, uid, [due_move_id], context=context)
+        return True
+
+    def _rebuild_income_lines(self, cr, uid, admission, sales_move_id, cash_account_id, context=None):
+        cr.execute("""
+            DELETE FROM account_move_line
+            WHERE move_id=%s AND account_id NOT IN (%s,195)
+        """, (sales_move_id, cash_account_id))
+
+        for line in admission.leih_admission_line_id:
+            income_acc = line.name.accounts_id.id if line.name.accounts_id else 611
+            self._add_income_line(cr, uid, sales_move_id, line.name.name, income_acc, line.total_amount, context=context)
+
+    def _apply_admission_line_commands(self, cr, uid, sales_move_id, vals, removed_line_info, context=None):
+        for old in removed_line_info:
+            self._remove_income_line(cr, uid, sales_move_id, old['account_id'], old['amount'], context=context)
+
+        for cmd in vals.get('leih_admission_line_id', []):
+            if cmd[0] == 0:
+                new_vals = cmd[2]
+                exam = self.pool.get('examination.entry').browse(cr, uid, new_vals.get('name'), context=context)
+                income_acc = exam.accounts_id.id if exam.accounts_id else 611
+                income_amt = new_vals.get('total_amount', 0.0)
+                self._add_income_line(cr, uid, sales_move_id, exam.name, income_acc, income_amt, context=context)
+
+        return True
+
+    def _get_total_credit_and_advance_cash(self, cr, uid, sales_move_id, cash_account_id, context=None):
+        cr.execute("""
+            SELECT COALESCE(SUM(credit),0)
+            FROM account_move_line
+            WHERE move_id=%s
+        """, (sales_move_id,))
+        total_credit = cr.fetchone()[0]
+
+        cr.execute("""
+            SELECT COALESCE(SUM(debit),0)
+            FROM account_move_line
+            WHERE move_id=%s AND account_id=%s
+        """, (sales_move_id, cash_account_id))
+        advance_cash = cr.fetchone()[0]
+
+        return total_credit, advance_cash
+
+    def _adjust_two_journal_case(self, cr, uid, sales_move_id, due_move_id, cash_account_id, total_credit, advance_cash, context=None):
+        new_due = total_credit - advance_cash
+        if new_due < 0:
+            new_due = 0
+
+        self._update_receivable_debit(cr, uid, sales_move_id, new_due, context=context)
+        self._update_cash_line(cr, uid, due_move_id, cash_account_id, new_due, context=context)
+        self._update_receivable_credit(cr, uid, due_move_id, new_due, context=context)
+
+        return True
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
+
+        if vals.get("due") and vals.get("due") < 0:
+            raise osv.except_osv(_('Warning!'), _("Check paid and grand total!"))
+
+        trigger_fields = ('leih_admission_line_id', 'paid', 'grand_total', 'due')
+        need_journal_update = any(f in vals for f in trigger_fields)
+
+        removed_line_info = []
+        has_update_cmd = False
+
+        if vals.get('leih_admission_line_id'):
+            for cmd in vals['leih_admission_line_id']:
+                if cmd[0] == 2:
+                    line_id = cmd[1]
+                    old_line = self.pool.get('leih.admission.line').browse(cr, uid, line_id, context=context)
+                    if old_line and old_line.name:
+                        acc_id = old_line.name.accounts_id.id if old_line.name.accounts_id else 611
+                        removed_line_info.append({
+                            'line_id': line_id,
+                            'account_id': acc_id,
+                            'amount': old_line.total_amount,
+                        })
+                if cmd[0] == 1:
+                    has_update_cmd = True
+
+        res = super(leih_admission, self).write(cr, uid, ids, vals, context=context)
+
+        if not need_journal_update:
+            return res
+
+        admission = self.browse(cr, uid, ids[0], context=context)
+
+        cash_account_id = 6
+        if admission.payment_type and admission.payment_type.account:
+            cash_account_id = admission.payment_type.account.id
+
+        move_ids = self._get_admission_moves(cr, uid, admission, context=context)
+        if not move_ids:
+            return res
+
+        sales_move_id, due_move_id = self._identify_sales_and_due_moves(cr, uid, move_ids, cash_account_id, context=context)
+        if not sales_move_id:
+            return res
+
+        self._cancel_moves(cr, uid, move_ids, context=context)
+
+        if has_update_cmd:
+            self._rebuild_income_lines(cr, uid, admission, sales_move_id, cash_account_id, context=context)
+        else:
+            self._apply_admission_line_commands(cr, uid, sales_move_id, vals, removed_line_info, context=context)
+
+        total_credit, advance_cash = self._get_total_credit_and_advance_cash(cr, uid, sales_move_id, cash_account_id, context=context)
+
+        if len(move_ids) > 1 and due_move_id:
+            if advance_cash >= total_credit:
+                self._remove_due_move(cr, uid, due_move_id, context=context)
+                self._delete_receivable_line(cr, uid, sales_move_id, context=context)
+                self._update_cash_line(cr, uid, sales_move_id, cash_account_id, total_credit, context=context)
+                self.pool.get('account.move').button_validate(cr, uid, [sales_move_id], context=context)
+                return res
+            else:
+                self._adjust_two_journal_case(cr, uid, sales_move_id, due_move_id, cash_account_id, total_credit, advance_cash, context=context)
+                self._validate_moves(cr, uid, [sales_move_id, due_move_id], context=context)
+                return res
+
+        if len(move_ids) == 1:
+            self._update_cash_line(cr, uid, sales_move_id, cash_account_id, admission.paid, context=context)
+            self._update_receivable_debit(cr, uid, sales_move_id, admission.due, context=context)
+            self._validate_moves(cr, uid, [sales_move_id], context=context)
+
+        return res
+
+
     @api.onchange('leih_admission_line_id')
     def onchange_admission_line(self):
         sumalltest = 0.0

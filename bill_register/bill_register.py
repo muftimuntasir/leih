@@ -723,16 +723,20 @@ class bill_register(osv.osv):
         return [x[0] for x in cr.fetchall()]
 
     def _identify_sales_and_due_moves(self, cr, uid, move_ids, cash_account_id, context=None):
+        """
+        sales_move: has income lines (not cash, not receivable)
+        due_move: has only cash + receivable
+        """
         sales_move_id = None
         due_move_id = None
 
         for mid in move_ids:
             cr.execute("""
-                SELECT COUNT(*) 
-                FROM account_move_line 
+                SELECT COUNT(*)
+                FROM account_move_line
                 WHERE move_id=%s AND account_id NOT IN (%s,195)
             """, (mid, cash_account_id))
-            cnt = cr.fetchone()[0]
+            cnt = cr.fetchone()[0] or 0
 
             if cnt > 0 and not sales_move_id:
                 sales_move_id = mid
@@ -741,11 +745,14 @@ class bill_register(osv.osv):
 
         return sales_move_id, due_move_id
 
+    # ==========================================================
+    # Cancel / validate
+    # ==========================================================
     def _cancel_moves(self, cr, uid, move_ids, context=None):
         move_obj = self.pool.get('account.move')
         for mid in move_ids:
             mv = move_obj.browse(cr, uid, mid, context=context)
-            if mv.state == 'posted':
+            if mv and mv.state == 'posted':
                 mv.button_cancel()
         return True
 
@@ -755,6 +762,50 @@ class bill_register(osv.osv):
             move_obj.button_validate(cr, uid, [mid], context=context)
         return True
 
+    # ==========================================================
+    # Ensure required lines exist (FIX for non-balanced)
+    # ==========================================================
+    def _ensure_cash_line(self, cr, uid, move_id, cash_account_id, context=None):
+        cr.execute("""
+            SELECT id FROM account_move_line
+            WHERE move_id=%s AND account_id=%s
+            LIMIT 1
+        """, (move_id, cash_account_id))
+        row = cr.fetchone()
+        if row:
+            return row[0]
+
+        ml_obj = self.pool.get('account.move.line')
+        return ml_obj.create(cr, uid, {
+            'move_id': move_id,
+            'name': '/',
+            'account_id': cash_account_id,
+            'debit': 0.0,
+            'credit': 0.0,
+        }, context=context)
+
+    def _ensure_receivable_line(self, cr, uid, move_id, is_credit=False, context=None):
+        cr.execute("""
+            SELECT id FROM account_move_line
+            WHERE move_id=%s AND account_id=195
+            LIMIT 1
+        """, (move_id,))
+        row = cr.fetchone()
+        if row:
+            return row[0]
+
+        ml_obj = self.pool.get('account.move.line')
+        return ml_obj.create(cr, uid, {
+            'move_id': move_id,
+            'name': '/',
+            'account_id': 195,
+            'debit': 0.0 if is_credit else 0.0,
+            'credit': 0.0 if not is_credit else 0.0,
+        }, context=context)
+
+    # ==========================================================
+    # Move line operations
+    # ==========================================================
     def _remove_income_line(self, cr, uid, move_id, account_id, credit_amount, context=None):
         cr.execute("""
             DELETE FROM account_move_line
@@ -769,70 +820,43 @@ class bill_register(osv.osv):
         ml_obj = self.pool.get('account.move.line')
         ml_obj.create(cr, uid, {
             'move_id': move_id,
-            'name': line_name,
+            'name': line_name or '/',
             'account_id': account_id,
             'debit': 0.0,
-            'credit': credit_amount,
+            'credit': credit_amount or 0.0,
         }, context=context)
 
     def _update_cash_line(self, cr, uid, move_id, cash_account_id, amount, context=None):
+        self._ensure_cash_line(cr, uid, move_id, cash_account_id, context=context)
         cr.execute("""
             UPDATE account_move_line
             SET debit=%s, credit=0
             WHERE move_id=%s AND account_id=%s
-        """, (amount, move_id, cash_account_id))
+        """, (amount or 0.0, move_id, cash_account_id))
 
     def _update_receivable_debit(self, cr, uid, move_id, amount, context=None):
+        self._ensure_receivable_line(cr, uid, move_id, is_credit=False, context=context)
         cr.execute("""
             UPDATE account_move_line
             SET debit=%s, credit=0
             WHERE move_id=%s AND account_id=195
-        """, (amount, move_id))
+        """, (amount or 0.0, move_id))
 
     def _update_receivable_credit(self, cr, uid, move_id, amount, context=None):
+        self._ensure_receivable_line(cr, uid, move_id, is_credit=True, context=context)
         cr.execute("""
             UPDATE account_move_line
             SET credit=%s, debit=0
             WHERE move_id=%s AND account_id=195
-        """, (amount, move_id))
+        """, (amount or 0.0, move_id))
 
     def _delete_receivable_line(self, cr, uid, move_id, context=None):
-        cr.execute("""
-            DELETE FROM account_move_line
-            WHERE move_id=%s AND account_id=195
-        """, (move_id,))
-
-    def _balance_sales_move_by_ar(self, cr, uid, sales_move_id, cash_account_id, context=None):
-        cr.execute("SELECT COALESCE(SUM(credit),0) FROM account_move_line WHERE move_id=%s", (sales_move_id,))
-        total_credit = cr.fetchone()[0]
-
-        cr.execute("""
-            SELECT COALESCE(SUM(debit),0)
-            FROM account_move_line
-            WHERE move_id=%s AND account_id=%s
-        """, (sales_move_id, cash_account_id))
-        cash_debit = cr.fetchone()[0]
-
-        new_ar_debit = total_credit - cash_debit
-        if new_ar_debit < 0:
-            new_ar_debit = 0
-
-        self._update_receivable_debit(cr, uid, sales_move_id, new_ar_debit, context=context)
-
-    def _balance_due_move_cash_and_ar(self, cr, uid, due_move_id, cash_account_id, context=None):
-        cr.execute("""
-            SELECT COALESCE(SUM(debit),0)
-            FROM account_move_line
-            WHERE move_id=%s AND account_id=%s
-        """, (due_move_id, cash_account_id))
-        due_cash = cr.fetchone()[0]
-        self._update_receivable_credit(cr, uid, due_move_id, due_cash, context=context)
+        cr.execute("DELETE FROM account_move_line WHERE move_id=%s AND account_id=195", (move_id,))
 
     def _remove_due_move(self, cr, uid, due_move_id, context=None):
         move_obj = self.pool.get('account.move')
-
         mv = move_obj.browse(cr, uid, due_move_id, context=context)
-        if mv.state == 'posted':
+        if mv and mv.state == 'posted':
             mv.button_cancel()
 
         cr.execute("DELETE FROM bill_journal_relation WHERE journal_id=%s", (due_move_id,))
@@ -840,43 +864,108 @@ class bill_register(osv.osv):
         move_obj.unlink(cr, uid, [due_move_id], context=context)
         return True
 
+    # ==========================================================
+    # Rebuild / apply O2M commands
+    # ==========================================================
     def _rebuild_income_lines(self, cr, uid, bill, sales_move_id, cash_account_id, context=None):
+        # remove all income lines, keep cash + AR
         cr.execute("""
-            DELETE FROM account_move_line 
+            DELETE FROM account_move_line
             WHERE move_id=%s AND account_id NOT IN (%s,195)
         """, (sales_move_id, cash_account_id))
 
         for line in bill.bill_register_line_id:
-            income_acc = line.name.accounts_id.id if line.name.accounts_id else 611
-            self._add_income_line(cr, uid, sales_move_id, line.name.name, income_acc, line.total_amount, context=context)
+            acc_id = line.name.accounts_id.id if line.name and line.name.accounts_id else 611
+            self._add_income_line(
+                cr, uid,
+                sales_move_id,
+                line.name.name if line.name else '/',
+                acc_id,
+                line.total_amount,
+                context=context
+            )
 
     def _apply_bill_line_commands(self, cr, uid, sales_move_id, vals, removed_line_info, context=None):
+        # remove deleted lines (cmd=2)
         for old in removed_line_info:
             self._remove_income_line(cr, uid, sales_move_id, old['account_id'], old['amount'], context=context)
 
+        # add newly created lines (cmd=0)
         for cmd in vals.get('bill_register_line_id', []):
             if cmd[0] == 0:
-                new_vals = cmd[2]
-                exam = self.pool.get('examination.entry').browse(cr, uid, new_vals.get('name'), context=context)
-                income_acc = exam.accounts_id.id if exam.accounts_id else 611
-                income_amt = new_vals.get('total_amount', 0.0)
-                self._add_income_line(cr, uid, sales_move_id, exam.name, income_acc, income_amt, context=context)
+                new_vals = cmd[2] or {}
+                exam_id = new_vals.get('name')
+                if not exam_id:
+                    continue
+                exam = self.pool.get('examination.entry').browse(cr, uid, exam_id, context=context)
+                acc_id = exam.accounts_id.id if exam and exam.accounts_id else 611
+                amt = new_vals.get('total_amount', 0.0)
+                self._add_income_line(cr, uid, sales_move_id, exam.name, acc_id, amt, context=context)
 
         return True
 
+    # ==========================================================
+    # Balancing logic (handles overpaid + missing AR line)
+    # ==========================================================
+    def _balance_sales_move_by_ar(self, cr, uid, sales_move_id, cash_account_id, context=None):
+        """
+        Always balance sales move:
+          total_credit = sum(credit) in move
+          cash_debit   = debit on cash line
+          ar_debit     = total_credit - cash_debit  (>=0)
+        Overpaid case: cash_debit > total_credit => cap cash to total_credit, AR=0
+        """
+        cr.execute("SELECT COALESCE(SUM(credit),0) FROM account_move_line WHERE move_id=%s", (sales_move_id,))
+        total_credit = cr.fetchone()[0] or 0.0
+
+        self._ensure_cash_line(cr, uid, sales_move_id, cash_account_id, context=context)
+
+        cr.execute("""
+            SELECT COALESCE(SUM(debit),0)
+            FROM account_move_line
+            WHERE move_id=%s AND account_id=%s
+        """, (sales_move_id, cash_account_id))
+        cash_debit = cr.fetchone()[0] or 0.0
+
+        if cash_debit > total_credit:
+            cash_debit = total_credit
+            self._update_cash_line(cr, uid, sales_move_id, cash_account_id, cash_debit, context=context)
+            self._update_receivable_debit(cr, uid, sales_move_id, 0.0, context=context)
+            return total_credit, cash_debit, 0.0
+
+        ar_debit = total_credit - cash_debit
+        if ar_debit < 0:
+            ar_debit = 0.0
+        self._update_receivable_debit(cr, uid, sales_move_id, ar_debit, context=context)
+        return total_credit, cash_debit, ar_debit
+
+    def _balance_due_move_cash_and_ar(self, cr, uid, due_move_id, cash_account_id, due_amount, context=None):
+        """
+        Due move must be:
+          cash debit = due_amount
+          AR credit  = due_amount
+        """
+        if due_amount < 0:
+            due_amount = 0.0
+        self._update_cash_line(cr, uid, due_move_id, cash_account_id, due_amount, context=context)
+        self._update_receivable_credit(cr, uid, due_move_id, due_amount, context=context)
+
+    # ==========================================================
+    # WRITE
+    # ==========================================================
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
 
-        if vals.get("due") and vals.get("due") < 0:
+        if vals.get("due") is not None and vals.get("due") < 0:
             raise osv.except_osv(_('Warning!'), _("Check paid and grand total!"))
 
         trigger_fields = ('bill_register_line_id', 'paid', 'grand_total', 'due')
         need_journal_update = any(f in vals for f in trigger_fields)
 
+        # capture deletes before super write (avoid MissingError)
         removed_line_info = []
         has_update_cmd = False
-
         if vals.get('bill_register_line_id'):
             for cmd in vals['bill_register_line_id']:
                 if cmd[0] == 2:
@@ -889,9 +978,10 @@ class bill_register(osv.osv):
                             'account_id': acc_id,
                             'amount': old_line.total_amount,
                         })
-                if cmd[0] == 1:
+                elif cmd[0] == 1:
                     has_update_cmd = True
 
+        # do actual write first
         res = super(bill_register, self).write(cr, uid, ids, vals, context=context)
 
         if not need_journal_update:
@@ -899,10 +989,12 @@ class bill_register(osv.osv):
 
         bill = self.browse(cr, uid, ids[0], context=context)
 
+        # cash account (default 6)
         cash_account_id = 6
         if bill.payment_type and bill.payment_type.account:
             cash_account_id = bill.payment_type.account.id
 
+        # find moves
         move_ids = self._get_bill_moves(cr, uid, bill, context=context)
         if not move_ids:
             return res
@@ -911,50 +1003,37 @@ class bill_register(osv.osv):
         if not sales_move_id:
             return res
 
+        # cancel all involved moves
         self._cancel_moves(cr, uid, move_ids, context=context)
 
+        # apply changes to income lines
         if has_update_cmd:
             self._rebuild_income_lines(cr, uid, bill, sales_move_id, cash_account_id, context=context)
         else:
             self._apply_bill_line_commands(cr, uid, sales_move_id, vals, removed_line_info, context=context)
 
-        # Special scenario (Option B):
-        # If there are two moves and due is now zero or less
-        # - Remove journal 2
-        # - Remove AR from journal 1
-        # - Set cash in journal 1 to bill.grand_total (or bill.paid if that is the desired logic)
-        if len(move_ids) > 1 and bill.due <= 0 and due_move_id:
-            self._remove_due_move(cr, uid, due_move_id, context=context)
-            self._delete_receivable_line(cr, uid, sales_move_id, context=context)
+        # balance sales move (creates missing cash/AR lines if needed)
+        total_credit, cash_debit, ar_debit = self._balance_sales_move_by_ar(
+            cr, uid, sales_move_id, cash_account_id, context=context
+        )
 
-            new_cash_amount = bill.grand_total
-            if new_cash_amount < 0:
-                new_cash_amount = 0
+        # 2-move scenario
+        if len(move_ids) > 1 and due_move_id:
+            # remove due move only if advance (cash debit in sales move) covers full total credit
+            if cash_debit >= total_credit:
+                self._remove_due_move(cr, uid, due_move_id, context=context)
+                self._delete_receivable_line(cr, uid, sales_move_id, context=context)
+                self._update_cash_line(cr, uid, sales_move_id, cash_account_id, total_credit, context=context)
+                self._validate_moves(cr, uid, [sales_move_id], context=context)
+                return res
 
-            self._update_cash_line(cr, uid, sales_move_id, cash_account_id, new_cash_amount, context=context)
-
-            self.pool.get('account.move').button_validate(cr, uid, [sales_move_id], context=context)
+            # keep due move: update it to match remaining due (AR debit in sales move)
+            self._balance_due_move_cash_and_ar(cr, uid, due_move_id, cash_account_id, ar_debit, context=context)
+            self._validate_moves(cr, uid, [sales_move_id, due_move_id], context=context)
             return res
 
-        # Normal logic for one journal
-        if len(move_ids) == 1:
-            self._update_cash_line(cr, uid, sales_move_id, cash_account_id, bill.paid, context=context)
-            self._update_receivable_debit(cr, uid, sales_move_id, bill.due, context=context)
-
-        # Normal logic for two journals
-        else:
-            self._balance_sales_move_by_ar(cr, uid, sales_move_id, cash_account_id, context=context)
-            if due_move_id:
-                self._balance_due_move_cash_and_ar(cr, uid, due_move_id, cash_account_id, context=context)
-
-        # Validate remaining moves
-        remaining_moves = []
-        for mid in move_ids:
-            if mid != due_move_id:
-                remaining_moves.append(mid)
-
-        self._validate_moves(cr, uid, remaining_moves, context=context)
-
+        # single move
+        self._validate_moves(cr, uid, [sales_move_id], context=context)
         return res
 
 
