@@ -710,16 +710,65 @@ class leih_admission(osv.osv):
 
         return total_credit, advance_cash
 
-    def _adjust_two_journal_case(self, cr, uid, sales_move_id, due_move_id, cash_account_id, total_credit, advance_cash, context=None):
-        new_due = total_credit - advance_cash
-        if new_due < 0:
-            new_due = 0
+    def _adjust_two_journal_case(self, cr, uid, sales_move_id, due_move_id, cash_account_id, admission, context=None):
+        """
+        sales_move:  Debit Cash(advance) + Debit AR(open after advance), Credit Income(total)
+        due_move:    Debit Cash(paid after advance) , Credit AR(paid after advance)
+        """
 
-        self._update_receivable_debit(cr, uid, sales_move_id, new_due, context=context)
-        self._update_cash_line(cr, uid, due_move_id, cash_account_id, new_due, context=context)
-        self._update_receivable_credit(cr, uid, due_move_id, new_due, context=context)
+        # 1) Total sale amount = total credits in sales move
+        cr.execute("""
+            SELECT COALESCE(SUM(credit),0)
+            FROM account_move_line
+            WHERE move_id=%s
+        """, (sales_move_id,))
+        total_credit = float(cr.fetchone()[0] or 0.0)
+
+        # 2) Advance cash = cash debit inside SALES move (this is the initial/advance payment)
+        cr.execute("""
+            SELECT COALESCE(SUM(debit),0)
+            FROM account_move_line
+            WHERE move_id=%s AND account_id=%s
+        """, (sales_move_id, cash_account_id))
+        advance_cash = float(cr.fetchone()[0] or 0.0)
+
+        # 3) Total paid (use admission.paid; if unreliable, derive from grand_total - due)
+        total_paid = float(admission.paid or 0.0)
+        if admission.grand_total and admission.due is not None:
+            # safer in many custom modules
+            total_paid = float((admission.grand_total or 0.0) - (admission.due or 0.0))
+
+        if total_paid < 0:
+            total_paid = 0.0
+
+        # ✅ THIS is what you must put in journal 2
+        paid_after_advance = total_paid - advance_cash
+        if paid_after_advance < 0:
+            paid_after_advance = 0.0
+
+        # Remaining AR after advance (kept in sales move)
+        ar_after_advance = total_credit - advance_cash
+        if ar_after_advance < 0:
+            ar_after_advance = 0.0
+
+        # ---- Update SALES MOVE (journal 1) ----
+        # Keep cash line as advance_cash (do NOT change it here)
+        self._update_receivable_debit(cr, uid, sales_move_id, ar_after_advance, context=context)
+
+        # ---- Update DUE MOVE (journal 2) ----
+        if paid_after_advance <= 0:
+            # If no extra payment beyond advance, remove due move
+            self._remove_due_move(cr, uid, due_move_id, context=context)
+            return True
+
+        # j2 cash debit = paid_after_advance
+        self._update_cash_line(cr, uid, due_move_id, cash_account_id, paid_after_advance, context=context)
+
+        # j2 AR credit = paid_after_advance
+        self._update_receivable_credit(cr, uid, due_move_id, paid_after_advance, context=context)
 
         return True
+
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
@@ -785,7 +834,7 @@ class leih_admission(osv.osv):
                 self.pool.get('account.move').button_validate(cr, uid, [sales_move_id], context=context)
                 return res
             else:
-                self._adjust_two_journal_case(cr, uid, sales_move_id, due_move_id, cash_account_id, total_credit, advance_cash, context=context)
+                self._adjust_two_journal_case(cr, uid, sales_move_id, due_move_id, cash_account_id, admission, context=context)
                 self._validate_moves(cr, uid, [sales_move_id, due_move_id], context=context)
                 return res
 
