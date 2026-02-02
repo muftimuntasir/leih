@@ -91,6 +91,7 @@ membership products (schemes).
         'admission/leih_admission_activated_view.xml',
         'admission/leih_admission_released_view.xml',
         'admission/leih_admission_cancelled_view.xml',
+        'admission/leih_admission_all_view.xml',
         'admission/release_wizard_view.xml',
         'admission/release/admission_release_view.xml',
         'admission/leih_emergency_view.xml',
