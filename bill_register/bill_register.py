@@ -178,7 +178,7 @@ class bill_register(osv.osv):
     @api.multi
     def advance_paid(self, name):
         bill_obj = self.env['bill.register'].search([('name', '=', name)])
-        if bill_obj.state != 'confirmed':
+        if bill_obj.state not in ('confirmed', 'released'):
             raise osv.except_osv(_('Warning!'),
                                  _('Confirm your bill first.'))
         elif bill_obj.state == 'confirmed':
