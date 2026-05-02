@@ -14,3 +14,11 @@ class product_lens(osv.osv):
         'supplier':fields.char("Supplier Name"),
     }
 
+
+class leih_optometrist(osv.osv):
+    _name = "leih.optometrist"
+
+    _columns = {
+        'name':fields.char("Name")
+    }
+

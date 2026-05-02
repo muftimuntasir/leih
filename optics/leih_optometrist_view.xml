@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!--proforma_invoice form-->
+        <record model="ir.ui.view" id="optom_form_view" >
+			<field name="name">Lens Info</field>
+			<field name="model">leih.optometrist</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Lens">
+                    <sheet>
+
+                        <group string="Bill Info">
+
+                                <field name="name"/>
+                    
+                        </group>
+
+                        <!--Tab information-->
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="optom_graph_view">
+                <field name="name">Lens Graph</field>
+                <field name="model">leih.optometrist</field>
+                <field name="arch" type="xml">
+                    <graph string="">
+                        <field name="name"/>
+
+                    </graph>
+                </field>
+        </record>
+
+
+
+        <!--proforma_invoice starting action-->
+        <record model="ir.actions.act_window" id="optom_action" >
+			<field name="name">Optom</field>
+			<field name="res_model">leih.optometrist</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,graph</field>
+			<field name="context" eval="{'search_default_my_courses': 1}"/>
+			<field name="help" type="html">
+				<p class="oe_view_nocontent_create">Click to create a new Lens
+				</p>
+			</field>
+		</record>
+
+
+
+        <!--Proforma Invoice record list tree-->
+        <record model="ir.ui.view" id="optom_tree_view" >
+            <field name="name">leih.optometrist</field>
+            <field name="model">leih.optometrist</field>
+            <field name="arch" type="xml">
+                <tree string="Admission List" default_order='id desc'>
+
+                  
+                                <field name="name"/>
+               
+                </tree>
+            </field>
+        </record>
+
+        <menuitem name="Optometrist" id="lens_menu_optom" parent="leih_billing_menu" action="optom_action"/>
+
+
+
+
+
+    </data>
+</openerp>

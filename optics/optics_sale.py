@@ -79,7 +79,8 @@ class optics_sale(osv.osv):
         'payment_type': fields.many2one("payment.type", "Payment Type", default=_default_payment_type),
         'service_charge': fields.float("Service Charge"),
         'to_be_paid': fields.float("To be Paid"),
-        'account_number': fields.char("Account Number")
+        'account_number': fields.char("Account Number"),
+        'optometrist':fields.many2one("leih.optometrist","Optometrist")
     }
 
     _defaults = {

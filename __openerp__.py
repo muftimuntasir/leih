@@ -132,6 +132,7 @@ membership products (schemes).
         'optics/optics_sale_view.xml',
         'optics/payment/optics_sale_payment_view.xml',
         'optics/product_lens_view.xml',
+        'optics/leih_optometrist_view.xml',
         'optics/report/optics_report_menu.xml',
         'optics/report/report_optics_sale.xml',
         'inventory/inventory_requisition_view.xml',

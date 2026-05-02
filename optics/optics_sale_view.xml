@@ -54,6 +54,7 @@
                         <field name="quantity"/>
                         <field name="price"/>
                         <field name="delivery_date"/>
+                        <field name="optometrist"/>
 
                     </group>
                     <notebook>
